@@ -1,0 +1,2253 @@
+﻿NTT Create Date,NTT Number,LR Number,Owner,TM Node,Region,Network State,Zone,Category,Service,Symptom,Domain,Network ID,Service Impact,CTTs Linked,Severity,MB Flag,NTT Status,ETTR,Time before breach ETTR,NTT Aging,Aging Category,Description
+2025-08-03 17:36:10,NTT-20250803-33710,,,BFT,SABAH,SABAH,PBP SELATAN,Unifi Mobile,Total Outage,LTE - 4G Service Down,LTE 4G,SALBF6028,Unifi Mobile:22,0,Minor,N,Open,2025-08-03 20:35:00,7947,2783,< 8H,"LTE (SA) ZTE CTTSB Kg Lumat (SALBF6028) - The link between the server and the ME is broken, Device power down"
+2025-08-03 17:27:45,NTT-20250803-33704,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C126M_DP0004,Unifi:9,0,Minor,N,Open,2025-08-04 14:10:00,71247,3288,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C126M_DP0004 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 17:22:34,NTT-20250803-33703,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0003,Unifi:3,0,Minor,N,Open,2025-08-04 13:55:00,70347,3599,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0003 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 17:17:28,NTT-20250803-33700,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C126M_DP0001,Unifi:9,0,Minor,N,Open,2025-08-04 13:55:00,70347,3905,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C126M_DP0001 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 17:04:48,NTT-20250803-33695,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C126M_DP0006,Unifi:4,0,Minor,N,Open,2025-08-04 13:55:00,70347,4665,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C126M_DP0006 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 17:04:05,NTT-20250803-33694,LR20250803-83189,NNOC010,KBU,SABAH,SABAH,KOTA KINABALU 1,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KBU_C131_DP0005,Unifi:6,2,Minor,N,Open,2025-08-04 17:03:00,81627,4708,< 8H,"[REACTIVE-FIBER] 
+KBU_C131_DP0005
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113976716485
+CTT appointment: 2025-08-03 15:30:00
+CFF return time: 2025-08-03 16:59:26
+CFF remark:
+pass team NEXT , kawasan di tempat pelanggan terlibat dengan dp down , 03hb jam 4.30pm"
+2025-08-03 16:50:02,NTT-20250803-33683,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C132_DP0007,Unifi:3,0,Minor,N,Open,2025-08-04 13:55:00,70347,5551,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C132_DP0007 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 16:44:54,NTT-20250803-33679,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0001,Unifi:4,0,Minor,N,Open,2025-08-04 13:55:00,70347,5859,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0001 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 16:32:01,NTT-20250803-33670,,RobinRPA,SPA,SABAH,SABAH,TAWAU,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,SPA_C020M_DP0016,Unifi:11,0,Minor,N,Open,2025-08-04 15:15:00,75147,6632,< 8H,[CAMELIA-FIBER][Sabah;TWU;SPA] NOC Detected down at SPA_C020M_DP0016 since 2025-08-03 15:12:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 16:21:48,NTT-20250803-33665,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0043,Unifi:3,0,Minor,N,Open,2025-08-04 13:55:00,70347,7245,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0043 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 16:06:08,NTT-20250803-33659,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"Hypp TV,HSI,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0016,Unifi:7,0,Minor,N,Open,2025-08-04 13:55:00,70347,8185,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0016 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 16:04:36,NTT-20250803-33658,LR20250803-83156,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0023,Unifi:3,1,Minor,N,Open,2025-08-04 14:55:00,73947,8277,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0023 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 15:59:30,NTT-20250803-33657,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0038,Unifi:5,0,Minor,N,Open,2025-08-04 13:55:00,70347,8583,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0038 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 15:59:25,NTT-20250803-33656,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0040,Unifi:4,0,Minor,N,Open,2025-08-04 13:55:00,70347,8588,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0040 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 15:47:36,NTT-20250803-33648,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C132_DP0008,Unifi:3,0,Minor,N,Open,2025-08-04 13:55:00,70347,9297,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C132_DP0008 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 15:46:51,NTT-20250803-33646,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C131_DP0044,Unifi:4,0,Minor,N,Open,2025-08-04 13:55:00,70347,9342,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C131_DP0044 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 15:45:32,NTT-20250803-33644,,,MGL,SABAH,SABAH,KOTA KINABALU 2,Unifi Mobile,Partial Outage,LTE - 4G Service Down,LTE 4G,SALKK6053,Unifi Mobile:73,0,Minor,N,Open,2025-08-03 18:45:00,1347,9421,< 8H,"LTE (SA) ZTE SALKK6053_TELIPOK  - Device power down, LTE cell outage, Device power down  due to AC power outage of embedded power"
+2025-08-03 15:21:19,NTT-20250803-33625,,,SPA,SABAH,SABAH,TAWAU,"Hypp TV,Data,HSI",Total Outage,CABLE_BREAKDOWN,FIBER CABLE,SPA F07,"Data (G&W):4, Unifi:126",0,Minor,N,Open,2025-08-03 18:21:00,-93,10874,< 8H,"[DCA] *ALERT! (SABAH REGION, SPA)* ACCESS-OLT PON port alarm at SPA since 2025-08-03 13:11:18"
+2025-08-03 15:19:09,NTT-20250803-33621,,RobinRPA,MGL,SABAH,SABAH,KOTA KINABALU 2,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,MGL_C039_DP0078,Unifi:8,0,Minor,N,Open,2025-08-04 13:05:00,67347,11004,< 8H,[CAMELIA-FIBER][Sabah;KBU;MGL] NOC Detected down at MGL_C039_DP0078 since 2025-08-03 13:02:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 15:14:02,NTT-20250803-33619,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C133M_DP0001,Unifi:3,0,Minor,N,Open,2025-08-04 13:55:00,70347,11311,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C133M_DP0001 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 15:08:56,NTT-20250803-33616,,RobinRPA,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBU_C999_013_DP0001,Unifi:35,0,Minor,N,Open,2025-08-04 13:55:00,70347,11617,< 8H,[CAMELIA-FIBER][Sabah;KBU;KBU] NOC Detected down at KBU_C999_013_DP0001 since 2025-08-03 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 14:43:27,NTT-20250803-33597,,,KBU,SABAH,SABAH,KOTA KINABALU 1,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,FIBER CABLE,KBU_F36,Unifi:395,0,Minor,N,Open,2025-08-04 02:40:00,29847,13146,< 8H,"[DCA] (SABAH REGION, SABAH) ACCESS-OLT PON port alarm - Certain pon port at KBU_G012,KBU_G014,KBU_G015,KBU_G016 at KBU since 2025-08-03 14:09:36
+KBU_G012-1/5/15 KBU_C999_013_DP0001
+KBU_G012-1/6/15 KBU_C999_013_DP0001
+KBU_G014-1/2/10 KBU_C132_DP0001-04
+KBU_G014-1/3/4 KBU_C132_DP0005-08
+KBU_G014-1/3/5 KBU_C132_DP0013-16
+KBU_G014-1/4/6 KBU_C132_DP0017-20
+KBU_G014-1/4/7 KBU_C132_DP0021-24
+KBU_G014-1/5/10 KBU_C132_DP0089-92
+KBU_G014-1/5/11 KBU_C132_DP0093-96
+KBU_G014-1/5/12 KBU_C132_DP0097-100
+KBU_G014-1/5/13 KBU_C132_DP0101-04
+KBU_G014-1/5/14 KBU_C132_DP0105-08
+KBU_G014-1/5/15 KBU_C132_DP0109-10
+KBU_G014-1/5/3 KBU_C131_DP0037-40
+KBU_G014-1/5/4 KBU_C126M_DP0001-04
+KBU_G014-1/5/5 KBU_C126M_DP0005-07
+KBU_G015-1/4/10 KBU_C132_DP0025-28
+KBU_G015-1/4/15 KBU_C133M_DP0001-01
+KBU_G015-1/4/3 KBU_C131_DP0009-12
+KBU_G015-1/4/5 KBU_C131_DP0005-08
+KBU_G015-1/4/6 KBU_C131_DP0001-04
+KBU_G015-1/5/1 KBU_C131_DP0013-16
+KBU_G015-1/5/13 KBU_C131_DP0025-28
+KBU_G015-1/5/14 KBU_C131_DP0029-32
+KBU_G015-1/5/15 KBU_C131_DP0033-36
+KBU_G015-1/5/2 KBU_C131_DP0017-20
+KBU_G015-1/5/3 KBU_C131_DP0041-44
+KBU_G015-1/5/4 KBU_C131_DP0021-24
+KBU_G015-1/5/5 KBU_C131_DP0045-48
+KBU_G015-1/8/1 KBU_C132_DP0029-32
+KBU_G016-1/1/15 KBU_C132_DP0009-12
+Total NE : 31 PON PORT UNIT"
+2025-08-03 14:39:44,NTT-20250803-33592,,mohd izuddin,PPG,SABAH,SABAH,KOTA KINABALU 2,n/a,Total Outage,LTE - Others,NGT IP,CSRZT41.DSPTT1023,Data (G&W):10,0,Critical,N,Open,2025-08-03 17:38:00,-2673,13369,< 8H,"[5G RTE][SA][EXP]  Device Offline and multiple link down [CSR 1+1] since 03-08-2025 13:55 HRS
+1 csrzt41.dsptt1023 Device offline
+2 csrzt41.dsptt1022 main down
+3 csrzt41.dsbki0316 main down
+4 csrzt41.dsbki0246 main down
+5 csrzt41.dsptt1026 main down
+6 csrzt41.dsptt1020 main down
+7 csrzt41.dsptt1021 main down
+8 csrzt41.dsbki0255 main down
+9 csrzt41.dspnp0571 main down
+10 csrzt41.dsptt1032 ptotection down"
+2025-08-03 14:36:33,NTT-20250803-33589,LR20250803-83069,NNOC010,PTT,SABAH,SABAH,KOTA KINABALU 1,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PTT_C047M_DP0003,Unifi:12,1,Minor,N,Open,2025-08-04 14:36:00,72807,13560,< 8H,"[REACTIVE-FIBER] 
+PTT_C047M_DP0003
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-113943916635
+CTT appointment: 2025-08-03 09:30:00
+CFF return time: 2025-08-03 14:16:31
+CFF remark:
+pass team NEXT , minta tukar spliter 1-12 ,03hb jam 2.00pm"
+2025-08-03 14:25:37,NTT-20250803-33586,,,KBU,SABAH,SABAH,KOTA KINABALU 1,Unifi Mobile,Total Outage,LTE - 4G Service Down,LTE 4G,BS3016,Unifi Mobile:47,0,Minor,N,Open,2025-08-03 20:45:00,8547,14216,< 8H,LTE (SA) ZTE PETAGAS KK (BS3016)  -  The link between the server and the ME is broken
+2025-08-03 14:24:57,NTT-20250803-33584,,ROBIN-RPA-LTE,MGL,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,LTE - Power Issue,LTE 4G,SALKK6053,Unifi Mobile:0,0,Minor,N,Open,2025-08-03 18:23:00,27,14256,< 8H,LTE (NSA) (RPA) ZTE PRI SALKK6053_TELIPOK  - AC power outage of embedded power since 2025-08-03 13:12:18.000
+2025-08-03 14:21:15,NTT-20250803-33581,,ROBIN-RPA,LBK,SABAH,SABAH,SANDAKAN,"Voice,ADSL",Total Outage,ANM-NE Offline,Access NE,LBK_VF5003,"Pre-Unifi:1, Phone Line:7",0,Critical,N,Open,2025-08-04 11:30:00,61647,14478,< 8H,[RPA] ACCESS-NE LBK_VF5003 offline
+2025-08-03 14:12:43,NTT-20250803-33575,,ROBIN-RPA-LTE,TRN,SABAH,SABAH,PBP UTARA,"Voice,Data",Total Outage,LTE - 4G Service Down,LTE 4G,BS2576,Unifi Mobile:59,0,Major,N,Open,2025-08-03 18:11:00,-693,14990,< 8H,"LTE (SA) (RPA) ZTE BS2576_GILING - Device power down, Device power down, LTE cell outage since 2025-08-03 14:00:13.000 due to AC power outage of embedded power"
+2025-08-03 14:09:36,NTT-20250803-33573,LR20250803-83065,Izzat Hazmi Bin Azizuddin,KBU,SABAH,SABAH,KOTA KINABALU 1,"HSI,Voice,Hypp TV",Total Outage,ANM-OLT PON port alarm,Access NE,KBU_G014,Unifi:395,2,Critical,Y,Open,2025-08-04 02:08:00,27927,15177,< 8H,"ACCESS-OLT PON port alarm - Certain pon port at KBU_G012,KBU_G014,KBU_G015,KBU_G016"
+2025-08-03 13:57:11,NTT-20250803-33559,,,TRN,SABAH,SABAH,PBP UTARA,Unifi Mobile,Partial Outage,LTE - 4G Service Down,LTE 4G,BS5776,Unifi Mobile:28,0,Minor,N,Open,2025-08-03 19:56:00,5607,15922,< 8H,"LTE (SA) ZTE BS5776_LP TELIPOK - Device power down, LTE cell outage (all sector)"
+2025-08-03 13:50:41,NTT-20250803-33555,LR20250803-82993,NNOC010,MBT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MBT_C005M_DP0010,Unifi:12,5,Minor,N,Open,2025-08-04 13:50:00,70047,16312,< 8H,"[REACTIVE-FIBER] 
+MBT_C005M_DP0010
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113601773655
+CTT appointment: 2025-08-04 09:30:00
+CFF return time: 2025-08-03 12:53:56
+CFF remark:
+IVT
+IVT TT RR 
+F
+DS Faulty 
+MBT C005M dp0010
+yakub 01163177664
+FDP low reading (05/08/25-09.30am)
+cable fiber optic Masih belum dibaiki hanya guna fiber drop"
+2025-08-03 13:47:58,NTT-20250803-33554,LR20250803-83019,NNOC010,BAL,SABAH,SABAH,TAWAU,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,BAL_C008M_DP0004,Unifi:3,1,Minor,N,Open,2025-08-04 13:47:00,69867,16475,< 8H,"[REACTIVE-FIBER] 
+BAL_C008M_DP0004
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113948758711
+CTT appointment: 2025-08-03 11:30:00
+CFF return time: 2025-08-03 13:13:22
+CFF remark:
+fdp high readng 29  
+appoiment date 3/8/25"
+2025-08-03 13:18:22,NTT-20250803-33535,,mohd izuddin,SPA,SABAH,SABAH,TAWAU,n/a,Total Outage,LTE - Others,NGT IP,CSRZT41.DSSPR0794,Data (G&W):3,0,Critical,N,Open,2025-08-03 16:18:00,-7473,18251,< 8H,"[5G RTE][SA][EXP]  Multiple Device Offline [CSR 1+1] since 03-08-2025 12:55:08. HRS
+1 csrzt41.dsspr0794 total down
+2 csrzt41.dsspr0779 total down"
+2025-08-03 13:15:27,NTT-20250803-33533,LR20250803-83005,NNOC010,TWU,SABAH,SABAH,TAWAU,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,TWU_C016_DP0092,Unifi:7,1,Minor,N,Open,2025-08-04 13:15:00,67947,18426,< 8H,"[REACTIVE-FIBER] 
+TWU_C016_DP0092
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113949698485
+CTT appointment: 2025-08-03 09:30:00
+CFF return time: 2025-08-03 13:01:28
+CFF remark:
+FDP DOWN / HIGH LOSS
+
+appt time : 03/08/2025 09:30:00"
+2025-08-03 13:11:18,NTT-20250803-33531,,ZF,SPA,SABAH,SABAH,TAWAU,"Hypp TV,HSI,Voice",Total Outage,ANM-OLT PON port alarm,Access NE,SPA_G802,Unifi:126,0,Critical,N,Open,2025-08-04 01:10:00,24447,18675,< 8H,"ACCESS-OLT PON port alarm
+SPA_G802-1/5/1SPA_C023M_DP0005-08
+SPA_G802-1/7/6SPA_C023M_DP0009-09
+SPA_G802-1/9/5SPA_C023M_DP0017-19
+SPA_G802-1/6/11SPA_C031M_DP0001-04
+SPA_G802-1/6/12SPA_C031M_DP0005-08
+SPA_G802-1/6/14SPA_C031M_DP0009-12
+SPA_G802-1/6/13SPA_C031M_DP0013-16
+SPA_G802-1/8/6SPA_C033_DP0025-28
+SPA_G802-1/8/7SPA_C033_DP0029-32
+SPA_G802-1/8/16SPA_C033_DP0033-36
+SPA_G802-1/8/9SPA_C033_DP0037-40
+SPA_G802-1/8/10SPA_C033_DP0041-44
+SPA_G802-1/8/11SPA_C033_DP0045-48
+SPA_G802-1/7/11SPA_C033_DP0061-63
+SPA_F17 & SPA_F47
+15 PON Port"
+2025-08-03 13:05:58,NTT-20250803-33526,,,SPA,SABAH,SABAH,TAWAU,Unifi Mobile,Total Outage,LTE - 4G Service Down,LTE 4G,BS2578,Unifi Mobile:18,0,Minor,N,Open,2025-08-03 19:46:00,5007,18995,< 8H,LTE (SA) ZTE BS2578_SMK TAGASAN - The link between the server and the ME is broken
+2025-08-03 12:32:22,NTT-20250803-33501,,,LBN,SABAH,SABAH,LABUAN,Data,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,LBN_F13,Data (G&W):1,0,Minor,N,Open,2025-08-03 15:31:00,-10293,21011,< 8H,"[DCA] FIBER EXPRES (LABUAN )
+TMF:  T-0011274858  /A-0009549320
+Customer Name : BALAI POLIS RANCHA(Z33)
+INC : INC0005765204| INC0005765205
+Service ID : LV1009502180 PS1009502181 | BS1009502187
+Service : IPME 
+Core info : (M) LBN F34 core 21, 22 / (B) LBN F41 core 21, 22
+Zone : LABUAN
+INC Creation Date/Time : 02/08/2025 23:48
+Issue : TOTAL DOWN
+REMAK : IPME total down, no dying gasp alam detected. PIC Pn Persihila 0 11-1580 2146 has been reset UPE but issue still persist.
+Update  : TMF reassign to NFF  R322829   Asmawi B. Junut   601165109383 /  60138688233 .. call RNA. Ealready escalate to SP Richard Ribin  / 014-5555773."
+2025-08-03 12:30:38,NTT-20250803-33496,LR20250803-82950,NNOC010,ERA,SABAH,SABAH,SANDAKAN,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,ERA_C069M_DP0003,Unifi:8,2,Minor,N,Open,2025-08-04 12:30:00,65247,21115,< 8H,"[REACTIVE-FIBER] 
+ERA_C069M_DP0003
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113950920545
+CTT appointment: 2025-08-03 11:30:00
+CFF return time: 2025-08-03 12:10:15
+CFF remark:
+semua user offline/ appt  11:30 pagi 3/8"
+2025-08-03 11:52:32,NTT-20250803-33466,LR20250803-82895,NNOC010,BFT,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,BFT_C040M_DP0011,Unifi:2,1,Minor,N,Open,2025-08-04 11:52:00,62967,23401,< 8H,"[REACTIVE-FIBER] 
+BFT_C040M_DP0011
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-113939846615
+CTT appointment: 2025-08-05 11:30:00
+CFF return time: 2025-08-03 11:22:11
+CFF remark:
+fdp down,appt date 05/08/2025 1130am"
+2025-08-03 10:48:20,NTT-20250803-33417,LR20250803-82872,NNOC010,TWU,SABAH,SABAH,TAWAU,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TWU_C015_DP0033,Unifi:8,1,Minor,N,Open,2025-08-04 10:48:00,59127,27253,< 8H,"[REACTIVE-FIBER] 
+TWU_C015_DP0033
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113878165031
+CTT appointment: 2025-08-03 09:30:00
+CFF return time: 2025-08-03 10:44:47
+CFF remark:
+mohon tindakan tiang bengkok di langgar.mohon gantian tiang .
+
+3.8.25
+09:30pg"
+2025-08-03 10:22:33,NTT-20250803-33406,,RobinRPA,KBD,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBD_C036M_DP0014,Unifi:2,0,Minor,N,Open,2025-08-04 09:25:00,54147,28800,8H - 12H,[CAMELIA-FIBER][Sabah;PBPU;KBD] NOC Detected down at KBD_C036M_DP0014 since 2025-08-03 09:22:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 10:19:34,NTT-20250803-33405,LR20250803-82842,,KBU,SABAH,SABAH,KOTA KINABALU 1,PSTN,Degradation,Service Down,Passive Element ICP,KBU_F999_0342,Pre-Unifi:1,1,Minor,N,Open,2025-08-06 15:30:00,248847,28979,8H - 12H,"[REACTIVE-COPPER]
+KBU_F999_0342
+eqpt stop restoration.. mohon bantu MTU"
+2025-08-03 10:17:18,NTT-20250803-33403,,RobinRPA,TWU,SABAH,SABAH,TAWAU,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TWU_C030_DP0003,Unifi:3,0,Minor,N,Open,2025-08-04 09:05:00,52947,29115,8H - 12H,[CAMELIA-FIBER][Sabah;TWU;TWU] NOC Detected down at TWU_C030_DP0003 since 2025-08-03 09:02:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 10:05:35,NTT-20250803-33396,LR20250803-82839,NNOC010,BFT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,BFT_C021M_DP0007,Unifi:2,1,Minor,N,Open,2025-08-04 10:05:00,56547,29818,8H - 12H,"[REACTIVE-FIBER] 
+BFT_C021M_DP0007
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-113579443225
+CTT appointment: 2025-08-04 09:30:00
+CFF return time: 2025-08-03 09:57:12
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+camelia d-side fdp down
+bft_c021m_dp0007
+04/08/2025 09:30am"
+2025-08-03 09:35:15,NTT-20250803-33378,,RobinRPA,MNK,SABAH,SABAH,PBP SELATAN,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,MNK_C005M_DP0013,Unifi:2,0,Minor,N,Open,2025-08-04 08:35:00,51147,31638,8H - 12H,[CAMELIA-FIBER][Sabah;;MNK] NOC Detected down at MNK_C005M_DP0013 since 2025-08-03 08:32:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 08:33:06,NTT-20250803-33358,LR20250803-82765,NNOC010,INM,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,INM_C042_DP0071,Unifi:3,2,Minor,N,Open,2025-08-04 08:32:00,50967,35367,8H - 12H,"[REACTIVE-FIBER] 
+INM_C042_DP0071
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113876827005
+CTT appointment: 2025-08-02 09:30:00
+CFF return time: 2025-08-03 05:34:55
+CFF remark:
+FDP DOWN"
+2025-08-03 08:31:44,NTT-20250803-33357,LR20250803-82766,NNOC010,INM,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,INM_C042_DP0069,Unifi:4,2,Minor,N,Open,2025-08-04 08:31:00,50907,35449,8H - 12H,"[REACTIVE-FIBER] 
+INM_C042_DP0069
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113854772395
+CTT appointment: 2025-08-01 11:30:00
+CFF return time: 2025-08-03 05:37:18
+CFF remark:
+fdp down"
+2025-08-03 08:27:52,NTT-20250803-33356,,ZF,KGU,SABAH,SABAH,PBP SELATAN,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KGU_G004,Unifi:9,0,Minor,N,Open,2025-08-04 18:00:00,85047,35681,8H - 12H,"[CAMELIA-FIBER][Sabah;KGU] Received complaint regarding FDP down at KGU due to D-side FOC cut since 2025-08-03 12:40:356hrs.
+
+Previously Detected Pon Port Alarm at 
+
+KGU_G004-1/7/5 - KGU_C031M_DP0013-DP0014
+
+Received NTT for CAMELIA/D-Side Issue at 2025-08-03 13:20hrs"
+2025-08-03 07:54:44,NTT-20250803-33344,,,INM,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,LTE - Others,NGT IP,"CSRZT41.DSBKI0271,CSRZT41.DSBKI0313,CSRZT41.DSBKI0191,CSRZT41.DSBKI0252",Data (G&W):0,0,Minor,N,Open,2025-08-03 10:47:00,-27333,37669,8H - 12H,"[5G RTE][NSA][EXP] Multiple CSR Single Leg Down since 2025-08-03 0305hrs.
+
+CSR 1+1 : 0/4 (All on redundancy)
+1) csrzt41.dsbki0271 - Protection down [INM_F69_C19,C20_8.5KM]
+2) csrzt41.dsbki0313 - Protection down [INM_F69_C21,22_4.68KM]
+3) csrzt41.dsbki0191 - Protection down [INM_F70_C20,21_6.072KM]
+4) csrzt41.dsbki0252 - Protection down [INM_F69_C30,31_4.3KM]"
+2025-08-03 07:41:07,NTT-20250803-33334,,,INM,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,FIBER CABLE,INM_F11,Unifi:23,0,Minor,N,Open,2025-08-03 10:40:00,-27753,38486,8H - 12H,"[DCA] ATAC Fiber (Sabah; Inanam) ACCESS-OLT PON port alarm at INM since 2025-08-03 06:32hrs
+
+INM_G006-1/11/1INM_C062_DP0029-32
+INM_G006-1/11/3INM_C062_DP0037-40
+INM_G006-1/8/15INM_C062_DP0025-28
+INM_G006-1/11/2INM_C062_DP0034,36"
+2025-08-03 07:32:24,NTT-20250803-33328,,RobinRPA,LHD,SABAH,SABAH,LAHAD DATU,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,LHD_C073M_DP0009,Unifi:2,0,Minor,N,Open,2025-08-04 04:55:00,37947,39009,8H - 12H,[CAMELIA-FIBER][Sabah;LHD;LHD] NOC Detected down at LHD_C073M_DP0009 since 2025-08-03 04:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 07:32:14,NTT-20250803-33327,,,LHD,SABAH,SABAH,LAHAD DATU,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,FIBER CABLE,LHD_F06,Unifi:221,0,Minor,N,Open,2025-08-03 10:31:00,-28293,39019,8H - 12H,"[DCA] ATAC Fiber (SABAH REGION, SABAH) ACCESS-OLT PON port alarm LHD_C023M,LHD_C025M,LHD_C073M  at LHD since 2025-08-03 06:05:39
+LHD_G002-1/7/3LHD_C023M_DP0001-04
+LHD_G002-1/7/4LHD_C023M_DP0005-08
+LHD_G003-1/4/12LHD_C023M_DP0009-12
+LHD_G003-1/1/2LHD_C025M_DP0001-04
+LHD_G003-1/3/1LHD_C025M_DP0005-08
+LHD_G003-1/3/15LHD_C025M_DP0009-11
+LHD_G004-1/3/2LHD_C073M_DP0001-04
+LHD_G004-1/3/3LHD_C073M_DP0005-08
+LHD_G004-1/7/1LHD_C073M_DP0009-12
+LHD_G005-1/1/6LHD_C073M_DP0013-15"
+2025-08-03 07:22:17,NTT-20250803-33325,,RobinRPA,LHD,SABAH,SABAH,LAHAD DATU,"Voice,Hypp TV,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,LHD_C073M_DP0012,Unifi:3,0,Minor,N,Open,2025-08-04 04:55:00,37947,39616,8H - 12H,[CAMELIA-FIBER][Sabah;LHD;LHD] NOC Detected down at LHD_C073M_DP0012 since 2025-08-03 04:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 07:13:04,NTT-20250803-33319,,ROBIN-RPA,FSB,SABAH,SABAH,LAHAD DATU,"ADSL,Voice",Total Outage,ANM-NE Offline,Access NE,FSB_VF5006,"Pre-Unifi:1, Phone Line:39",0,Critical,N,Open,2025-08-04 00:00:00,20247,40169,8H - 12H,[RPA] ACCESS-NE FSB_VF5006 offline
+2025-08-03 07:11:16,NTT-20250803-33317,,ROBIN-RPA,FSB,SABAH,SABAH,LAHAD DATU,"ADSL,Voice",Total Outage,ANM-NE Offline,Access NE,FSB_VF5007,"Pre-Unifi:3, Phone Line:40",0,Critical,N,Open,2025-08-04 00:00:00,20247,40277,8H - 12H,[RPA] ACCESS-NE FSB_VF5007 offline
+2025-08-03 06:38:17,NTT-20250803-33301,,FM,MGL,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,NFM - AC Main Fail,Facilities Related Equipment,Inside Power MGL,Pre-Unifi:0,0,Minor,N,Open,2025-08-03 09:35:00,-31653,42256,8H - 12H,"PRI-2508-WM715 CPAMS Alarm (Menggatal:MGLAGHW01, -, MGL-REC-CDMA-07) 03/08/2025 06:02:56 A/C MAIN FAIL, AC Main Fail, Rectifier Fail & multiple alarm"
+2025-08-03 06:32:11,NTT-20250803-33296,,gafa,INM,SABAH,SABAH,KOTA KINABALU 2,"HSI,Hypp TV,Voice",Total Outage,ANM-OLT PON port alarm,Access NE,INM_G006,Unifi:23,0,Critical,N,Open,2025-08-03 18:30:00,447,42622,8H - 12H,"ACCESS-OLT PON port alarm
+INM_G006-1/11/1INM_C062_DP0029-32
+INM_G006-1/11/3INM_C062_DP0037-40
+INM_G006-1/8/15INM_C062_DP0025-28
+INM_G006-1/11/2INM_C062_DP0034,36"
+2025-08-03 06:11:26,NTT-20250803-33291,,,LHD,SABAH,SABAH,LAHAD DATU,Data,Total Outage,LTE - Others,NGT IP,CSRZT41.DSLHD0473,Data (G&W):1,0,Critical,N,Open,2025-08-03 09:10:00,-33153,43867,12H - 24H,"[5G RTE][SA][EXP] csrzt41.dslhd0473 Device Offline [CSR 1+1] since 03-08-2025 05:03hrs.
+
+Address: KAMPUNG SILABUKAN PHASE 1, 89250 LAHAD DATU, SABAH
+Lat/Long: 4.994839 / 118.556239
+
+FIBER INFO:
+Main: [FSB-LHD 48C_J_B_C17,18_29.5KM]
+Last physical down time: 2025-08-03 04:59
+
+Protect: [FSB-LHD 48C_J_B_C12,15_29.5KM]
+Last physical down time: 2025-08-03 04:59
+
+5G_DSLHD0473_LDGSEBERANGKGSILABUKAN"
+2025-08-03 06:05:39,NTT-20250803-33290,LR20250803-82770,gafa,LHD,SABAH,SABAH,LAHAD DATU,"HSI,Hypp TV,Voice",Total Outage,ANM-OLT PON port alarm,Access NE,LHD_G002,Unifi:221,1,Critical,N,Open,2025-08-03 18:00:00,-1353,44214,12H - 24H,"ACCESS-OLT PON port alarm
+LHD_C023M,LHD_C025M,LHD_C073M"
+2025-08-03 06:02:19,NTT-20250803-33289,,RobinRPA,ERA,SABAH,SABAH,SANDAKAN,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,ERA_C025_DP0030,Unifi:2,0,Minor,N,Open,2025-08-04 05:05:00,38547,44414,12H - 24H,[CAMELIA-FIBER][Sabah;SDK;ERA] NOC Detected down at ERA_C025_DP0030 since 2025-08-03 05:02:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 05:58:01,NTT-20250803-33286,,,FSB,SABAH,SABAH,LAHAD DATU,Data,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,FSB_F02,"Data (G&W):20, Unifi:380, Unifi Mobile:63",0,Major,Y,Open,2025-08-03 08:56:00,-33993,44672,12H - 24H,[DCA] MB!  (SABAH) NIC detected node EPEHWFSB51 isolate since 03/5@0501hrs.
+2025-08-03 05:52:35,NTT-20250803-33285,,,FSB,SABAH,SABAH,LAHAD DATU,n/a,Total Outage,LTE - eNodeB Isolate,LTE 4G,"BS3978,BS3773",Unifi Mobile:63,0,Minor,N,Open,2025-08-03 20:51:00,8907,44998,12H - 24H,LTE (SA) ZTE 2 eNB : FAJARHARAPAN(BS3978) & CENDERAWASIH(BS3773) - Link between OMM and NE broken
+2025-08-03 05:45:23,NTT-20250803-33284,LR20250803-82767,Mohd Kamal Ishak,FSB,SABAH,SABAH,LAHAD DATU,"Data,Hypp TV,HSI",Total Outage,ANM-NE Offline,Access NE,"FSB_G801R,FSB_G804R",Unifi:632,1,Critical,Y,Open,2025-08-04 05:00:00,38247,45430,12H - 24H,MB! ACCESS-NE Offline - FSB_G801R/FSB_G802R/FSB_G804R/TTP_G803R
+2025-08-03 05:30:03,NTT-20250803-33281,,FM,FSB,SABAH,SABAH,LAHAD DATU,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,Inside Power FSB,Pre-Unifi:0,0,Minor,N,Open,2025-08-03 08:26:00,-35793,46350,12H - 24H,RTU Offline & Summary Alarm BOL
+2025-08-03 05:20:38,NTT-20250803-33279,,Azri Izwan,FSB,SABAH,SABAH,LAHAD DATU,n/a,No Impact,TX - Others,CORE Transmission,"WXJ047 F5000 FSB.1,WXJ047 F5000 LHD.1",Data (G&W):0,0,Major,N,Open,2025-08-04 08:17:00,50067,46915,12H - 24H,"Detected alarm LOS at Felda Sahabat(FSB) - Lahad Datu(LHD) since 3/8@0459hrs.
+
+Network Impact:
+1. WXJ047(FH)FSB-LHD
+2. DWJ031(FH)FSB-LHD"
+2025-08-03 05:11:13,NTT-20250803-33276,,ROBIN-RPA,FSB,SABAH,SABAH,LAHAD DATU,n/a,Total Outage,Metro-e MetroE Node Down/Isolate,METRO-E,EPEHWFSB51,Unifi:59,0,Critical,Y,Open,2025-08-03 08:10:00,-36753,47480,12H - 24H,"[RPA] [BAU] [Metro-E] NOC Detected NE Down since 2025-08-03 05:01:56.013
+1. EPEHWFSB51"
+2025-08-03 05:07:33,NTT-20250803-33275,,RobinRPA,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KGU_C067M_DP0013,Unifi:4,0,Minor,N,Open,2025-08-04 04:05:00,34947,47700,12H - 24H,[CAMELIA-FIBER][Sabah;PBPS;KGU] NOC Detected down at KGU_C067M_DP0013 since 2025-08-03 04:02:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 05:01:59,NTT-20250803-33272,,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C004M_DP0002,Unifi:5,0,Minor,N,Open,2025-08-04 03:25:00,32547,48034,12H - 24H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C004M_DP0002 since 2025-08-03 03:22:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 04:31:47,NTT-20250803-33270,,RobinRPA,INM,SABAH,SABAH,KOTA KINABALU 2,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,INM_C038_DP0006,Unifi:4,0,Minor,N,Open,2025-08-04 03:15:00,31947,49846,12H - 24H,[CAMELIA-FIBER][Sabah;KBU;INM] NOC Detected down at INM_C038_DP0006 since 2025-08-03 03:12:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-03 04:02:38,NTT-20250803-33269,,RobinRPA,INM,SABAH,SABAH,KOTA KINABALU 2,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,INM_C038_DP0018,Unifi:9,0,Minor,N,Open,2025-08-04 03:15:00,31947,51595,12H - 24H,[CAMELIA-FIBER][Sabah;KBU;INM] NOC Detected down at INM_C038_DP0018 since 2025-08-03 03:12:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 23:14:23,NTT-20250802-33219,LR20250802-82709,RobinRPA,PPR,SABAH,SABAH,PBP SELATAN,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,PPR_C013_DP0009,Unifi:5,1,Minor,N,Open,2025-08-03 22:30:00,14847,68890,12H - 24H,[CAMELIA-FIBER][Sabah;PBPS;PPR] NOC Detected down at PPR_C013_DP0009 since 2025-08-02 22:12:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 23:02:25,NTT-20250802-33215,,RobinRPA,TWU,SABAH,SABAH,TAWAU,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TWU_C033_DP0037,Unifi:6,0,Minor,N,Open,2025-08-03 18:55:00,1947,69608,12H - 24H,[CAMELIA-FIBER][Sabah;TWU;TWU] NOC Detected down at TWU_C033_DP0037 since 2025-08-02 18:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 22:41:57,NTT-20250802-33212,,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C035M_DP0011,Unifi:2,0,Minor,N,Open,2025-08-03 21:55:00,12747,70836,12H - 24H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C035M_DP0011 since 2025-08-02 21:52:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 22:02:21,NTT-20250802-33203,,RobinRPA,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KGU_C026M_DP0001,Unifi:2,0,Minor,N,Open,2025-08-03 18:45:00,1347,73212,12H - 24H,[CAMELIA-FIBER][Sabah;PBPS;KGU] NOC Detected down at KGU_C026M_DP0001 since 2025-08-02 18:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 22:00:12,NTT-20250802-33202,,,KDT,SABAH,SABAH,PBP UTARA,Unifi Mobile,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,KDT_F06,Unifi Mobile:41,0,Minor,N,Open,2025-08-03 00:59:00,-62613,73341,12H - 24H,"[DCA] FMT Mobile 4G LTE ALERT! (SABAH REGION, SABAH) LTE (SA) ZTE JLN KUDAT-KOTA MARUDU(BS3768) - The link between the server and the ME is broken at KDT since 2025-08-02 12:00"
+2025-08-02 21:24:38,NTT-20250802-33194,,RobinRPA,KGU,SABAH,SABAH,PBP SELATAN,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KGU_C025M_DP0012,Unifi:5,0,Minor,N,Open,2025-08-03 18:45:00,1347,75475,12H - 24H,[CAMELIA-FIBER][Sabah;PBPS;KGU] NOC Detected down at KGU_C025M_DP0012 since 2025-08-02 18:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 20:40:17,NTT-20250802-33182,LR20250802-82665,NNOC010,KDT,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KDT_C013_DP038B,Unifi:1,1,Minor,N,Open,2025-08-03 20:39:00,8187,78136,12H - 24H,"[REACTIVE-FIBER] 
+KDT_C013_DP038B
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113166125505
+CTT appointment: 2025-07-28 09:30:00
+CFF return time: 2025-08-02 20:26:22
+CFF remark:
+1.ntt
+2.bd foc
+3.F
+4.dp faulty 
+5.kdt C013 DP 38B
+6.abdulah
+7.low reading semua port di DP..appt. date..2/8/2025..0930am"
+2025-08-02 20:14:13,NTT-20250802-33173,,Sukor Bin Dewa,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,TX - Others,CORE Transmission,DWJ008 F3000 TWU.2,Broadcast:0,0,Major,N,Open,2025-08-02 23:12:00,-69033,79700,12H - 24H,"No packet receive at slot 19 TWU.2 , request Farid reset card"
+2025-08-02 20:08:28,NTT-20250802-33170,LR20250802-82662,NNOC010,KBD,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KBD_C010_DP0007,Unifi:7,1,Minor,N,Open,2025-08-03 20:08:00,6327,80045,12H - 24H,"[REACTIVE-FIBER] 
+KBD_C010_DP0007
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-113873456906
+CTT appointment: 2025-08-02 09:30:00
+CFF return time: 2025-08-02 20:01:27
+CFF remark:
+bacaan fdp 27db.smpi rmh pelanggan 28db..internet intermittent..pelanggan minta d baiki segera.kerana pelanggan mahu guna kan internet yg laju untuk bisnis dan server."
+2025-08-02 19:56:29,NTT-20250802-33160,LR20250802-82650,NNOC010,PIS,SABAH,SABAH,PBP UTARA,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,PIS_C007M_DP016A,Unifi:3,2,Minor,N,Open,2025-08-03 19:56:00,5607,80764,12H - 24H,"[REACTIVE-FIBER] 
+PIS_C007M_DP016A
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: N/A
+CTT appointment: N/A
+CFF return time: N/A"
+2025-08-02 19:09:25,NTT-20250802-33133,,,PRS,,,,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,LHD-PRS 48C_J_A,Data (G&W):0,0,Minor,N,Open,2025-08-03 04:20:00,-50553,83588,12H - 24H,[DCA] *Alert! (Sabah; Lahad Datu - Kg Paris)* Detected LOS alarm at link Lahad Datu(LHD) - Kg Paris(PRS) since 02/08@1620hrs
+2025-08-02 19:05:44,NTT-20250802-33130,,RobinRPA,TWU,SABAH,SABAH,TAWAU,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TWU_C009_DP0012,Unifi:6,0,Minor,N,Open,2025-08-03 18:05:00,-1053,83809,12H - 24H,[CAMELIA-FIBER][Sabah;TWU;TWU] NOC Detected down at TWU_C009_DP0012 since 2025-08-02 18:02:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 18:46:58,NTT-20250802-33123,,RobinRPA,TWU,SABAH,SABAH,TAWAU,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TWU_C107M_DP0003,Unifi:6,0,Minor,N,Open,2025-08-03 17:55:00,-1653,84935,12H - 24H,[CAMELIA-FIBER][Sabah;TWU;TWU] NOC Detected down at TWU_C107M_DP0003 since 2025-08-02 17:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 18:46:04,NTT-20250802-33121,LR20250802-82629,NNOC010,MGL,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MGL_C015_DP0008,Unifi:7,1,Minor,N,Open,2025-08-03 18:45:00,1347,84989,12H - 24H,"[REACTIVE-FIBER] 
+MGL_C015_DP0008
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113868130945
+CTT appointment: 2025-08-01 15:30:00
+CFF return time: 2025-08-02 18:42:07
+CFF remark:
+DF problem laluan terlalu semak 2.8 16:30"
+2025-08-02 18:02:03,NTT-20250802-33090,,RobinRPA,KBD,SABAH,SABAH,PBP UTARA,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBD_C036M_DP0004,Unifi:8,0,Minor,N,Open,2025-08-03 15:55:00,-8853,87630,24H - 48H,[CAMELIA-FIBER][Sabah;PBPU;KBD] NOC Detected down at KBD_C036M_DP0004 since 2025-08-02 15:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 17:55:31,NTT-20250802-33085,LR20250802-82586,NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,TRN_C011M_DP001A,Unifi:4,1,Minor,N,Open,2025-08-03 17:55:00,-1653,88022,24H - 48H,"[REACTIVE-FIBER] 
+TRN_C011M_DP001A
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113878858295
+CTT appointment: 2025-08-05 09:30:00
+CFF return time: 2025-08-02 17:31:53
+CFF remark:
+bacaan dp rendah"
+2025-08-02 16:50:49,NTT-20250802-33034,,Shahizan Bin Abd Aziz,MAD,,,,n/a,No Impact,BCAST - Analog FM Fail,Terrestrial Broadcast,FMC022 IKIM MAD DE.1,Broadcast:0,0,Minor,N,Open,2025-08-02 19:49:00,-81213,91904,24H - 48H,[BSMA] Detected multiple NE one leg alarm in Sabah since 2025-08-02 16:17 hrs
+2025-08-02 16:49:55,NTT-20250802-33032,,Adham Hafiz Bin Ahmad Mazlan,LHD,SABAH,SABAH,LAHAD DATU,n/a,No Impact,TX - Others,CORE Transmission,"WXK013_1830_LHD.1,WXK020_1830_PRS.1R",Data (G&W):0,0,Minor,N,Open,2025-08-02 19:42:00,-81633,91958,24H - 48H,Detected alarm LOS at (NK) WXK013_1830_LHD.1 - WXK020_PRS.1R since 2/8@1617hrs.
+2025-08-02 16:49:44,NTT-20250802-33030,,,TWU,SABAH,SABAH,TAWAU,"Hypp TV,HSI,PSTN",Total Outage,CABLE_BREAKDOWN,FIBER CABLE,TWU_F13,Unifi:16,0,Minor,N,Open,2025-08-02 19:49:00,-81213,91969,24H - 48H,"[DCA] (SABAH REGION, SABAH) Access-OLT PON port alarm - BLK_G801-1/1/8 - BLK_C004M_DP0001 - DP0004 at BLK since 2025-08-02 13:14:16
+BLK_G801-1/1/8 - BLK_C004M_DP0001 - DP0004
+
+JALAN KALABAKAN, KAMPUNG RANCANGAN KALABAKAN
+Total NE : 1OLT UNIT"
+2025-08-02 16:45:33,NTT-20250802-33027,,RobinRPA,PPR,SABAH,SABAH,PBP SELATAN,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,PPR_C020_DP0016,Unifi:4,0,Minor,N,Open,2025-08-03 15:35:00,-10053,92220,24H - 48H,[CAMELIA-FIBER][Sabah;PBPS;PPR] NOC Detected down at PPR_C020_DP0016 since 2025-08-02 15:32:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 16:21:22,NTT-20250802-33002,,Hafiz Bin Ahmad,KNK,SABAH,SABAH,TAWAU,n/a,No Impact,ME_Trunk Down,METRO-E,EPEHWKNK01,Pre-Unifi:0,0,Minor,N,Open,2025-08-02 19:20:00,-82953,93671,24H - 48H,Multiple link down Sabah 1617hrs [Lahad Datu(LHD) - Kg Paris(PRS)]
+2025-08-02 16:19:40,NTT-20250802-32999,,Aeriza,KDT,SABAH,SABAH,PBP UTARA,"PSTN,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KDT_G801R,Unifi:13,0,Minor,N,Open,2025-08-04 17:30:00,83247,93773,24H - 48H,"[CAMELIA-FIBER][SABAH;KDT] Received complaint regarding FDP down at KDT due to D-side FOC cut since 2025-08-02 16:19:40HRS.
+
+Previously Detected PonPort:
+KDT_G801R-1/1/7 - KDT_C011_DP0025 - DP0028
+Total NE : 1OLT UNIT
+ 
+Received NTT for CAMELIA/D-side issue since 2025-8-2 18:10hrs."
+2025-08-02 16:17:17,NTT-20250802-32998,LR20250802-82489,NNOC010,SIG,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,SIG_C018M_DP008C,Unifi:3,1,Minor,N,Open,2025-08-03 16:16:00,-7593,93916,24H - 48H,"[REACTIVE-FIBER] 
+SIG_C018M_DP008C
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113877264325
+CTT appointment: 2025-08-04 09:30:00
+CFF return time: 2025-08-02 16:10:55
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+low reading tie dp008c
+sig_c018m_dp008c
+04/08/2025 09:30am"
+2025-08-02 15:16:09,NTT-20250802-32955,LR20250802-82428,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C006M_DP0005,Unifi:11,6,Minor,N,Open,2025-08-03 15:15:00,-11253,97584,24H - 48H,"[REACTIVE-FIBER] 
+KIT_C006M_DP0005
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113855119745
+CTT appointment: 2025-08-04 11:30:00
+CFF return time: 2025-08-02 15:12:53
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+low reading fdp
+kit_c006m_dp0005
+07/08/2025 09:30am"
+2025-08-02 15:15:41,NTT-20250802-32954,,,KDT,SABAH,SABAH,PBP UTARA,Unifi Mobile,Total Outage,LTE - 4G Service Down,LTE 4G,BS2569,Unifi Mobile:44,0,Minor,N,Open,2025-08-03 20:50:00,8847,97612,24H - 48H,LTE (SA) ZTE MP KOTA BELUD(BS2569) -  The link between the server and the ME is broken
+2025-08-02 15:12:16,NTT-20250802-32950,LR20250802-82385,NNOC010,MGL,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MGL_C025_DP0063,Unifi:12,2,Minor,N,Open,2025-08-03 15:12:00,-11433,97817,24H - 48H,"[REACTIVE-FIBER] 
+MGL_C025_DP0063
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113836306775
+CTT appointment: 2025-07-31 14:30:00
+CFF return time: 2025-08-02 14:44:18
+CFF remark:
+TIE FDP HIGH LOQSE"
+2025-08-02 15:10:52,NTT-20250802-32948,LR20250802-82386,NNOC010,MGL,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MGL_C025_DP063A,Unifi:3,1,Minor,N,Open,2025-08-03 15:10:00,-11553,97901,24H - 48H,"[REACTIVE-FIBER] 
+MGL_C025_DP063A
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113795424787
+CTT appointment: 2025-08-01 15:30:00
+CFF return time: 2025-08-02 14:44:54
+CFF remark:
+TIE FDP HIGH LOSSE"
+2025-08-02 15:09:32,NTT-20250802-32945,LR20250802-82416,NNOC010,MGL,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MGL_C006_DP0042,Unifi:7,1,Minor,N,Open,2025-08-03 15:09:00,-11613,97981,24H - 48H,"[REACTIVE-FIBER] 
+MGL_C006_DP0042
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113877280181
+CTT appointment: 2025-08-04 09:30:00
+CFF return time: 2025-08-02 15:00:37
+CFF remark:
+READING SEMUA PORT DP HIGH LOOSE, -26.9x
+MOHON DIBAIKI...Tq"
+2025-08-02 14:49:05,NTT-20250802-32923,,,NBN,SABAH,SABAH,PBP SELATAN,n/a,No Impact,NFM - Temperature High,Facilities Related Equipment,Inside Power NBN,Pre-Unifi:0,0,Minor,N,Open,2025-08-02 17:44:00,-88713,99208,24H - 48H,PRI-2508-WM384 CPAMS Alarm (Nabawan:NBW-TMP-OTHER-010) 02/08/2025 13:22:39 Temperature High: TEMP03 @Cabin: RECT
+2025-08-02 14:43:54,NTT-20250802-32919,,RobinRPA,KBD,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBD_C036M_DP0007,Unifi:10,0,Minor,N,Open,2025-08-03 12:45:00,-20253,99519,24H - 48H,[CAMELIA-FIBER][Sabah;PBPU;KBD] NOC Detected down at KBD_C036M_DP0007 since 2025-08-02 12:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 14:42:10,NTT-20250802-32918,LR20250802-82371,NNOC010,MGL,SABAH,SABAH,KOTA KINABALU 2,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MGL_C025_DP067A,Unifi:4,1,Minor,N,Open,2025-08-03 14:41:00,-13293,99623,24H - 48H,"[REACTIVE-FIBER] 
+MGL_C025_DP067A
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113867380455
+CTT appointment: 2025-08-01 15:30:00
+CFF return time: 2025-08-02 14:36:14
+CFF remark:
+tie fdp high losse"
+2025-08-02 14:40:37,NTT-20250802-32915,LR20250802-82373,NNOC010,MGL,SABAH,SABAH,KOTA KINABALU 2,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,MGL_C025_DP0067,Unifi:12,2,Minor,N,Open,2025-08-03 14:40:00,-13353,99716,24H - 48H,"[REACTIVE-FIBER] 
+MGL_C025_DP0067
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113846570715
+CTT appointment: 2025-08-02 09:30:00
+CFF return time: 2025-08-02 14:37:08
+CFF remark:
+plgn tie fdp highb losse"
+2025-08-02 14:30:55,NTT-20250802-32904,,,LHD,SABAH,SABAH,LAHAD DATU,Data,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,LHD_F01,Data (TM One):1,0,Minor,N,Open,2025-08-02 17:30:00,-89553,100298,24H - 48H,"[DCA] FIBER EXPRESS (SABAH)
+Customer : PDRM | MARIN LAHAD DATU
+INC : INC0005764326 | INC0005764331
+Service ID : PS1014425514 | BS1014425520
+BW/SLA : 6 Mbps || SLG 99.5%
+Service : IPME TOTAL DOWN
+Core Info :  LHD F30, core 65/66/67/68
+Zone : SANDAKAN; TWU & LHD
+INC Creation Date/Time : 02/08/2025 09:24
+TMF: T-0011267998 / A-0009543326
+Remark : Call NFF En Kairul 01159287708 ??? ETTA 1pm"
+2025-08-02 14:23:01,NTT-20250802-32891,,RobinRPA,KKI,SABAH,SABAH,SANDAKAN,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KKI_C019M_DP0010,Unifi:6,0,Minor,N,Open,2025-08-03 12:45:00,-20253,100772,24H - 48H,[CAMELIA-FIBER][Sabah;SDK;KKI] NOC Detected down at KKI_C019M_DP0010 since 2025-08-02 12:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 14:19:47,NTT-20250802-32887,LR20250802-82300,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,KPY_C011M_DP0008,Unifi:3,1,Minor,N,Open,2025-08-03 14:19:00,-14613,100966,24H - 48H,"[REACTIVE-FIBER] 
+KPY_C011M_DP0008
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113865248165
+CTT appointment: 2025-08-06 09:30:00
+CFF return time: 2025-08-02 13:39:33
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+camelia d-side fdp tiada reading
+kpy_c011m_dp0008
+06/08/2025 09:30am"
+2025-08-02 14:00:28,NTT-20250802-32871,,RobinRPA,SPA,SABAH,SABAH,TAWAU,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,SPA_C020M_DP0001,Unifi:2,0,Minor,N,Open,2025-08-03 12:55:00,-19653,102125,24H - 48H,[CAMELIA-FIBER][Sabah;TWU;SPA] NOC Detected down at SPA_C020M_DP0001 since 2025-08-02 12:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 13:29:54,NTT-20250802-32841,LR20250802-82271,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,PPR_C006_DP029B,Unifi:4,1,Minor,N,Open,2025-08-03 13:29:00,-17613,103959,24H - 48H,"[REACTIVE-FIBER] 
+PPR_C006_DP029B
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113879784585
+CTT appointment: 2025-08-07 11:30:00
+CFF return time: 2025-08-02 13:14:12
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+tie dp029B low reading
+ppr_c006_dp029B
+07/08/2025 11:30am"
+2025-08-02 13:14:16,NTT-20250802-32826,,Aeriza,BLK,SABAH,SABAH,TAWAU,"Hypp TV,HSI,PSTN",Total Outage,ANM-OLT PON port alarm,Access NE,BLK_G801,Unifi:16,0,Critical,N,Open,2025-08-04 01:14:00,24687,104897,24H - 48H,Access-OLT PON port alarm - BLK_G801-1/1/8 - BLK_C004M_DP0001 - DP0004
+2025-08-02 13:08:49,NTT-20250802-32822,,RobinRPA,SIG,SABAH,SABAH,PBP SELATAN,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,SIG_C018M_DP0008,Unifi:5,0,Minor,N,Open,2025-08-03 11:35:00,-24453,105224,24H - 48H,[CAMELIA-FIBER][Sabah;PBPS;SIG] NOC Detected down at SIG_C018M_DP0008 since 2025-08-02 11:32:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 12:44:55,NTT-20250802-32804,LR20250802-82233,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C044M_DP0004,Unifi:3,2,Minor,N,Open,2025-08-03 12:44:00,-20313,106658,24H - 48H,"[REACTIVE-FIBER] 
+KIT_C044M_DP0004
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-112908201623
+CTT appointment: 2025-08-04 14:30:00
+CFF return time: 2025-08-02 12:36:04
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+fdp down tiada reading
+kit_c044m_dp0004
+05/08/2025 09:30am"
+2025-08-02 12:37:04,NTT-20250802-32800,"LR20250803-82836,LR20250802-82099",NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TNM_C006_DP027A,Unifi:2,2,Minor,N,Open,2025-08-03 12:36:00,-20793,107129,24H - 48H,"[REACTIVE-FIBER] 
+TNM_C006_DP027A
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113889042092
+CTT appointment: 2025-08-03 11:30:00
+CFF return time: 2025-08-02 11:28:41
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+camelia d-side fdp down
+tnm_c006_dp027a
+03/08/2025 11:30am"
+2025-08-02 12:22:48,NTT-20250802-32783,,RobinRPA,KGU,SABAH,SABAH,PBP SELATAN,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KGU_C046M_DP0016,Unifi:8,0,Minor,N,Open,2025-08-03 10:55:00,-26853,107985,24H - 48H,[CAMELIA-FIBER][Sabah;PBPS;KGU] NOC Detected down at KGU_C046M_DP0016 since 2025-08-02 10:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 12:21:01,NTT-20250802-32782,,,KDT,SABAH,SABAH,PBP UTARA,Unifi Mobile,Total Outage,LTE - 4G Service Down,LTE 4G,BS3768,Unifi Mobile:41,0,Minor,N,Open,2025-08-03 20:50:00,8847,108092,24H - 48H,LTE (SA) ZTE JLN KUDAT-KOTA MARUDU(BS3768) - The link between the server and the ME is broken
+2025-08-02 12:15:35,NTT-20250802-32772,LR20250802-82174,NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C011_DP0027,Unifi:4,4,Minor,N,Open,2025-08-03 12:15:00,-22053,108418,24H - 48H,"[REACTIVE-FIBER] 
+KGU_C011_DP0027
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113760862331
+CTT appointment: 2025-08-01 09:30:00
+CFF return time: 2025-08-02 12:10:18
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+fdp down tiada reading
+kgu_c011_dp0027
+06/08/2025 14:30pm"
+2025-08-02 11:55:32,NTT-20250802-32744,,RobinRPA,KDT,SABAH,SABAH,PBP UTARA,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KDT_C011_DP0013,Unifi:3,0,Minor,N,Open,2025-08-03 10:35:00,-28053,109621,24H - 48H,[CAMELIA-FIBER][Sabah;PBPU;KDT] NOC Detected down at KDT_C011_DP0013 since 2025-08-02 10:32:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 11:40:08,NTT-20250802-32726,,,KNK,SABAH,SABAH,TAWAU,Data,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,KNK_F02,Data (TM One):1,0,Minor,N,Open,2025-08-02 23:39:00,-67413,110545,24H - 48H,"[DCA] Fiber Express 2.0 (SABAH)
+
+TMF : T-0011263891 | A-0009540060
+*Customer : SD GUTHRIE BERHAD*
+T No: IINC0005762781 & INC0005762782
+Service ID: LV1082484609 / PS1082484610 & BS1082484616
+BW/ SLA: 16 Mbps / SLG 99.5%
+_Core Info: KNK - URSDPLT-JBA02 FTB(AC) 001 Core 1,2,3,4_
+_EPE Port : EPEHWKNK01 (port 8/0/12 & 6/0/12)_
+Zone: KUNAK
+Time Cct Created: 01/08/2025 12:00
+Ctt Aging: 0 Day(s) 4 Hour(s) 29 Minute(s)
+Issue: Total down fiber reading :: Rx Power: -40.00dBm
+Address JELITA BUMI ESTATE, P.O BOX 135, 91207 KUNAK, SABAH
+Update : NFF Muhd Fadli Bin Abd Latif 60105891647. ETTA : 2/8@9AM"
+2025-08-02 11:22:36,NTT-20250802-32706,LR20250802-82081,NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,TNM_C006_DP0006,Unifi:3,1,Minor,N,Open,2025-08-03 11:22:00,-25233,111597,24H - 48H,"[REACTIVE-FIBER] 
+TNM_C006_DP0006
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113873097081
+CTT appointment: 2025-08-03 11:30:00
+CFF return time: 2025-08-02 11:16:34
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+camelia d-side fdp no reading
+tnm_c006_dp0006
+03/06/2025 11:30am"
+2025-08-02 11:21:47,NTT-20250802-32705,LR20250802-82088,Aeriza,KGU,SABAH,SABAH,PBP SELATAN,"PSTN,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,"KGU_C046M_DP0001,KGU_C046M_DP0003,KGU_C046M_DP0002",Unifi:42,10,Critical,N,Open,2025-08-03 10:27:00,-28533,111646,24H - 48H,"[CAMELIA-FIBER][Sabah;PBPS;KGU] Received complaint regarding FDP down at KGU due to D-side FOC cut since 2025-08-02 11:21:47hrs.
+
+Previously Detected Pon Port Alarm at  KGU_G001-0/15/4 - KGU_C046M_DP0001 - KGU_C046M_DP0004
+
+Received NTT for CAMELIA/D-Side Issue at 2025-08-03 03:26hrs"
+2025-08-02 11:16:19,NTT-20250802-32701,LR20250802-82057,NNOC010,NYN,SABAH,SABAH,SANDAKAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,NYN_C098M_DP012D,Unifi:1,1,Minor,N,Open,2025-08-03 11:15:00,-25653,111974,24H - 48H,"[REACTIVE-FIBER] 
+NYN_C098M_DP012D
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-113876875488
+CTT appointment: 2025-08-01 16:30:00
+CFF return time: 2025-08-02 10:55:54
+CFF remark:
+pass enz UTK tindakan...tie fdp 12E 2 port loss reading...appt 1130am 02/08/2025"
+2025-08-02 11:14:40,NTT-20250802-32699,LR20250802-82053,NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TNM_C006_DP0004,Unifi:5,2,Minor,N,Open,2025-08-03 11:14:00,-25713,112073,24H - 48H,"[REACTIVE-FIBER] 
+TNM_C006_DP0004
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-113878203169
+CTT appointment: 2025-08-07 11:30:00
+CFF return time: 2025-08-02 10:54:12
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+camelia d-side fdp down
+tnm_c006_dp0004
+07/08/2025 14:30pm"
+2025-08-02 11:08:47,NTT-20250802-32694,,RobinRPA,KBD,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KBD_C036M_DP0011,Unifi:3,0,Minor,N,Open,2025-08-03 10:25:00,-28653,112426,24H - 48H,[CAMELIA-FIBER][Sabah;PBPU;KBD] NOC Detected down at KBD_C036M_DP0011 since 2025-08-02 10:22:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-02 10:39:49,NTT-20250802-32676,,,LKN,SABAH,SABAH,PBP UTARA,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,Inside Power LKN,Pre-Unifi:0,0,Minor,N,Open,2025-08-02 13:38:00,-103473,114164,24H - 48H,PRI-2508-WM271 CPAMS Alarm (Bukit Langkon (HS):LKN-RTU-02) 02/08/2025 09:14:17 RTU Offline
+2025-08-02 09:50:58,NTT-20250802-32648,LR20250802-82006,NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C056M_DP006A,Unifi:2,1,Minor,N,Open,2025-08-03 09:50:00,-30753,117095,24H - 48H,"[REACTIVE-FIBER] 
+KGU_C056M_DP006A
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113866488455
+CTT appointment: 2025-08-06 09:30:00
+CFF return time: 2025-08-02 09:43:44
+CFF remark:
+ivt
+ivt tt rr
+f
+foc terbakar
+kgu_c056m_dp0006
+Nick,01110259785
+6/8/2025;9:30"
+2025-08-02 08:55:48,NTT-20250802-32620,LR20250802-81985,NNOC010,KBD,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KBD_C025M_DP0015,Unifi:10,1,Minor,N,Open,2025-08-03 08:55:00,-34053,120405,24H - 48H,"[REACTIVE-FIBER] 
+KBD_C025M_DP0015
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113857027025
+CTT appointment: 2025-08-07 11:30:00
+CFF return time: 2025-08-02 08:52:13
+CFF remark:
+1 NTT
+2 BD DP
+3 F
+4 DP FAULTY 
+5 KBD C025M DP 0015B TIE DP LOW READING 
+6 AMIDI 
+7 AP 7 8 25 JAM 1130"
+2025-08-02 08:16:45,NTT-20250802-32611,LR20250801-81889,NNOC010,KMU,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,Service Down,Passive Element Nova,KMU_C001_DP0024,Unifi:9,1,Minor,N,Open,2025-08-03 08:16:00,-36393,122748,24H - 48H,"[REACTIVE-FIBER] 
+KMU_C001_DP0024
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113834987715
+CTT appointment: 2025-08-01 11:30:00
+CFF return time: 2025-08-01 21:36:21
+CFF remark:
+fdp low reding"
+2025-08-02 00:53:16,NTT-20250802-32523,,,KBU,SABAH,SABAH,KOTA KINABALU 1,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,Inside Power KBU,Unifi:0,0,Minor,N,Open,2025-08-03 06:55:00,-41253,149357,24H - 48H,PRI-2507-WL693 CPAMS Alarm (Sungai Manila Maritime:SMNL-RTU-01) 31/07/2025 21:34:01 RTU Offline
+2025-08-02 00:44:00,NTT-20250802-32520,,RobinRPA,SIN,SABAH,SABAH,PBP SELATAN,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,SIN_C009M_DP0001,Unifi:3,0,Minor,N,Open,2025-08-03 23:05:00,16947,149913,24H - 48H,[CAMELIA-FIBER][Sabah;;SIN] NOC Detected down at SIN_C009M_DP0001 since 2025-08-01 23:02:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 20:22:56,NTT-20250801-32467,LR20250801-81873,NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C031_DP001A,Unifi:2,1,Minor,N,Open,2025-08-02 20:22:00,-79233,165577,24H - 48H,"[REACTIVE-FIBER] 
+TRN_C031_DP001A
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113884266115
+CTT appointment: 2025-08-04 14:30:00
+CFF return time: 2025-08-01 20:05:23
+CFF remark:
+bacaan tie dp rendah  . tie dp down"
+2025-08-01 19:55:15,NTT-20250801-32461,,Mohd Kamal Ishak,MNK,SABAH,SABAH,PBP SELATAN,"PSTN,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,MNK_G801R,Unifi:10,0,Critical,N,Open,2025-08-03 19:24:00,3687,167238,24H - 48H,"[CAMELIA-FIBER][Sabah;MNK;MNK] Received complaint regarding down at MNK due to D-side FOC cut since 2025-08-01 19:55 HRS.
+
+MNK_G801R-1/2/1 - MNK_C005M_DP0009-12
+
+Received NTT for CAMELIA/D-side issue since 2025-08-02 17:38 HRS."
+2025-08-01 18:47:47,NTT-20250801-32426,LR20250801-81848,Anas,LBN,SABAH,SABAH,LABUAN,"Hypp TV,Voice,HSI",Total Outage,ANM-OLT PON port alarm,Access NE,LBN_G003,Unifi:22,2,Critical,N,Open,2025-08-03 17:45:00,-2253,171286,24H - 48H,"ACCESS OLT PON port alarm - D-SIDE
+LBN_G003-1/3/3 - LBN_C012_DP0047-50"
+2025-08-01 18:46:11,NTT-20250801-32423,,,PPR,SABAH,SABAH,PBP SELATAN,Primary & Backup,Total Outage,Fiber Express,FIBER CABLE,PPR_F06,Data (TM One):1,0,Minor,N,Open,2025-08-01 21:46:00,-160593,171382,24H - 48H,"[DCA] EXP
+
+FIBER EXP
+
+Customer Name:KIMANIS POWER SDN. BHD.
+TT No:INC0005761379
+Service ID:LD1014719580  PS1014719581
+BW/ SLA:SLA 99.7%
+Core Info:PPR F10 C41,42
+Zone:PPR
+Time Cct Created: 31/07/2025 19:30
+Ctt Aging:0 Day(s) 13 Hour(s) 35 Minute(s)
+Issue:UPE down no dying gaps alarm detected /Rx Power: -38.38dBm, Warning range: [-23.00, -3.00]dBm
+Address:TKT 1,OFFICE BUILDING, KIMANIS POWER PLANT,KPG BATU PUNGIT KEMANIS,KM 48,89607 PAPAR,SABAH
+Update (NFF details & ETTA)NFF Hanafi 60 19-830 9177  inform RR still stuck with another case. No ETTA yet
+BUDI WTT#T-0011258613 A-0009534899"
+2025-08-01 18:27:42,NTT-20250801-32414,,,KMU,SABAH,SABAH,PBP UTARA,Primary & Backup,Total Outage,Fiber Express,FIBER CABLE,KMU-PIS_48C_J,Data (TM One):1,0,Minor,N,Open,2025-08-01 21:26:00,-161793,172491,24H - 48H,"[DCA] EXP
+
+FIBER EXPRESS   
+
+Customer Name:KLINIK KESIHATAN DANDUN PITAS
+#TMF:T-0011262000 |  A-0009538087
+TT No:INC0005762746
+Service ID:LV1006671718
+BW/ SLA:99.7%
+Core Info:PIS_F12 (3,4)
+EPEHWPIS01>display interface G7/1/11
+Zone:PITAS 
+Time Cct Created:01/08/2025 11:41
+Ctt Aging:
+Issue: Upe down &  no dying gasp alarm
+Address TKT -,LOT 25KM DARI PEKAN PITAS,KG. DANDUN,89050 KUDAT,SABAH
+ENGILBERT MARCELLINUS/ 088-687849
+Update (NFF details & ETTA)Ma Siu Lin @ Awong /60198321027
+WAT/UA deployment (Y/N)"
+2025-08-01 17:58:25,NTT-20250801-32388,LR20250801-81806,NNOC010,KDT,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KDT_C020M_DP009B,Unifi:2,1,Minor,N,Open,2025-08-02 17:57:00,-87933,174248,> 48H,"[REACTIVE-FIBER] 
+KDT_C020M_DP009B
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-112171015865
+CTT appointment: 2025-08-01 14:30:00
+CFF return time: 2025-08-01 17:53:03
+CFF remark:
+NTT 
+BD FOC 
+F
+DP Faulty 
+Kdt_C20M_9B
+Izaak 
+Low reading pada port tie FDP 9B.Tidak semua port low reading.Mohon bantuan pemulihan dengan segera.Appointment date 1.8.2025 14.30"
+2025-08-01 17:45:49,NTT-20250801-32382,LR20250801-81786,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KPY_C002M_DP002A,Unifi:3,2,Minor,N,Open,2025-08-02 17:45:00,-88653,175004,> 48H,"[REACTIVE-FIBER] 
+KPY_C002M_DP002A
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113821695211
+CTT appointment: 2025-08-04 14:30:00
+CFF return time: 2025-08-01 17:34:49
+CFF remark:
+IVT
+IVT TT RR
+F
+D/S FULL
+KPY_C002M_DP002A
+ALIHUSSEIN
+TIE FDP DOWN"
+2025-08-01 17:32:43,NTT-20250801-32377,,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C007M_DP0011,Unifi:2,0,Minor,N,Open,2025-08-02 16:25:00,-93453,175790,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C007M_DP0011 since 2025-08-01 16:22:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 17:32:11,NTT-20250801-32375,,Azri Izwan,PPG,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,TX - Others,CORE Transmission,"DWJ111 F3000 PPG.7,DWJ111 F3000 INM.2",Data (G&W):0,0,Major,N,Open,2025-08-02 20:30:00,-78753,175822,> 48H,Detected alarm OTN_LOF at DWJ111(FH) Penampang(PPG) - Inanam(INM) since 1/8@1730hrs.
+2025-08-01 17:28:52,NTT-20250801-32371,LR20250801-81753,NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C031_DP0001,Unifi:5,3,Minor,N,Open,2025-08-02 17:28:00,-89673,176021,> 48H,"[REACTIVE-FIBER] 
+TRN_C031_DP0001
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113815206325
+CTT appointment: 2025-08-01 09:30:00
+CFF return time: 2025-08-01 17:14:01
+CFF remark:
+bacaan dprendah"
+2025-08-01 16:53:10,NTT-20250801-32339,LR20250801-81685,NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C031_DP0002,Unifi:4,1,Minor,N,Open,2025-08-02 16:52:00,-91833,178163,> 48H,"[REACTIVE-FIBER] 
+TRN_C031_DP0002
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113855844455
+CTT appointment: 2025-08-04 14:30:00
+CFF return time: 2025-08-01 16:29:59
+CFF remark:
+bacaan dp rendahh"
+2025-08-01 16:07:09,NTT-20250801-32280,,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C008M_DP0004,Unifi:4,0,Minor,N,Open,2025-08-02 14:55:00,-98853,180924,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C008M_DP0004 since 2025-08-01 14:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 15:57:52,NTT-20250801-32264,"LR20250801-81584,LR20250802-82085",NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TNM_C006_DP0007,Unifi:9,2,Minor,N,Open,2025-08-02 15:57:00,-95133,181481,> 48H,"[REACTIVE-FIBER] 
+TNM_C006_DP0007
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113854172305
+CTT appointment: 2025-08-01 09:30:00
+CFF return time: 2025-08-01 15:42:01
+CFF remark:
+hayati
+fdp down"
+2025-08-01 15:41:44,NTT-20250801-32240,LR20250801-81589,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C008M_DP0003,Unifi:7,3,Minor,N,Open,2025-08-02 15:25:00,-97053,182449,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C008M_DP0003 since 2025-08-01 14:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 15:38:56,NTT-20250801-32234,,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C008M_DP0011,Unifi:4,0,Minor,N,Open,2025-08-02 14:45:00,-99453,182617,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C008M_DP0011 since 2025-08-01 14:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 14:08:03,NTT-20250801-32147,LR20250801-81440,NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TNM_C022M_DP0003,Unifi:9,1,Minor,N,Open,2025-08-02 14:07:00,-101733,188070,> 48H,"[REACTIVE-FIBER] 
+TNM_C022M_DP0003
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113680571976
+CTT appointment: 2025-08-01 11:30:00
+CFF return time: 2025-08-01 14:04:26
+CFF remark:
+IVT
+IVT TT RR
+F
+D/S FULL
+TNM_C022M_DP0003
+FDP low reading
+1/8/2025 11:30am"
+2025-08-01 12:28:47,NTT-20250801-32097,LR20250801-81360,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KPY_C006M_DP0008,Unifi:2,2,Minor,N,Open,2025-08-02 12:28:00,-107673,194026,> 48H,"[REACTIVE-FIBER] 
+KPY_C006M_DP0008
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113841894475
+CTT appointment: 2025-08-05 14:30:00
+CFF return time: 2025-08-01 12:25:42
+CFF remark:
+IVT
+IVT TT RR
+F
+D/S FULL
+KPY_C006M_DP008A
+ALIHUSSEIN
+FDP DOWN"
+2025-08-01 12:27:38,NTT-20250801-32095,LR20250801-81292,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C020M_DP0008,Unifi:5,3,Minor,N,Open,2025-08-02 12:27:00,-107733,194095,> 48H,"[REACTIVE-FIBER] 
+KIT_C020M_DP0008
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-112601635361
+CTT appointment: 2025-08-01 09:30:00
+CFF return time: 2025-08-01 12:00:08
+CFF remark:
+LR ESC: NTT
+LR ESC TYPE: NTT TT OPE
+NE TYPE: F
+NE INFO: KIT_C020M_DP0008
+REMARK: FDP MASIH HIGH LOS
+APPOINTMENT: 01/08/2025 11:30"
+2025-08-01 12:16:59,NTT-20250801-32077,LR20250801-81278,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C026_DP0011,Unifi:2,1,Minor,N,Open,2025-08-02 12:16:00,-108393,194734,> 48H,"[REACTIVE-FIBER] 
+PPR_C026_DP0011
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113843863015
+CTT appointment: 2025-08-01 11:30:00
+CFF return time: 2025-08-01 11:56:17
+CFF remark:
+Masalah Fiber down di FDP"
+2025-08-01 12:05:48,NTT-20250801-32054,,RobinRPA,KNK,SABAH,SABAH,TAWAU,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KNK_C001_DP0052,Unifi:5,0,Minor,N,Open,2025-08-02 11:05:00,-112653,195405,> 48H,[CAMELIA-FIBER][Sabah;TWU;KNK] NOC Detected down at KNK_C001_DP0052 since 2025-08-01 11:02:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 11:52:38,NTT-20250801-32034,LR20250801-81245,NNOC010,TRN,SABAH,SABAH,PBP UTARA,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,TRN_C008M_DP0005,Unifi:5,1,Minor,N,Open,2025-08-02 11:52:00,-109833,196195,> 48H,"[REACTIVE-FIBER] 
+TRN_C008M_DP0005
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113851258045
+CTT appointment: 2025-08-01 14:30:00
+CFF return time: 2025-08-01 11:39:24
+CFF remark:
+DP sebenar cusT TRN_C008M_DP005B TIE DP DOWN
+1-113851258045"
+2025-08-01 11:06:38,NTT-20250801-31974,,RobinRPA,BAL,SABAH,SABAH,TAWAU,"HSI,Voice,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,BAL_C018M_DP0002,Unifi:4,0,Minor,N,Open,2025-08-02 10:05:00,-116253,198955,> 48H,[CAMELIA-FIBER][Sabah;TWU;BAL] NOC Detected down at BAL_C018M_DP0002 since 2025-08-01 10:02:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 10:46:30,NTT-20250801-31956,LR20250801-81133,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KPY_C007M_DP0009,Unifi:1,1,Minor,N,Open,2025-08-02 10:46:00,-113793,200163,> 48H,"[REACTIVE-FIBER] 
+KPY_C007M_DP0009
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113801537715
+CTT appointment: 2025-08-01 09:30:00
+CFF return time: 2025-08-01 10:30:29
+CFF remark:
+IVT
+IVT TT RR
+F
+D/S FULL
+KPY_C007M_DP0009
+ALIHUSSEIN
+FDP DOWN"
+2025-08-01 09:44:11,NTT-20250801-31907,,,PPG,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,IPCORE - Others,IP Core,iMSE21.PPG,Unifi:0,0,Minor,N,Open,2025-08-01 12:43:00,-193173,203902,> 48H,IPTAC |  Tier 2 |  LD1006613140 - DOME  | INC0005748322
+2025-08-01 09:39:23,NTT-20250801-31904,LR20250801-81066,RobinRPA,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,PPR_C021_DP0060,Unifi:9,4,Minor,N,Open,2025-08-02 08:55:00,-120453,204190,> 48H,[CAMELIA-FIBER][Sabah;PBPS;PPR] NOC Detected down at PPR_C021_DP0060 since 2025-08-01 08:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-08-01 08:44:19,NTT-20250801-31881,LR20250801-81042,RobinRPA,KNK,SABAH,SABAH,TAWAU,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KNK_C017M_DP0009,Unifi:3,1,Minor,N,Open,2025-08-02 07:45:00,-124653,207494,> 48H,"[CAMELIA-FIBER][Sabah;TWU;KNK] NOC Detected down at KNK_C017M_DP0009 since 2025-08-01 07:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+
+Alarm reappear since 2025-08-02 07:32:02 hrs.
+Alarm reappear since 2025-08-03 07:42:01 hrs."
+2025-08-01 08:31:26,NTT-20250801-31874,,ROBIN-RPA,SPA,SABAH,SABAH,TAWAU,"Voice,ADSL",Total Outage,ANM-NE Offline,Access NE,SPA_VB5002,"Pre-Unifi:1, Phone Line:2",0,Critical,N,Open,2025-08-04 09:59:00,56187,208267,> 48H,[RPA] ACCESS-NE SPA_VB5002 offline
+2025-08-01 08:23:28,NTT-20250801-31871,LR20250731-80880,NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"Hypp TV,Voice,HSI",Total Outage,Service Down,Passive Element Nova,TNM_C006_DP0005,Unifi:7,3,Minor,N,Open,2025-08-02 08:23:00,-122373,208745,> 48H,"[REACTIVE-FIBER] 
+TNM_C006_DP0005
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113848635475
+CTT appointment: 2025-08-05 14:30:00
+CFF return time: 2025-07-31 21:06:38
+CFF remark:
+IVT
+IVT TT RR 
+F
+DSFULL
+TNM C006 DP0005
+FAIRUZ 0138783585
+FDP DOWN...APPT 0408"
+2025-08-01 08:21:16,NTT-20250801-31870,"LR20250731-80882,LR20250802-82090",NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TNM_C006_DP0027,Unifi:11,2,Minor,N,Open,2025-08-02 08:20:00,-122553,208877,> 48H,"[REACTIVE-FIBER] 
+TNM_C006_DP0027
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113847992645
+CTT appointment: 2025-08-05 11:30:00
+CFF return time: 2025-07-31 21:13:37
+CFF remark:
+IVT
+IVT TT RR
+F
+DSFULL
+TNM C006 DP0027
+FAIRUZ 0138783585
+FDP DOWN...APPT 0508 JAM 1130"
+2025-08-01 07:54:35,NTT-20250801-31859,,,SPA,SABAH,SABAH,TAWAU,"HSI,Voice,Hypp TV",Total Outage,CABLE_BREAKDOWN,FIBER CABLE,SPA_F08,Unifi:118,0,Minor,N,Open,2025-08-01 15:50:00,-181953,210478,> 48H,"[DCA] ATAC Fiber (Sabah : Semporna) ACCESS-OLT PON port alarm - FOC at SPA since 2025-08-01 07:46hrs
+SPA_G801-1/2/15SPA_C007M_DP0005-08
+SPA_G801-1/2/16SPA_C006M_DP0001-04
+SPA_G801-1/3/1SPA_C005M_DP0001-04
+SPA_G801-1/3/2SPA_C005M_DP0005-08
+SPA_G801-1/3/3SPA_C005M_DP0009-12
+SPA_G801-1/3/4SPA_C007M_DP0009-12
+Add :  LORONG AVENUE 3, TAMAN SUTERA 91308 SEMPORNA"
+2025-08-01 07:46:22,NTT-20250801-31853,,Hamemi Binti Mohd Farip,SPA,SABAH,SABAH,TAWAU,"Hypp TV,HSI,Voice",Total Outage,ANM-OLT PON port alarm,Access NE,SPA_G801,Unifi:118,0,Critical,N,Open,2025-08-03 21:00:00,9447,210971,> 48H,"ACCESS-OLT PON port alarm - FOC
+SPA_G801-1/2/15 - SPA_C007M_DP0005-08
+SPA_G801-1/2/16 - SPA_C006M_DP0001-04
+SPA_G801-1/3/1 - SPA_C005M_DP0001-04
+SPA_G801-1/3/2 - SPA_C005M_DP0005-08
+SPA_G801-1/3/3 - SPA_C005M_DP0009-12
+SPA_G801-1/3/4 - SPA_C007M_DP0009-12
+Add :  LORONG AVENUE 3, TAMAN SUTERA 91308 SEMPORNA"
+2025-08-01 00:27:09,NTT-20250801-31724,,,BAL,SABAH,SABAH,TAWAU,Primary & Backup,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,BAL_F06_LFC,Data (TM One):1,0,Minor,N,Open,2025-08-01 03:27:00,-226533,237324,> 48H,"[DCA]EXP 2.0 (SABAH)
+
+Customer name:  KUALA LUMPUR KEPONG BERHAD (SABAH)
+INC: INC0005761205 & INC0005761206
+Service ID:  LV1031556202 , PS1031556203 , BS1031556209
+BW/SLA 2 Mbps || SLG 99.5%
+Service: IPVPN
+Core Info: Main : BAL_TAIKO [14,15] Backup: BAL_TAIKO [39,40]
+INC Creation Date/Time: 31/07/2025 17:51
+Issue: LINE DOWN
+TMF : T-0011256321 | A-0009533396
+Address: TKT -,LOT MILE 42,PEJABAT BARU KL KEPONG,JLN TAWAU-SEMPORNA,TAWAU,91000 TAWAU,SABAH"
+2025-07-31 21:01:24,NTT-20250731-31668,LR20250731-80876,NNOC010,TNM,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TNM_C006_DP0026,Unifi:4,1,Minor,N,Open,2025-08-01 21:01:00,-163293,249669,> 48H,"[REACTIVE-FIBER] 
+TNM_C006_DP0026
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: N/A
+CTT appointment: N/A
+CFF return time: 2025-07-31 20:57:08
+CFF remark:
+IVT
+IVT TT RR
+F
+DSFULL
+TNM C006 DP0026
+FAIRUZ 0138783585
+FDP DOWN ...APT 0408 JAM 0930"
+2025-07-31 20:44:29,NTT-20250731-31658,"LR20250731-80855,LR20250801-81844",NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C011M_DP0005,Unifi:6,2,Minor,N,Open,2025-08-01 20:44:00,-164313,250684,> 48H,"[REACTIVE-FIBER] 
+TRN_C011M_DP0005
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113809549875
+CTT appointment: 2025-08-04 09:30:00
+CFF return time: 2025-07-31 19:58:41
+CFF remark:
+Bacaan dp rendah"
+2025-07-31 19:55:33,NTT-20250731-31638,,,TWU,SABAH,SABAH,TAWAU,Primary No Backup,Fault Rectification,CABLE_BREAKDOWN,FIBER CABLE,TWU_F01,Data (TM One):1,0,Minor,N,Open,2025-07-31 22:27:00,-244533,253620,> 48H,"[DCA] EXP (SABAH)
+
+Customer Name: GITN - PEJABAT PENERANGAN BAHAGIAN TAWAU (TAWAU) (KONSO)
+PIC Info: Pn Kasmiah/ 0138894899 /089772500
+TT Number: INC0005760287
+Service ID: LV1092611403
+Bw/SLA: 25 Mbps??SLG 99.7%
+Core Info: URKDNIP-V4801 FTB(AC) 001 C1,C2
+                dis int gi 13/1/7
+Service: Primary 1GOV Service (Metro Ethernet)
+Zone: TAWAU
+Time CTT Created: 31/07/2025 11:51
+CTT Aging: 0 Day(s) 3 Hour(s) 33 Minute(s)
+Issue: Line Down
+          NID monitored down. No dying gasp alarm is detected.??Adv CD to check further (FE 2.0).
+Address: TINGKAT BAWAH,LOT BILIK SDF,WISMA PERSEKUTUAN TAWAU,JLN DUNLOP,BANDAR SABINDO,91000 TAWAU,SABAH
+Update: R342883 Jeffery B. Majupil @ Mohd Faizal Abdulla 011-10357998, ETTA 8pm due to attending another fault
+TMF Number: T-0011253983, A-0009531312"
+2025-07-31 17:09:49,NTT-20250731-31510,,RobinRPA,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,PPR_C044M_DP0010,Unifi:4,0,Minor,N,Open,2025-08-01 16:05:00,-181053,263564,> 48H,[CAMELIA-FIBER][Sabah;PBPS;PPR] NOC Detected down at PPR_C044M_DP0010 since 2025-07-31 16:02:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-31 16:17:26,NTT-20250731-31446,LR20250731-80615,NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,KGU_C065M_DP0009,Unifi:5,1,Minor,N,Open,2025-08-01 16:17:00,-180333,266707,> 48H,"[REACTIVE-FIBER] 
+KGU_C065M_DP0009
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113722366430
+CTT appointment: 2025-07-31 14:30:00
+CFF return time: 2025-07-31 16:06:50
+CFF remark:
+1.LR CAT:IVT
+2.TYPE:BD NE
+3.NT:F
+4.FAULT:NE BD
+5.NE.INFO:KGU_C065M_DP0009
+6.0195829182/EDWARD ANSIBIL
+7.REMARK:cabel foc prblm..semua signal reading port low reading di main fdp 0009
+Appt Date:31/07/25,14:30PM
+ETTR:01/08/25,14:30PM"
+2025-07-31 16:16:01,NTT-20250731-31444,,Anas,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_G802,Unifi:25,0,Critical,N,Open,2025-08-01 23:09:00,-155613,266792,> 48H,"C[CAMELIA-FIBER][SABAH;PBPU;TRN] Received complaint regarding down at TRN due to D-side FOC cut since  2025-07-31 16:16:01
+Previously Detected PonPort:
+TRN_G802-1/4/15 - TRN_C034_DP0025-28
+ETTR :    2025-08-01 04:13
+Service impact : Unifi:25
+Total NE : 1OLT UNIT
+Received NTT for CAMELIA/D-side issue since   2025-07-31 18:00:18"
+2025-07-31 16:13:28,NTT-20250731-31438,LR20250731-80590,NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C012_DP0048,Unifi:6,1,Minor,N,Open,2025-08-01 16:13:00,-180573,266945,> 48H,"[REACTIVE-FIBER] 
+KGU_C012_DP0048
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113391319615
+CTT appointment: 2025-07-30 14:30:00
+CFF return time: 2025-07-31 15:53:25
+CFF remark:
+ivt
+ivt tt rr
+f
+fdp low reading
+nick,01110259785
+31/7/2025;11:30"
+2025-07-31 14:31:22,NTT-20250731-31294,,,KBD,SABAH,SABAH,PBP UTARA,"Backup Only,Data",No Impact,Fiber Express,FIBER CABLE,KBD_F06,Data (TM One):1,0,Minor,N,Open,2025-07-31 17:31:00,-262293,273071,> 48H,"[DCA]IVT
+
+Customer Name: ATMNWC KEM KOTA BELUD 
+PIC Info: Kpl Mizan/ 0197730233
+TT Number:  INC0005754120
+Service ID:  BS1040607078 / LV1040607071
+BW /SLA: 4Mbps / 99.9%
+Core Info: KBD-KMU 48C_J_B (41,42)
+Metro-E port : EPEHWKMU02 (5/0/18)
+Remark: NID down, no power issue
+Service: IPME
+Zone: KOTA BELUD
+TMF ticket Id : T-0011249131/ activity id: A-0009526398
+Address: KEM KOTA BELUD (REJ 507 (AW),,JLN KEM PARADISE,KEM KOTA BELUD (REJ 507 (AW),,89150 KOTA BELUD,SABAH
+Update: under action by NFF Dzulkefli B. Jun 60104501072 / 60135422817 : tunggu cable baru ND siap pasang."
+2025-07-31 14:00:13,NTT-20250731-31246,LR20250731-80341,,TWU,SABAH,SABAH,TAWAU,PSTN,Degradation,,Passive Element ICP,TWU_VF5075,Pre-Unifi:1,1,Minor,N,Open,2025-08-01 13:59:00,-188613,274940,> 48H,"[REACTIVE-COPPER] 
+mohon tindakan kabinet tiada tone
+
+31.7.25
+11:30pg"
+2025-07-31 13:59:23,NTT-20250731-31244,,FM,KGU,SABAH,SABAH,PBP SELATAN,n/a,No Impact,NFM - Temperature High,Facilities Related Equipment,Inside Power KGU,Unifi:0,0,Critical,N,Open,2025-08-01 16:57:00,-177933,274990,> 48H,PRI-2507-WL376 CPAMS Alarm (Keningau:KGU-TMP-ACCS-017) 31/07/2025 12:35:04 Temperature High (Critical): OLT ROOM @G: OLT
+2025-07-31 12:17:27,NTT-20250731-31135,LR20250731-80211,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,KIT_C004M_DP010A,Unifi:3,1,Minor,N,Open,2025-08-01 12:17:00,-194733,281106,> 48H,"[REACTIVE-FIBER] 
+KIT_C004M_DP010A
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113835102361
+CTT appointment: 2025-08-01 09:30:00
+CFF return time: 2025-07-31 12:07:07
+CFF remark:
+LR CATEGORY : IVT
+LR ESC.TYPE: IVT TT RR
+NETWORK TYPE: F
+TYPE OF FAULT: FDP DOWN
+NE INFO: KIT_C004M_DP010A
+CONTACT NAME : JAIMIMDRAIS
+OTHER REMARKS : FDP.Down.All.ports getting Low reading.Plggn dimaklumkan.
+Appt date: 01/08/2025-11:00"
+2025-07-31 09:58:14,NTT-20250731-30968,,,NYN,SABAH,SABAH,SANDAKAN,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,NYN_F08,Data (G&W):1,0,Minor,N,Open,2025-07-31 12:57:00,-278733,289459,> 48H,"[DCA] FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dssdk0725 PROTECT Line Leg Down since 29-07-2025 05:51HRS"
+2025-07-31 08:49:35,NTT-20250731-30915,,,NYN,SABAH,SABAH,SANDAKAN,n/a,Fault Rectification,LTE - Others,NGT IP,CSRZT41.DSSDK0725,Data (G&W):1,0,Minor,N,Open,2025-07-31 16:46:00,-264993,293578,> 48H,"FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dssdk0725 PROTECT Line Leg Down since 29-07-2025 05:51HRS
+
+ADDRESS: JALAN AIRPORT PERIMETER, 90000, SANDAKAN, SABAH 
+LAT/LONG: 5.892991 , 118.067476
+
+FIBER INFO:
+PROTECT Line Fibre info: [NYN_F41_C99,C100_5.006KM]
+
+READING:
+CSR(dBm): RX :  N/A/[-14.4,0.5]      TX : -1.7/[-8.2,1.5]
+AGG(dBm): RX : -17.9/[-14.4,0.5]     TX : -2.7/[-8.2,1.5] xgei-0/2/0/18"
+2025-07-31 08:40:05,NTT-20250731-30911,LR20250730-79784,,KDT,SABAH,SABAH,PBP UTARA,PSTN,Degradation,,Passive Element ICP,KDT_VC5004,Pre-Unifi:1,1,Minor,N,Open,2025-08-01 08:38:00,-207873,294148,> 48H,"[REACTIVE-COPPER] 
+5.kdt VC5004 DP 83
+6.abdulah
+7.masalah d/side cable.. line faulty..tiada spare cable yang bagus sampai di DP...appt date..30/7/2025..1130am"
+2025-07-30 20:04:39,NTT-20250730-30707,,,TRN,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C020_DP0051,Unifi:1,0,Minor,N,Open,2025-07-31 20:02:00,-253233,339474,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C020_DP0051 since 2025-07-30 19:53:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-30 20:00:46,NTT-20250730-30706,LR20250730-79775,Noorwahiddah sapian,SPA,SABAH,SABAH,TAWAU,PSTN,Total Outage,,Passive Element ICP,SPA_VC5006,Pre-Unifi:1,1,Minor,N,Open,2025-07-31 20:00:00,-253353,339707,> 48H,"[REACTIVE-COPPER] SPA_VC5006_0080, DP MATI TIADA PAIR BAGUS ADA PUN FREE TIADA TONE APPT 30-07-2025 9:30AM"
+2025-07-30 19:32:44,NTT-20250730-30690,,Faizon,MNK,SABAH,SABAH,PBP SELATAN,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,MNK_G801R,Unifi:6,0,Critical,N,Open,2025-08-03 19:26:00,3807,341389,> 48H,"[CAMELIA-FIBER][Sabah;MNK;MNK] Received complaint regarding down at MNK due to D-side FOC cut since 2025-08-01 19:55 HRS.
+
+ MNK_G801R-1/2/6 MNK_C006M_DP0014
+
+Received NTT for CAMELIA/D-side issue since 2025-08-02 17:38 HRS."
+2025-07-30 19:11:41,NTT-20250730-30675,LR20250730-79759,NNOC010,KDT,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KDT_C021M_DP003A,Unifi:3,1,Minor,N,Open,2025-07-31 19:11:00,-256293,342652,> 48H,"[REACTIVE-FIBER] 
+KDT_C021M_DP003A
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113502826291
+CTT appointment: 2025-08-01 14:30:00
+CFF return time: 2025-07-30 19:08:14
+CFF remark:
+NTT 
+BD FOC 
+F
+DP Faulty 
+Kdt_C21M_3A
+Izaak 
+Low reading signal di tie FDP 3A.Mohon bantuan pemulihan dengan segera.Appointment date 1.8.2025 1430."
+2025-07-30 16:31:26,NTT-20250730-30521,"LR20250730-79559,LR20250731-80008",NNOC010,KMU,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KMU_C001_DP0033,Unifi:6,2,Minor,N,Open,2025-07-31 16:31:00,-265893,352267,> 48H,"[REACTIVE-FIBER] 
+KMU_C001_DP0033
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113775641635
+CTT appointment: 2025-08-01 11:30:00
+CFF return time: 2025-07-30 16:19:52
+CFF remark:
+sudah cek dp0033 semua port low reding
+appt 1/8/2025
+jam 9.30am"
+2025-07-30 16:06:02,NTT-20250730-30486,LR20250730-79488,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C030_DP0018,Unifi:6,1,Minor,N,Open,2025-07-31 16:05:00,-267453,353791,> 48H,"[REACTIVE-FIBER] 
+KIT_C030_DP0018
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113689395915
+CTT appointment: 2025-07-30 14:30:00
+CFF return time: 2025-07-30 15:46:24
+CFF remark:
+LR CATEGORY : IVT
+LR.ESC.TYPE : IVT TT RR
+NETWORK TYPE: F
+TYPE OF FAULT : FDP.HIGH LOSS
+NE INFO: KIT_C030_DP0018
+CONTACT NAME : JAIMIMDRAIS
+OTHER REMARKS : FDP.HIGH LOSS.PON di ONU blinking.Verify"
+2025-07-30 16:04:53,NTT-20250730-30484,LR20250730-79507,NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C013_DB0009,Unifi:11,1,Minor,N,Open,2025-07-31 16:04:00,-267513,353860,> 48H,"[REACTIVE-FIBER] 
+KGU_C013_DB0009
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113381764430
+CTT appointment: 2025-07-30 11:30:00
+CFF return time: 2025-07-30 15:53:38
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+tie db009a low reading
+kgu_c013_db0009
+30/07/2025 11:30am"
+2025-07-30 16:03:41,NTT-20250730-30482,LR20250730-79526,NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C025M_DP0008,Unifi:12,2,Minor,N,Open,2025-07-31 16:03:00,-267573,353932,> 48H,"[REACTIVE-FIBER] 
+KGU_C025M_DP0008
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113804138095
+CTT appointment: 2025-07-31 11:30:00
+CFF return time: 2025-07-30 16:00:57
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+fdp down tiada reading
+kgu_c025m_dp0008
+02/08/2025 14:30pm"
+2025-07-30 14:26:49,NTT-20250730-30340,LR20250730-79299,NNOC010,BWN,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,BWN_C002M_DP0010,Unifi:9,3,Minor,N,Open,2025-07-31 14:26:00,-273393,359744,> 48H,"[REACTIVE-FIBER] 
+BWN_C002M_DP0010
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-112645522945
+CTT appointment: 2025-08-03 14:30:00
+CFF return time: 2025-07-30 14:22:17
+CFF remark:
+IVT
+IVT TT RR 
+F
+DS faulty 
+BWN C002M DP0010
+Yakub 01163177664
+FDP low reading (04/08/24-09.30am)
+fiber optic down"
+2025-07-30 14:13:35,NTT-20250730-30323,LR20250730-79278,NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C013_DB0010,Unifi:6,1,Minor,N,Open,2025-07-31 14:13:00,-274173,360538,> 48H,"[REACTIVE-FIBER] 
+KGU_C013_DB0010
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113158946115
+CTT appointment: 2025-07-28 11:30:00
+CFF return time: 2025-07-30 14:05:48
+CFF remark:
+1/FDP_KGU_C013_DB0010 
+2/KGU_C013_DB0010 FDP HIGH LOSS rujuk gambar kena attach 087335393 Adika fasa 3 no 76
+3/30_07_2025 jam 14:00am
+4/tarikh temujanji pada 30_07_2025 jam 11:30am
+5/01110384929 japirin mudin"
+2025-07-30 13:06:44,NTT-20250730-30236,,,KPY,SABAH,SABAH,PBP SELATAN,Data,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,KPY_F01,Data (TM One):1,0,Minor,N,Open,2025-07-30 16:06:00,-353793,364549,> 48H,"[DCA] IVT
+
+KLINIK KESIHATAN KERUKAN || LV1066441703 || IM519491 | INC0005753941 & INC0005753934
+Core Info / Cabinet / FDC / DP:551211_1@unifibiz | INC0005753934 (UNIFI)
+KPY_C002M
+KPY_C002M_DP0002
+
+KPY_G801R-1/1/5.38
+ONT_ID: 38
+ONU_Passwd: 0010511533
+Issue :Due to fdp KPY_C002M_DP002A low reading, escalate to NFF team ( Abdul Rahman 0198305484) for further action.
+PIC  Dr Tarmaselan - 012-4519350
+Update (NFF details & ETTA) :Abdul Rahman 0198305484
+BUDI WTT / TMF# :Ticket successfully created. Ticket Id =T-0011240732
+A-0009518334
+
+Core Info / Cabinet / FDC / DP:KPY F05 C35, C36 | INC0005753941 (IPME)
+Issue :fiber cable faulty escalate to NFF team for further action
+PIC  Dr Tarmaselan - 012-4519350
+Update (NFF details & ETTA) :Abdul Rahman 0198305484
+BUDI WTT / TMF# :Ticket successfully created. Ticket Id =T-0011240792
+A-0009518348"
+2025-07-30 12:38:58,NTT-20250730-30202,,,PPR,SABAH,SABAH,PBP SELATAN,Primary No Backup,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,PPR_F03,Data (TM One):1,0,Minor,N,Open,2025-07-30 15:38:00,-355473,366215,> 48H,"[DCA] IVT
+
+Service NumberLD1087096255
+Site NameKLINIK KOMUNITI TAMAN PENGALAT BESAR
+LD1087096255 
+INC0005754073
+Refer TMF  :   T-0011232140 | A-0009511503
+Core  info  : PPR FTB(AC) F11  13,14
+Remarks :  
+-  CFF  team En Roslan   017-868 1660 , attending site   &  found   Core high loss 290 Meter dari customer  Advise  NFF  to further  checking 
+- F08 papar 48c. Rx low at premises klinik kesihatan pengalat bear-30.1dbm. maklumkan pn.nadia myrcomm assign team baikpulih Mohammad Hanafi Bin Ajamain   60104504417 / 60198309177
+Address  :   TKT ARAS BAWAH,LOT LOT. NO.2,BILIK PENOLONG PEGAWAI PERUBATAN DAN KAUNTER, RUANGAN PEJABAT, BANGUNAN KEDAI,TAMAN PENGALAT BESAR, PHASE 6,89600 PAPAR,SABAH
+PIC : Pn Norizan Bt Mohd Talib ???  0168049295 / PKD En Khairil 0198541916"
+2025-07-30 12:18:58,NTT-20250730-30177,LR20250730-79092,NNOC010,MNK,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MNK_C005M_DP0005,Unifi:3,1,Minor,N,Open,2025-07-31 12:18:00,-281073,367415,> 48H,"[REACTIVE-FIBER] 
+MNK_C005M_DP0005
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113714967885
+CTT appointment: 2025-07-30 11:30:00
+CFF return time: 2025-07-30 12:10:34
+CFF remark:
+IVT
+IVT TT RR
+F
+D/S FULL
+MNK_C005M_DP0005
+ALIHUSSEIN
+FDP DOWN"
+2025-07-30 11:51:05,NTT-20250730-30148,,,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,LTE - Others,NGT IP,CSRZT41.DSTUA0965,Data (G&W):0,0,Minor,N,Open,2025-07-30 14:47:00,-358533,369088,> 48H,"[5G RTE][NSA][REAL] DSTUA0965 Main link intermittent.
+
+fiber info:
+LINK:10GE xgei-1/1/0/1.csrzt41.dstua0965--xgei-0/2/1/14.aggzt41.TRN [TRN_F39_C15,16_12.0KM]"
+2025-07-30 09:37:58,NTT-20250730-30000,LR20250730-78859,RobinRPA,KDT,SABAH,SABAH,PBP UTARA,"Voice,Hypp TV,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KDT_C006M_DP0012,Unifi:5,2,Minor,N,Open,2025-07-31 08:05:00,-296253,377075,> 48H,[CAMELIA-FIBER][Sabah;PBPU;KDT] NOC Detected down at KDT_C006M_DP0012 since 2025-07-30 08:02:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-30 09:37:22,NTT-20250730-29998,LR20250730-78851,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C011_DP0013,Unifi:5,3,Minor,N,Open,2025-07-31 09:36:00,-290793,377111,> 48H,"[REACTIVE-FIBER] 
+PPR_C011_DP0013
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113767906895
+CTT appointment: 2025-07-31 09:30:00
+CFF return time: 2025-07-30 09:30:55
+CFF remark:
+Masalah Fiber down di FDP"
+2025-07-30 08:52:51,NTT-20250730-29968,LR20250729-78675,NNOC010,PIS,SABAH,SABAH,PBP UTARA,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,PIS_C002_DP0020,Unifi:10,2,Minor,N,Open,2025-07-31 08:52:00,-293433,379782,> 48H,"[REACTIVE-FIBER] 
+PIS_C002_DP0020
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: N/A
+CTT appointment: N/A
+CFF return time: N/A"
+2025-07-29 19:56:28,NTT-20250729-29745,,,TWU,SABAH,SABAH,TAWAU,Data,Total Outage,Fiber Express,FIBER CABLE,TWU_F08,Data (TM One):2,0,Minor,N,Open,2025-07-30 08:00:00,-382953,426365,> 48H,"[DCA]
+Fiber Express 2.0 (Sabah)
+TMF: T-0011230486
+Customer Name:JPN DAERAH KALABAKAN
+PIC Info:En Azman - 089799899
+TT Number:INC0005753795 & INC0005753800
+Service ID:LV1097357224
+Bw/SLA:10 Mbps SLG 99.7%
+Core Info:BLK_F04 (3,5)
+Service:IPME
+Problem:Line down
+Zone:TAWAU
+Time CTT Created:28/07/2025 15:02
+CTT Aging:1 Day(s) 0 Hour(s) 12 Minute(s)
+Issue:Total down, no power issue at site. Fiber port observed no light
+Address:TKT -,BANGUNAN KIOSK BUMIPUTERA, DAERAH KALABAKAN,91000 TAWAU,SABAH
+
+Update:Escalated issue to NFF. Pending details & ETTA."
+2025-07-29 19:35:02,NTT-20250729-29733,LR20250729-78658,NNOC010,KMU,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KMU_C002_DP0017,Unifi:11,1,Minor,N,Open,2025-07-30 19:34:00,-341313,427651,> 48H,"[REACTIVE-FIBER] 
+KMU_C002_DP0017
+Requestor: TM36011-Nizamuddin Bin Nik Mohd Yusoff
+CAMELIA test bypassed!
+CTT no: 1-112456251569
+CTT appointment: 2025-07-30 11:30:00
+CFF return time: 2025-07-29 19:23:30
+CFF remark:
+perlu tambah tie dp ..jalan telah lebar"
+2025-07-29 19:29:56,NTT-20250729-29731,"LR20250729-78624,LR20250730-79761",NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C004M_DP005A,Unifi:5,2,Minor,N,Open,2025-07-30 19:29:00,-341613,427957,> 48H,"[REACTIVE-FIBER] 
+TRN_C004M_DP005A
+Requestor: TM36011-Nizamuddin Bin Nik Mohd Yusoff
+CAMELIA test bypassed!
+CTT no: 1-113665548725
+CTT appointment: 2025-07-29 11:30:00
+CFF return time: 2025-07-29 18:43:31
+CFF remark:
+bacaan reading tinggi"
+2025-07-29 19:17:24,NTT-20250729-29719,"LR20250730-79540,LR20250729-78617",NNOC010,TRN,SABAH,SABAH,PBP UTARA,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,TRN_C028M_DP0001,Unifi:7,3,Minor,N,Open,2025-07-30 19:17:00,-342333,428709,> 48H,"[REACTIVE-FIBER] 
+TRN_C028M_DP0001
+Requestor: TM36011-Nizamuddin Bin Nik Mohd Yusoff
+CAMELIA test bypassed!
+CTT no: 1-113473322145
+CTT appointment: 2025-07-28 14:30:00
+CFF return time: 2025-07-29 18:34:00
+CFF remark:
+bacaan fdp rendah dan tiang patah"
+2025-07-29 18:00:24,NTT-20250729-29653,,,SPA,SABAH,SABAH,TAWAU,Primary No Backup,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,SPA_F04,Data (TM One):1,0,Minor,N,Open,2025-07-29 20:59:00,-422613,433329,> 48H,"[DCA] Fiber Express 2.0
+
+FIBER EXPRESS 2.0 (Sabah)
+Customer : TLDM - KD SRI SEMPORNA
+TT Number : INC0005753897 | INC0005753903
+Service ID : LV1019797420
+Service: Metro-E
+Problem : DOWN
+Zone: Sabah
+BW/SLA : SLG 99.5%
+Core Info : SPAFTB(AC)F140003,0004
+Issue: Link is down since 29/7/2025 11:16:04 AM, Rx Power (dBm): -40dBm.
+Ticket Id =T-0011226962"
+2025-07-29 16:58:24,NTT-20250729-29599,LR20250729-78515,NNOC010,MNK,SABAH,SABAH,PBP SELATAN,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,MNK_C005M_DP0006,Unifi:2,1,Minor,N,Open,2025-07-30 16:58:00,-350673,437049,> 48H,"[REACTIVE-FIBER] 
+MNK_C005M_DP0006
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: N/A
+CTT appointment: N/A
+CFF return time: 2025-07-29 16:46:46
+CFF remark:
+IVT
+IVT TT RR
+F
+D/S FULL
+MNK_C005M_DP0006
+ALIHUSSEIN
+FDP LOW READING"
+2025-07-29 16:26:08,NTT-20250729-29553,LR20250729-78426,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C011_DP0011,Unifi:10,4,Minor,N,Open,2025-07-30 16:25:00,-352653,438985,> 48H,"[REACTIVE-FIBER] 
+PPR_C011_DP0011
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113753360855
+CTT appointment: 2025-07-30 14:30:00
+CFF return time: 2025-07-29 16:07:40
+CFF remark:
+Masalah Fiber down di FDP"
+2025-07-29 16:26:08,NTT-20250729-29555,"LR20250729-78431,LR20250801-81514",NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C011_DP0012,Unifi:6,5,Minor,N,Open,2025-07-30 16:25:00,-352653,438985,> 48H,"[REACTIVE-FIBER] 
+PPR_C011_DP0012
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113732814981
+CTT appointment: 2025-08-03 11:30:00
+CFF return time: 2025-07-29 16:09:38
+CFF remark:
+Masalah Fiber down di FDP"
+2025-07-29 16:23:28,NTT-20250729-29550,LR20250729-78400,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C042M_DP0006,Unifi:7,1,Minor,N,Open,2025-07-30 16:23:00,-352773,439145,> 48H,"[REACTIVE-FIBER] 
+PPR_C042M_DP0006
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113750874725
+CTT appointment: 2025-08-02 14:30:00
+CFF return time: 2025-07-29 16:02:15
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+laluan drop fiber semak perlu buat pembersihan laluan
+ppr_c042m_dp0006
+02/08/2025 14:30pm"
+2025-07-29 15:00:43,NTT-20250729-29434,LR20250729-78256,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C002M_DP0006,Unifi:8,1,Minor,N,Open,2025-07-30 15:00:00,-357753,444110,> 48H,"[REACTIVE-FIBER] 
+KIT_C002M_DP0006
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113708654835
+CTT appointment: 2025-07-29 11:30:00
+CFF return time: 2025-07-29 14:46:18
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+low reading tie dp006a
+kit_c002m_dp0006
+29/07/2025 11:30am"
+2025-07-29 14:12:26,NTT-20250729-29345,"LR20250729-78193,LR20250730-78866,LR20250730-78875",NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C004M_DP0010,Unifi:9,3,Minor,N,Open,2025-07-30 14:12:00,-360633,447007,> 48H,"[REACTIVE-FIBER] 
+KIT_C004M_DP0010
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113715893536
+CTT appointment: 2025-07-30 11:30:00
+CFF return time: 2025-07-29 14:07:57
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+low reading tie dp010B,tie dp010A pun sama
+kit_c004m_dp0010
+30/07/2025 11:30am"
+2025-07-29 11:28:08,NTT-20250729-29143,,,PPR,SABAH,SABAH,PBP SELATAN,Backup Only,Partial Outage,CABLE_BREAKDOWN,FIBER CABLE,PPR_F11,Data (TM One):1,0,Minor,N,Open,2025-07-29 14:27:00,-446133,456865,> 48H,"[DCA] IVT 
+
+Ticket Id =T-0011219313
+Activity Id = A-0009499769
+Site Name         : AGRO BANK (BANK PERTANIAN MALAYSIA)_ PAPAR
+INC                     : INC0005744520
+Status                : BACKUP (DOWN)
+Services ID        : BS1041216683 / LV1041216675
+Core Info           : 
+PPR - UNAGROM-PR202 MEN_TRK 0001 SECOND
+From 
+UNAGROM-PR202 FDP(ME) 001 Core 05,06
+To
+PPR_ODF_900 F16 Core 185,186
+
+From 
+PPR_ODF_900 F16 Core 185,186
+To
+PPR_ FDF(TX) KIT_48C Core13,14
+
+From
+PPR_ FDF(TX) KIT_48C Core13,14
+To
+KIT_ FDF(TX) PPR_48C Core13,14
+
+From
+KIT_ FDF(TX) PPR_48C Core13,14
+To
+KIT_ FDF(ME) 001 Core13,14
+
+Address             : TKT -,LOT LOT 1,BLOK A PLAZA 22,- NIL,KG SAPAT,89600 PAPAR,SABAH
+Remark : Completed check but still getting high loss monitor from CNAC. 
+minta tolong ENZ team check drp TM Node Kinarut ke TM Node Papar
+Latest Update :  Foj48c ppr kit rx hiloss -23.3dbm papar node."
+2025-07-29 10:37:56,NTT-20250729-29072,"LR20250729-77823,LR20250729-78655",NNOC010,KMU,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KMU_C037M_DP0001,Unifi:5,3,Minor,N,Open,2025-07-30 10:37:00,-373533,459877,> 48H,"[REACTIVE-FIBER] 
+KMU_C037M_DP0001
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113716199556
+CTT appointment: 2025-07-29 14:30:00
+CFF return time: 2025-07-29 10:34:07
+CFF remark:
+sudh cek dp0001 semua port low reding
+appt 30/7/2025
+jam 9.30am"
+2025-07-29 08:35:30,NTT-20250729-28942,,,SPA,SABAH,SABAH,TAWAU,n/a,No Impact,LTE - Low Fiber Reading Issue,NGT IP,CSRZT41.DSSPR0779,Data (G&W):0,0,Minor,N,Open,2025-07-29 17:34:00,-434913,467223,> 48H,"[5G RTE][NSA][Performance] csrzt41.dsspr0779 CSR Protect Low Fibre Reading
+
+ADDRESS:JALAN PANGKALANGAN, SEMPORNA 91300, SABAH
+LAT/LONG:4.40482,118.547155
+
+FIBER INFO:
+CSR : Protect Fibre Info Main LINK:xgei-1/1/0/2.csrzt41.dsspr0779--xgei-0/2/1/11.aggzt41.spa [SPA_F17_C3,4_16.6KM]
+
+Fibre Reading :CSR Protect
+08:31:15 Malaysia Tue Jul 29 2025
+Interface         Type              Wavelength  RxPower(dBm)          TxPower(dBm)          Status
+xgei-1/1/0/1      10G-40km-SFP+     1550nm      -7.4/[-15.8,-1.0]     0.8/[-4.7,5.0]        Normal
+xgei-1/1/0/2      10G-40km-SFP+     1550nm      -15.9/[-15.8,-1.0]    0.9/[-4.7,5.0]        Abnormal"
+2025-07-29 04:31:35,NTT-20250729-28840,LR20250729-77593,RobinRPA,PIS,SABAH,SABAH,PBP UTARA,"HSI,Hypp TV,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,PIS_C003_DP0021,Unifi:10,3,Minor,N,Open,2025-07-30 03:35:00,-398853,481858,> 48H,[CAMELIA-FIBER][Sabah;PBPU;PIS] NOC Detected down at PIS_C003_DP0021 since 2025-07-29 03:32:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-28 15:53:08,NTT-20250728-28458,LR20250728-77157,NNOC010,BFT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,BFT_C012M_DP0006,Unifi:8,1,Minor,N,Open,2025-07-29 15:52:00,-441033,527365,> 48H,"[REACTIVE-FIBER] 
+BFT_C012M_DP0006
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113322531865
+CTT appointment: 2025-07-22 11:30:00
+CFF return time: 2025-07-28 15:43:29
+CFF remark:
+port di tie fdp rosak,tidak boleh guna splitter disebabkan reading rendah -28,perlu penambahan port kerana di tie fdp ada 6 pelanggan,appt date 28/07/2025 0930am"
+2025-07-28 13:21:32,NTT-20250728-28255,LR20250728-76891,NNOC010,KDT,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KDT_C015M_DP0009,Unifi:12,1,Minor,N,Open,2025-07-29 13:21:00,-450093,536461,> 48H,"[REACTIVE-FIBER] 
+KDT_C015M_DP0009
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113595670065
+CTT appointment: 2025-07-28 09:30:00
+CFF return time: 2025-07-28 13:17:55
+CFF remark:
+NTT 
+BD FOC 
+F
+DP Faulty 
+Kdt_C15M_9
+Izaak 
+High loss di tie FDP 9C.Reading sekitar -31 sebab guna splitter di FDP.Bacaan untuk port in adalah sekitar-27 hingga -28.Mohon bantuan pemulihan dengan segera.Appointment date 28.7.2025 0930"
+2025-07-28 12:12:41,NTT-20250728-28178,LR20250728-76764,NNOC010,KMU,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KMU_C037M_DP002A,Unifi:5,2,Minor,N,Open,2025-07-29 12:12:00,-454233,540592,> 48H,"[REACTIVE-FIBER] 
+KMU_C037M_DP002A
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113682029403
+CTT appointment: 2025-07-31 09:30:00
+CFF return time: 2025-07-28 11:50:14
+CFF remark:
+sudh cek kmu c037m dp002a tiada reding cabel bsar dari min DP ke tie dp002a putus
+appt 31/7/2025
+jam 9.30am"
+2025-07-28 12:11:28,NTT-20250728-28176,LR20250728-76750,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KPY_C007M_DP0003,Unifi:9,1,Minor,N,Open,2025-07-29 12:11:00,-454293,540665,> 48H,"[REACTIVE-FIBER] 
+KPY_C007M_DP0003
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113463703785
+CTT appointment: 2025-07-24 09:30:00
+CFF return time: 2025-07-28 11:44:47
+CFF remark:
+IVT
+IVT TT RR
+F
+D/S FULL
+KPY_C007M_DP0003
+ALIHUSSEIN
+FDP DOWN"
+2025-07-28 10:19:29,NTT-20250728-28042,,,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,LTE - Low Fiber Reading Issue,NGT IP,CSRZT41.DSTUA1002,Data (G&W):0,0,Minor,N,Open,2025-07-28 19:18:00,-515073,547384,> 48H,"[5G RTE][NSA][Performance] csrzt41.dstua1002 CSR Main Low Fibre Reading
+
+ADDRESS:KAMPUNG TAMBALANG, JALAN BOLONG TAMBALANG, 89150 TUARAN, SABAH 
+LAT/LONG:6.189191,116.19426
+
+FIBER INFO:
+CSR : Main Fibre Info LINK:10GE xgei-1/1/0/1.csrzt41.dstua1002--xgei-0/0/1/12.aggzt41.TRN [TRN_F37_C103,C104_8.0KM]
+
+Fibre Reading :CSR Main
+10:15:05 Malaysia Mon Jul 28 2025
+Interface         Type              Wavelength  RxPower(dBm)          TxPower(dBm)          Status
+xgei-1/1/0/1      10G-10km-SFP+     1310nm      -20.9/[-14.4,0.5]     -2.1/[-8.2,1.5]       Abnormal
+xgei-1/1/0/2      10G-10km-SFP+     1310nm      -11.6/[-14.4,0.5]     -3.0/[-8.2,1.5]       Normal"
+2025-07-28 09:19:40,NTT-20250728-27998,,,KIT,SABAH,SABAH,PBP SELATAN,n/a,Fault Rectification,LTE - Others,NGT IP,CSRZT41.DSPTT1042,Data (G&W):1,0,Minor,N,Open,2025-07-28 17:17:00,-522333,550973,> 48H,"FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dsptt1042 MAIN Line Leg Down since 26-07-2025 18:55HRS
+
+ADDRESS: BENGKEL TURUS JADI & IRON WORKS, LOT 99 A-B, SEDCO LIGHT INDUSTRIAL ESTATE, KEM LOK KAWI 89600 PAPAR, SABAH
+LAT/LONG: 5.84605 , 116.046559
+
+FIBER INFO:
+MAIN Line Fibre info: [KIT_F11_C99,100_3.9KM]
+
+READING:
+CSR(dBm): RX :  N/A/[-14.4,0.5]      TX : -1.7/[-8.2,1.5]
+AGG(dBm): RX : -17.9/[-14.4,0.5]     TX : -2.7/[-8.2,1.5] xgei-0/0/1/11"
+2025-07-28 09:12:39,NTT-20250728-27994,,,TRN,SABAH,SABAH,PBP UTARA,n/a,Fault Rectification,LTE - Others,NGT IP,CSRZT41.DSTUA0973,Data (G&W):2,0,Minor,N,Open,2025-07-28 17:10:00,-522753,551394,> 48H,"FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dstua0973 PROTECT Line Leg Down since 26-07-2025 15:21HRS
+
+ADDRESS: SK LAYA LAYA, JLN PERUMAHAN LAYA LAYA, PERUMAHAN LAYA LAYA, 89208 TUARAN, SABAH
+LAT/LONG: 6.16237 , 116.166924
+
+FIBER INFO:
+PROTECT Line Fibre info: [TRN_F37_C1,2_13KM]
+
+READING:
+CSR(dBm): RX :  N/A/[-14.4,0.5]      TX : -1.7/[-8.2,1.5]
+AGG(dBm): RX : -17.9/[-14.4,0.5]     TX : -2.7/[-8.2,1.5] xgei-0/0/1/10"
+2025-07-28 08:43:18,NTT-20250728-27976,,,KBD,SABAH,SABAH,PBP UTARA,n/a,Fault Rectification,LTE - Others,NGT IP,CSRZT41.DSKMU0381,Data (G&W):3,0,Minor,N,Open,2025-07-28 16:41:00,-524493,553155,> 48H,"FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dskmu0381 PROTECT Line Leg Down since 25-07-2025 20:06HRS
+
+ADDRESS: JAYA INDUSTRIAL CENTRE, 89100 KOTA MARUDU, SABAH.
+LAT/LONG: 6.490795 , 116.771721
+
+FIBER INFO:
+PROTECT Line Fibre info: [KMU_F23_C61,62_4.8KM | KBD-KMU_1095702647_OBW_AGGCSR]
+
+READING:
+CSR(dBm): RX :  N/A/[-14.4,0.5]      TX : -1.7/[-8.2,1.5]
+AGG(dBm): RX : -17.9/[-14.4,0.5]     TX : -2.7/[-8.2,1.5] xgei-0/0/1/14"
+2025-07-27 14:45:25,NTT-20250727-27614,"LR20250727-76194,LR20250727-76202",NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C030_DP0017,Unifi:12,4,Minor,N,Open,2025-07-28 14:45:00,-531453,617828,> 48H,"[REACTIVE-FIBER] 
+KIT_C030_DP0017
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-112580384026
+CTT appointment: 2025-07-27 11:30:00
+CFF return time: 2025-07-27 13:26:51
+CFF remark:
+LR ESC: NTT
+LR ESC TYPE: NTT TT OPE
+NE TYPE: F 
+NE INFO: KIT_C030M_DP017A
+REMARK: TIE FDP MASIH HIGH LOSS
+APPOINTMENT: 27/7/2025 11:30
+
+LR ESC: NTT
+LR ESC TYPE: NTT TT OPE
+NE TY: F
+NE INFO: KIT_C030_DP017A
+REMARK: TIE FDP MASIH HIGH LOS
+APPOINTMENT: 27/7/2025 11:30"
+2025-07-27 12:19:40,NTT-20250727-27531,LR20250727-76149,RobinRPA,KDT,SABAH,SABAH,PBP UTARA,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KDT_C020M_DP0002,Unifi:7,2,Minor,N,Open,2025-07-28 11:25:00,-543453,626573,> 48H,[CAMELIA-FIBER][Sabah;PBPU;KDT] NOC Detected down at KDT_C020M_DP0002 since 2025-07-27 11:22:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-27 10:41:52,NTT-20250727-27461,LR20250727-76049,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,PPR_C036M_DP0005,Unifi:8,1,Minor,N,Open,2025-07-28 10:41:00,-546093,632441,> 48H,"[REACTIVE-FIBER] 
+PPR_C036M_DP0005
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-113601529455
+CTT appointment: 2025-08-01 11:30:00
+CFF return time: 2025-07-27 10:37:17
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+low reading tie dp005a
+ppr_c036m_dp0005
+01/08/2025 11:30am"
+2025-07-26 14:37:04,NTT-20250726-26966,,,KIT,SABAH,SABAH,PBP SELATAN,Data,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,KIT_F05,Data (G&W):1,0,Minor,N,Open,2025-07-26 17:34:00,-694113,704729,> 48H,"[DCA] IVT (SABAH)
+Customer Name  : KETUA POLIS NEGARA |    BRIGED SABAH 
+PIC Info                  : Kpl Majidi 013-552 0115
+TT Number            : INC0005750091 & INC0005750092
+Service ID              : LV1012730865
+Bw/SLA                  : 10 Mbps / SLG 99.5%
+Core Info                : KIT_FDF(AC)_F03 Port 37,38
+Problem                 : IPVPN Premier Leg
+Zone                       : KINARUT
+CTT created          : 26/07/2025 09:07 | 0 Day(s) 2 Hour(s) 18 Minute(s)
+TMF                        : T-0011197417
+NFF detail             : Please follow up with NFF En Hanafi 60 19-830 9177. ETTA : 1.30pm"
+2025-07-26 14:30:52,NTT-20250726-26960,LR20250726-75562,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,PPR_C011_DP0016,Unifi:4,1,Minor,N,Open,2025-07-27 14:30:00,-618753,705101,> 48H,"[REACTIVE-FIBER] 
+PPR_C011_DP0016
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113488191325
+CTT appointment: 2025-07-27 11:30:00
+CFF return time: 2025-07-26 13:36:43
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+Drop fiber putus,perlu tanam 1 tiang,drop fiber tumpang di bangunan bertanda bulat,lat long tanam tiang 5.714789,115.932902
+ppr_c011_dp0016
+27/07/2025 11:30am"
+2025-07-26 10:34:14,NTT-20250726-26716,,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C031_DP0020,Unifi:2,0,Minor,N,Open,2025-08-03 18:45:00,1347,719299,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C031_DP0020 since 2025-07-26 09:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-26 10:03:59,NTT-20250726-26685,LR20250726-75322,RobinRPA,KIT,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KIT_C036M_DP0006,Unifi:2,1,Minor,N,Open,2025-07-27 09:05:00,-638253,721114,> 48H,[CAMELIA-FIBER][Sabah;PBPS;KIT] NOC Detected down at KIT_C036M_DP0006 since 2025-07-26 09:02:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-25 21:46:52,NTT-20250725-26426,"LR20250730-79556,LR20250725-75123",NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C010M_DP0007,Unifi:4,2,Minor,N,Open,2025-07-26 21:46:00,-678993,765341,> 48H,"[REACTIVE-FIBER] 
+TRN_C010M_DP0007
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113416666225
+CTT appointment: 2025-07-25 09:30:00
+CFF return time: 2025-07-25 21:25:04
+CFF remark:
+bacaan dp rendah"
+2025-07-25 17:44:31,NTT-20250725-26267,LR20250725-74981,NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C033M_DP0001,Unifi:5,1,Minor,N,Open,2025-07-26 17:44:00,-693513,779882,> 48H,"[REACTIVE-FIBER] 
+TRN_C033M_DP0001
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113398293745
+CTT appointment: 2025-07-29 09:30:00
+CFF return time: 2025-07-25 17:33:45
+CFF remark:
+Bacaan dp rendah"
+2025-07-25 15:53:27,NTT-20250725-26127,LR20250725-74787,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,PPR_C001_DP0006,Unifi:5,1,Minor,N,Open,2025-07-26 15:53:00,-700173,786546,> 48H,"[REACTIVE-FIBER] 
+PPR_C001_DP0006
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113502503602
+CTT appointment: 2025-07-27 14:30:00
+CFF return time: 2025-07-25 15:46:45
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+perlu pindah tiang Dan tanam 1 tiang baru,lat long T1 5.727619,115.935903,lat long T2 5.727457,115.935592.tiang asal beranda biru perlu pindah di T2
+ppr_c001_dp0006
+27/07/2025 14:30pm"
+2025-07-25 13:24:41,NTT-20250725-25999,"LR20250725-74619,LR20250730-78989",RobinRPA,KIT,SABAH,SABAH,PBP SELATAN,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KIT_C042M_DP0004,Unifi:7,2,Minor,N,Open,2025-07-26 11:55:00,-714453,795472,> 48H,[CAMELIA-FIBER][Sabah;PBPS;KIT] NOC Detected down at KIT_C042M_DP0004 since 2025-07-25 11:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-25 11:49:53,NTT-20250725-25909,LR20250725-74490,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,KIT_C004M_DP0013,Unifi:1,1,Minor,N,Open,2025-07-26 11:49:00,-714813,801160,> 48H,"[REACTIVE-FIBER] 
+KIT_C004M_DP0013
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113512879445
+CTT appointment: 2025-07-25 09:30:00
+CFF return time: 2025-07-25 11:43:03
+CFF remark:
+LR ESC: NTT
+LR ESC TYPE: NTT TT OPE
+NE TYPE: F
+NE INFO: KIT_C004M_DP0013 
+APPOINTMENT: 25/7/2025 9:30
+REMARK: FDP HIGH LOSS"
+2025-07-25 11:47:20,NTT-20250725-25904,LR20250725-74449,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C044M_DP005B,Unifi:2,1,Minor,N,Open,2025-07-26 11:46:00,-714993,801313,> 48H,"[REACTIVE-FIBER] 
+PPR_C044M_DP005B
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-113502945543
+CTT appointment: 2025-07-27 09:30:00
+CFF return time: 2025-07-25 11:16:49
+CFF remark:
+Masalah Fiber down di Tie FDP"
+2025-07-25 11:08:37,NTT-20250725-25865,LR20250725-74421,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C044M_DP010A,Unifi:3,1,Minor,N,Open,2025-07-26 11:08:00,-717273,803636,> 48H,"[REACTIVE-FIBER] 
+PPR_C044M_DP010A
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-113508010975
+CTT appointment: 2025-07-25 09:30:00
+CFF return time: 2025-07-25 11:00:47
+CFF remark:
+Masalah Fiber high loss di Tie FDP,..melibatkan 3 pelanggan."
+2025-07-24 10:36:56,NTT-20250724-24948,LR20250724-73374,NNOC010,MBT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,MBT_C008M_DP0005,Unifi:3,12,Minor,N,Open,2025-07-25 10:36:00,-805593,891937,> 48H,"[REACTIVE-FIBER] 
+MBT_C008M_DP0005
+Requestor: S12772-Desman Desa Bin Menhat
+CAMELIA test bypassed!
+CTT no: N/A
+CTT appointment: N/A
+CFF return time: N/A
+
+MBT_C008M_DP0001, DP0003 &
+MBT_C008M_DP0005, DP0006, DP0008, DP008A"
+2025-07-23 16:01:00,NTT-20250723-24469,LR20250723-72849,,TWU,SABAH,SABAH,TAWAU,PSTN,Degradation,,Passive Element ICP,TWU_VF5081,Pre-Unifi:1,1,Minor,N,Open,2025-07-24 16:00:00,-872553,958893,> 48H,"[REACTIVE-COPPER] 
+mohon tindakan 1 kabinet tiada tone
+
+23.7.25
+15:30pm"
+2025-07-23 09:03:49,NTT-20250723-24027,LR20250723-72336,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,KPY_C011M_DP0007,Unifi:2,2,Minor,N,Open,2025-07-24 09:03:00,-897573,983924,> 48H,"[REACTIVE-FIBER] 
+KPY_C011M_DP0007
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113291010865
+CTT appointment: 2025-07-22 11:30:00
+CFF return time: 2025-07-23 08:45:18
+CFF remark:
+hayati
+fdp down"
+2025-07-23 08:32:09,NTT-20250723-24000,,,TRN,SABAH,SABAH,PBP UTARA,n/a,Fault Rectification,LTE - Others,NGT IP,CSRZT41.DSTUA0992,Data (G&W):3,0,Minor,N,Open,2025-07-23 16:29:00,-957213,985824,> 48H,"FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dstua0992 PROTECT Line Leg Down since 19-07-2025 05:57HRS
+
+ADDRESS: 1+0, JALAN SULAMAN, 89208 TUARAN, SABAH, MALAYSIA
+LAT/LONG: 6.17174 , 116.1945
+
+FIBER INFO:
+PROTECT Line Fibre info: [TRN_F37_C49,50_9.8KM]
+
+READING:
+CSR(dBm): RX :  N/A/[-14.4,0.5]      TX : -1.7/[-8.2,1.5]
+AGG(dBm): RX : -17.9/[-14.4,0.5]     TX : -2.7/[-8.2,1.5] xgei-0/1/1/6"
+2025-07-22 18:32:27,NTT-20250722-23718,LR20250722-72124,NNOC010,TRN,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TRN_C025M_DP0012,Unifi:6,2,Minor,N,Open,2025-07-23 18:32:00,-949833,1036206,> 48H,"[REACTIVE-FIBER] 
+TRN_C025M_DP0012
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113114918173
+CTT appointment: 2025-07-22 09:30:00
+CFF return time: 2025-07-22 18:21:24
+CFF remark:
+bacaan dp rendah"
+2025-07-22 15:19:50,NTT-20250722-23520,LR20250722-71822,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KPY_C001M_DP0007,Unifi:8,2,Minor,N,Open,2025-07-23 15:19:00,-961413,1047763,> 48H,"[REACTIVE-FIBER] 
+KPY_C001M_DP0007
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113166710745
+CTT appointment: 2025-07-22 09:30:00
+CFF return time: 2025-07-22 15:11:17
+CFF remark:
+IVT
+IVT TT RR 
+F
+TIE FDP DOWN
+KPY C001M DP007A
+APPT DATE TIME 
+22/7/25 9:30/1430
+PASS ENZ FOR FURTHER ACTION"
+2025-07-22 12:52:44,NTT-20250722-23339,"LR20250723-72630,LR20250730-78913,LR20250722-71607",NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C025M_DP008B,Unifi:8,6,Minor,N,Open,2025-07-23 12:52:00,-970233,1056589,> 48H,"[REACTIVE-FIBER] 
+KGU_C025M_DP008B
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-113381110925
+CTT appointment: 2025-07-23 14:30:00
+CFF return time: 2025-07-22 12:45:32
+CFF remark:
+1) lr ivt tt cat type f 
+2) (***ib fibre cable tie fdp low reading)
+3) ne kgu_c025m_dp008b slot port 0001
+4) cff sdz richard lai 01112536897
+5) appointment date 23/07/2025
+     time 14:30pm tie fdp low reading 
+     los-34dbm, fdp fully 12 customer, 
+     advice team nff rr install splitter 1 12."
+2025-07-22 11:57:52,NTT-20250722-23284,LR20250722-71540,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"HSI,Voice,Hypp TV",Total Outage,Service Down,Passive Element Nova,PPR_C006_DP0058,Unifi:7,1,Minor,N,Open,2025-07-23 11:57:00,-973533,1059881,> 48H,"[REACTIVE-FIBER] 
+PPR_C006_DP0058
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113346017405
+CTT appointment: 2025-07-26 09:30:00
+CFF return time: 2025-07-22 11:54:09
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+perlu pembersihan laluan drop fiber Dan tanam 1 tiang,lat long 5.718442,115.928337
+ppr_c006_dp0058
+26/07/2025 09:30am"
+2025-07-22 11:10:35,NTT-20250722-23225,LR20250722-71476,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C008_DP007A,Unifi:4,1,Minor,N,Open,2025-07-23 11:10:00,-976353,1062718,> 48H,"[REACTIVE-FIBER] 
+PPR_C008_DP007A
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-113320685321
+CTT appointment: 2025-07-22 09:30:00
+CFF return time: 2025-07-22 11:03:45
+CFF remark:
+minta bantuan adjust kan reading di tie FDP, -28.28 sampai rumah -33.04 pelanggan pakej 300Mbps.."
+2025-07-22 10:19:45,NTT-20250722-23166,,Kimi,FSB,SABAH,SABAH,LAHAD DATU,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,FSB_G802R,Unifi:0,0,Critical,N,Open,2025-08-31 21:48:00,2431527,1065768,> 48H,ACCESS-Trunk/uplink card alarm - FSB_G802R 10/3
+2025-07-22 09:42:44,NTT-20250722-23135,,Kimi,MNK,SABAH,SABAH,PBP SELATAN,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,MNK_G801R,Unifi:0,0,Critical,N,Open,2025-08-08 10:00:00,401847,1067989,> 48H,ACCESS-Trunk/uplink card alarm - MNK_G801R 10/1
+2025-07-22 09:15:24,NTT-20250722-23107,,Kimi,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,TRN_G804R,Unifi:0,0,Critical,N,Open,2025-08-08 10:00:00,401847,1069629,> 48H,ACCESS-Trunk/uplink card alarm - TRN_G804R xgei_1/4/2
+2025-07-21 13:22:00,NTT-20250721-22478,,ROBIN-RPA,SPA,SABAH,SABAH,TAWAU,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,SPA_G802,Unifi:0,0,Critical,N,Open,2025-08-31 21:35:00,2430747,1141233,> 48H,[NGOSS] ACCESS-Trunk/uplink card alarm - SPA_G802 port 10/1 down
+2025-07-20 19:07:40,NTT-20250720-21984,,RobinRPA,KDS,SABAH,SABAH,PBP UTARA,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KDS_C010M_DP0006,Unifi:2,0,Minor,N,Open,2025-07-21 17:45:00,-1125453,1206893,> 48H,[CAMELIA-FIBER][Sabah;PBPU;KDS] NOC Detected down at KDS_C010M_DP0006 since 2025-07-20 17:42:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-20 18:35:31,NTT-20250720-21974,,HAZMAN,KDS,SABAH,SABAH,PBP UTARA,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,"KDS_C010M_DP0001,KDS_C010M_DP0003,KDS_C010M_DP0002,KDS_C010M_DP0004",Unifi:7,0,Critical,N,Open,2025-07-22 17:00:00,-1041753,1208822,> 48H,"[CAMELIA-FIBER][Sabah;PBPU;KDS] Received complaint regarding FDP down at KDS due to D-side FOC cut since 2025-07-20 18:35:31hrs.
+
+Previously Detected Pon Port Alarm at  KDS_G803R-1/1/1 - KDS_C010M_DP0001 - KDS_C010M_DP0004
+
+Received NTT for CAMELIA/D-Side Issue at 2025-07-21 08:50hrs"
+2025-07-19 17:51:35,NTT-20250719-21338,LR20250719-69400,NNOC010,KBD,SABAH,SABAH,PBP UTARA,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,KBD_C025M_DP0006,Unifi:6,2,Minor,N,Open,2025-07-20 17:51:00,-1211493,1297858,> 48H,"[REACTIVE-FIBER] 
+KBD_C025M_DP0006
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-112776699615
+CTT appointment: 2025-07-22 09:30:00
+CFF return time: 2025-07-19 17:22:05
+CFF remark:
+Dp low reading"
+2025-07-18 11:14:39,NTT-20250718-20157,LR20250718-68061,NNOC010,KIT,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KIT_C044M_DP0001,Unifi:4,1,Minor,N,Open,2025-07-19 11:14:00,-1321713,1408074,> 48H,"[REACTIVE-FIBER] 
+KIT_C044M_DP0001
+Requestor: B17364-Wan Norazila Binti Wan Halim
+CAMELIA test bypassed!
+CTT no: 1-112708787995
+CTT appointment: 2025-07-18 09:30:00
+CFF return time: 2025-07-18 11:05:40
+CFF remark:
+LR ESC: NTT
+LR ESC TYPE: NTT TT OPE 
+NE TYPE: F
+NE INFO: KIT_C044M_DP0001
+REMARK: FDP HIGH LOS"
+2025-07-18 00:55:04,NTT-20250718-19932,LR20250718-67833,RobinRPA,KMU,SABAH,SABAH,PBP UTARA,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KMU_C001_DP0025,Unifi:8,4,Minor,N,Open,2025-07-19 21:25:00,-1285053,1445249,> 48H,[CAMELIA-FIBER][Sabah;PBPU;KMU] NOC Detected down at KMU_C001_DP0025 since 2025-07-17 21:22:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-17 22:50:28,NTT-20250717-19865,LR20250717-67792,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C022_DP0036,Unifi:2,1,Minor,N,Open,2025-07-18 16:35:00,-1388853,1452725,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C022_DP0036 since 2025-07-17 16:32:02hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-17 16:09:42,NTT-20250717-19551,LR20250717-67432,NNOC010,KPY,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KPY_C004M_DP0002,Unifi:6,1,Minor,N,Open,2025-07-18 16:09:00,-1390413,1476771,> 48H,"[REACTIVE-FIBER] 
+KPY_C004M_DP0002
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-112785036655
+CTT appointment: 2025-07-17 11:30:00
+CFF return time: 2025-07-17 15:58:33
+CFF remark:
+drop fiber putus disebabkan tiang condong,mohon untuk betulkan semula tiang yang hampir jatuh,tiang tidak dapat dipanjat,appt date 17/07/2025 1130am"
+2025-07-17 15:31:51,NTT-20250717-19492,LR20250717-67339,NNOC010,TBN,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,TBN_C022M_DP0011,Unifi:2,1,Minor,N,Open,2025-07-18 15:31:00,-1392693,1479042,> 48H,"[REACTIVE-FIBER] 
+TBN_C022M_DP0011
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-112632302524
+CTT appointment: 2025-07-17 11:30:00
+CFF return time: 2025-07-17 15:22:09
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+tie dp011a low reading,kabel putus perlu tanam 2 tiang utk tarik drop fiber
+tbn_c022m_dp0011
+17/07/2025 11:30am"
+2025-07-17 15:26:16,NTT-20250717-19484,"LR20250717-67328,LR20250718-68119",NNOC010,KGU,SABAH,SABAH,PBP SELATAN,"HSI,Hypp TV,Voice",Total Outage,Service Down,Passive Element Nova,KGU_C025M_DP0004,Unifi:11,7,Minor,N,Open,2025-07-18 15:25:00,-1393053,1479377,> 48H,"[REACTIVE-FIBER] 
+KGU_C025M_DP0004
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-112982442635
+CTT appointment: 2025-07-17 14:30:00
+CFF return time: 2025-07-17 15:18:59
+CFF remark:
+1.LR CAT:IVT
+2.TYPE:BD NE
+3.NT:F
+4.FAULT:NE BD
+5.NE INFO:KGU_C025M_DP0004
+6.0195829182/EDWARD ANSIBIL
+7.REMARK:cabel foc prblm..signal reading low reading selapas extra port di main fdp..ada 3 extra port digunakan di main fdp,terdapat 11 plgn active dlm fdp 0004,main fdp ada 9 plgn,perlu tukar spilter 1:12 di main fdp 0004
+Appt Date:17/07/25,14:30PM
+ETTR:18/07/25,14:30PM"
+2025-07-17 11:50:33,NTT-20250717-19242,LR20250717-67010,NNOC010,BWN,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,BWN_C001M_DP0013,Unifi:2,1,Minor,N,Open,2025-07-18 11:50:00,-1405953,1492320,> 48H,"[REACTIVE-FIBER] 
+BWN_C001M_DP0013
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-112982994705
+CTT appointment: 2025-07-17 09:30:00
+CFF return time: 2025-07-17 11:47:01
+CFF remark:
+IVT
+IVT TT RR 
+F
+DS Faulty 
+BWN C001M dp0013
+Yakub 01163177664
+FDP book Masih belum wujud, terlibat kebakaran (17/07/25-09.30am)"
+2025-07-16 13:19:48,NTT-20250716-18350,LR20250716-65985,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C028M_DP007B,Unifi:3,1,Minor,N,Open,2025-07-17 13:19:00,-1487013,1573365,> 48H,"[REACTIVE-FIBER] 
+PPR_C028M_DP007B
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-112795729015
+CTT appointment: 2025-07-16 11:30:00
+CFF return time: 2025-07-16 13:11:50
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+tie dp007B low reading
+ppr_c028m_dp007B
+16/07/2025 11:30am"
+2025-07-16 12:41:15,NTT-20250716-18309,,Hazriman /S3,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,TX - Physical Alarm,CORE Transmission,"SDJ050 F780B KBD.2,SDJ050 F780B KMU.1",Data (G&W):0,0,Minor,N,Open,2025-07-16 15:40:00,-1564953,1575678,> 48H,"Detected LOS alarm 1 leg on link SDJ050 (FH) KBD - KMU since 16/7@1230hrs
+
+Network Impact:
+1. SDJ050 (FH) KBD - KMU"
+2025-07-16 11:42:46,NTT-20250716-18232,,,TTP,SABAH,SABAH,LAHAD DATU,"Hypp TV,Voice,HSI",Total Outage,CABLE_BREAKDOWN,FIBER CABLE,TTP_F01,Unifi:0,0,Minor,N,Open,2025-07-16 14:42:00,-1568433,1579187,> 48H,[DCA] NSA ATAC (Sabah; Tungku Township) ACCESS-Trunk/uplink card alarm at TTP since 2025-07-16 11:10hrs
+2025-07-16 11:10:17,NTT-20250716-18193,,gafa,TTP,SABAH,SABAH,LAHAD DATU,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,TTP_G803R,Unifi:0,0,Critical,N,Open,2025-08-08 10:00:00,401847,1581136,> 48H,ACCESS-Trunk/uplink card alarm - TTP_G803R 9/3
+2025-07-15 14:47:06,NTT-20250715-17462,LR20250715-65042,RobinRPA,TRN,SABAH,SABAH,PBP UTARA,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,TRN_C033M_DP0002,Unifi:2,1,Minor,N,Open,2025-07-16 13:55:00,-1571253,1654527,> 48H,[CAMELIA-FIBER][Sabah;PBPU;TRN] NOC Detected down at TRN_C033M_DP0002 since 2025-07-15 13:52:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-14 16:18:11,NTT-20250714-16616,LR20250714-64085,RobinRPA,PPR,SABAH,SABAH,PBP SELATAN,"Voice,HSI,Hypp TV",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,PPR_C016_DP0012,Unifi:5,1,Minor,N,Open,2025-07-15 15:25:00,-1652253,1735462,> 48H,[CAMELIA-FIBER][Sabah;PBPS;PPR] NOC Detected down at PPR_C016_DP0012 since 2025-07-14 15:22:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+2025-07-14 08:30:48,NTT-20250714-16059,,,KGU,SABAH,SABAH,PBP SELATAN,n/a,No Impact,LTE - Low Fiber Reading Issue,NGT IP,CSRZT41.DSKNG0063,Data (G&W):0,0,Minor,N,Open,2025-07-14 17:29:00,-1731213,1763505,> 48H,"[5G RTE][NSA][Performance] csrzt41.dskng0063 CSR Main Low Fibre Reading
+
+ADDRESS:IPG KAMPUS KENINGAU, JALAN TAWAU-KENINGAU, 89009 KENINGAU, SABAH 
+LAT/LONG:5.306549,116.159293
+
+FIBER INFO:
+CSR : Main Fibre Info LINK:10GE xgei-1/1/0/1.csrzt41.dskng0063--xgei-0/2/0/15.aggzt41.kgu [KGU_F29_C27,28_6.8KM]
+
+Fibre Reading :CSR Main
+08:25:28 Malaysia Mon Jul 14 2025
+Interface         Type              Wavelength  RxPower(dBm)          TxPower(dBm)          Status
+xgei-1/1/0/1      10G-10km-SFP+     1310nm      -17.9/[-14.4,0.5]     -1.5/[-8.2,1.5]       Abnormal
+xgei-1/1/0/2      10G-40km-SFP+     1550nm      -12.9/[-15.8,-1.0]    0.2/[-4.7,5.0]        Normal"
+2025-07-12 06:15:40,NTT-20250712-14713,LR20250712-62001,RobinRPA,KDT,SABAH,SABAH,PBP UTARA,"Voice,Hypp TV,HSI",Total Outage,CABLE_BREAKDOWN,Passive Element Nova,KDT_C011_DP0028,Unifi:11,5,Minor,N,Open,2025-07-13 05:25:00,-1861053,1944413,> 48H,"[CAMELIA-FIBER][Sabah;PBPU;KDT] NOC Detected down at KDT_C011_DP0028 since 2025-07-12 05:22:01hrs. Remark CAMELIA : D Side (between FDC-FDP). Check for optical cable cut/connection malfunction between FDC to FDP
+
+Additional DP:
+KDT_C011_DP0026
+KDT_C011_DP0027"
+2025-07-11 00:21:50,NTT-20250711-13732,,ROBIN-RPA,NBN,SABAH,SABAH,PBP SELATAN,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,NBN_G801,Unifi:0,0,Critical,N,Open,2025-08-31 23:58:00,2439327,2052043,> 48H,[NGOSS] ACCESS-Trunk/uplink card alarm - NBN_G801:XFP 20/1
+2025-07-09 18:16:30,NTT-20250709-12703,LR20250709-59809,NNOC010,KDT,SABAH,SABAH,PBP UTARA,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,KDT_C021M_DP0006,Unifi:2,1,Minor,N,Open,2025-07-10 18:16:00,-2073993,2160363,> 48H,"[REACTIVE-FIBER] 
+KDT_C021M_DP0006
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-111973488764
+CTT appointment: 2025-06-25 09:30:00
+CFF return time: 2025-07-09 18:12:23
+CFF remark:
+1.ntt
+2.bd foc
+3.F
+4.oshe tt
+5.kdt C021M DP 6
+6.abdulah
+7.laluan d/fiber jauh"
+2025-07-09 15:52:45,NTT-20250709-12518,LR20250709-59571,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C026_DP0009,Unifi:2,1,Minor,N,Open,2025-07-10 15:52:00,-2082633,2168988,> 48H,"[REACTIVE-FIBER] 
+PPR_C026_DP0009
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-112661487806
+CTT appointment: 2025-07-11 11:30:00
+CFF return time: 2025-07-09 15:47:40
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+fdp high reading
+ppr_c026_dp0009
+11/07/2025 11:30am"
+2025-07-08 19:05:21,NTT-20250708-11759,,ROBIN-RPA,BLK,SABAH,SABAH,TAWAU,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,BLK-RTU-01,Unifi:0,0,Minor,N,Open,2025-07-08 22:05:00,-2233053,2243832,> 48H,PRI-2507-WC804 CPAMS Alarm(BLK-RTU-01) 08-07-2025 18:23:43 RTU Offline
+2025-07-08 18:12:32,NTT-20250708-11714,,ROBIN-RPA,TGD,SABAH,SABAH,SANDAKAN,n/a,No Impact,NFM - Rectifier Fail,Facilities Related Equipment,TGD-REC-TX-01,Unifi:0,0,Minor,N,Open,2025-07-08 21:12:00,-2236233,2247001,> 48H,PRI-2507-WC784 CPAMS Alarm(TGD-REC-TX-01) 08-07-2025 17:33:36 Rectifier Fail
+2025-07-08 13:24:51,NTT-20250708-11332,,ROBIN-RPA,LKN,SABAH,SABAH,PBP UTARA,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,LKN-RTU-02,Unifi:0,0,Minor,N,Open,2025-07-08 16:24:00,-2253513,2264262,> 48H,PRI-2507-WC656 CPAMS Alarm(LKN-RTU-02) 08-07-2025 12:43:42 RTU Offline
+2025-07-07 18:23:13,NTT-20250707-10717,LR20250707-57494,NNOC010,KMU,SABAH,SABAH,PBP UTARA,"Voice,Hypp TV,HSI",Total Outage,Service Down,Passive Element Nova,KMU_C025M_DP0001,Unifi:11,1,Minor,N,Open,2025-07-08 18:23:00,-2246373,2332760,> 48H,"[REACTIVE-FIBER] 
+KMU_C025M_DP0001
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-112361107296
+CTT appointment: 2025-07-09 09:30:00
+CFF return time: 2025-07-07 18:15:43
+CFF remark:
+fdp low reding"
+2025-07-07 17:44:36,NTT-20250707-10674,LR20250707-57412,,KMU,SABAH,SABAH,PBP UTARA,ADSL,Degradation,,Passive Element ICP,KMU_VC5011,Pre-Unifi:1,1,Minor,N,Open,2025-07-08 17:42:00,-2248833,2335077,> 48H,"[REACTIVE-COPPER] 
+NTT
+CABLE COOPER OVERHEAD CUT
+PASS NEXT 07/07/2025 1430"
+2025-07-07 16:02:36,NTT-20250707-10534,LR20250707-57235,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C009_DP0019,Unifi:1,1,Minor,N,Open,2025-07-08 16:02:00,-2254833,2341197,> 48H,"[REACTIVE-FIBER] 
+PPR_C009_DP0019
+Requestor: B14602-Noorwahiddah Binti Sapian
+CAMELIA test bypassed!
+CTT no: 1-112631666104
+CTT appointment: 2025-07-08 14:30:00
+CFF return time: 2025-07-07 15:58:58
+CFF remark:
+ivt
+ivt tt rr
+f
+dp faulty
+fdp low reading
+ppr_c009_dp0019
+08/07/2025 14:30pm"
+2025-07-07 08:44:45,NTT-20250707-10045,,,BAL,SABAH,SABAH,TAWAU,n/a,Fault Rectification,LTE - Others,NGT IP,CSRZT41.DSTAW0859,Data (G&W):1,0,Minor,N,Open,2025-07-07 16:41:00,-2338893,2367468,> 48H,"FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dstaw0859 MAIN Line Leg Down since 06-07-2025 04:55HRS
+
+ADDRESS: JALAN BUKIT QUOIN, 91000 TAWAU, SABAH 
+LAT/LONG: 4.298324 , 118.052056
+
+FIBER INFO:
+MAIN Line Fibre info: [BAL_F45 C37,38_24KM]
+
+READING:
+CSR(dBm): RX :  N/A/[-14.4,0.5]      TX : -1.7/[-8.2,1.5]
+AGG(dBm): RX : -17.9/[-14.4,0.5]     TX : -2.7/[-8.2,1.5] xgei-0/0/1/10"
+2025-07-03 15:22:45,NTT-20250703-07095,"LR20250703-53415,LR20250721-70772",NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C044M_DP0001,Unifi:6,2,Minor,N,Open,2025-07-04 15:22:00,-2602833,2689188,> 48H,"[REACTIVE-FIBER] 
+PPR_C044M_DP0001
+Requestor: B17454-Mimi Suzana Binti Mohd Rashid
+CAMELIA test bypassed!
+CTT no: 1-112502258495
+CTT appointment: 2025-07-03 14:30:00
+CFF return time: 2025-07-03 15:17:53
+CFF remark:
+masalah Fiber down di FDP"
+2025-07-03 11:21:22,NTT-20250703-06790,,,TRN,SABAH,SABAH,PBP UTARA,Backup Only,Partial Outage,CABLE_BREAKDOWN,FIBER CABLE,TRN_F07,Data (G&W):0,0,Minor,N,Open,2025-07-04 19:19:00,-2588613,2703671,> 48H,"[DCA] FMT Mobile 5G RTE ALERT! (TUARAN, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dstua0997 PROTECT Line Leg Down since 01-06-2025 09:24HRS"
+2025-07-03 10:48:19,NTT-20250703-06728,,,KBD,SABAH,SABAH,PBP UTARA,Backup Only,Partial Outage,CABLE_BREAKDOWN,FIBER CABLE,KBD_F27,Data (G&W):0,0,Minor,N,Open,2025-07-04 18:47:00,-2590533,2705654,> 48H,[DCA] [5G RTE][NSA][Performance] csrzt41.dskbd0138 CSR Protect/AGG Main Low Fibre Reading since 2025-02-05 08:53hrs
+2025-07-02 16:16:56,NTT-20250702-06191,,ROBIN-RPA,M72,,SABAH,,n/a,No Impact,NFM - GANSET ON LOAD,Facilities Related Equipment,M72-GEN-GEN-03,Unifi:0,0,Minor,N,Open,2025-07-02 19:16:00,-2761593,2772337,> 48H,PRI-2507-WA298 CPAMS Alarm(M72-GEN-GEN-03) 01-07-2025 14:15:47 Genset On Load (FCN)
+2025-07-01 12:46:26,NTT-20250701-04995,,Sukor Bin Dewa,KBU,SABAH,SABAH,KOTA KINABALU 1,n/a,No Impact,TX - Others,CORE Transmission,KBU_B8221,Broadcast:0,0,Minor,N,Open,2025-07-01 15:45:00,-2860653,2871367,> 48H,Replacement Board G3DAPX F Huawei at WCK008 98M12 KBU.1
+2025-06-25 13:58:23,NTT-20250625-00213,"LR20250625-45435,LR20250723-72581",NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C036M_DP0015,Unifi:3,2,Minor,N,Open,2025-06-26 13:58:00,-3299073,3385450,> 48H,"[REACTIVE-FIBER] 
+PPR_C036M_DP0015
+Requestor: TM31667-Nurul Asyikin Binti Azmi
+CAMELIA test bypassed!
+CTT no: 1-112083921125
+CTT appointment: 2025-06-26 11:30:00
+CFF return time: 2025-06-25 13:55:19
+CFF remark:
+low fdp reading"
+2025-06-23 11:19:56,NTT-20250623-98057,LR20250623-42753,,RNU,SABAH,SABAH,PBP UTARA,PSTN,Degradation,Service Down,Passive Element ICP,RNU_VC5005,Pre-Unifi:1,1,Minor,N,Open,2025-06-26 15:30:00,-3293553,3567757,> 48H,"[REACTIVE-COPPER]
+RNU_VC5005_0008
+NTT, dailtone tidak sampai ke DP 0008, bila jumper pair 1 hingga 10 jadi loop. tindakan pihak ENZ tq."
+2025-06-21 22:09:50,NTT-20250621-97196,LR20250621-41960,Kimi,NBN,SABAH,SABAH,PBP SELATAN,"HSI,Hypp TV,Voice",Total Outage,ANM-NE Offline,Access NE,NBN_G802R,Unifi:2,1,Critical,N,Open,2025-08-08 22:22:00,446367,3701563,> 48H,"ACCESS-NE Offline - NBN_G802R - Pending SFP DWDM
+- MAJ - FTTH FH 0065/2025 - Suspect Uplink card slot 9 faulty - OK"
+2025-06-19 16:40:57,NTT-20250619-94187,,ROBIN-RPA,PPG,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,NFM - Fire Alarm Activate,Facilities Related Equipment,PPG-FFT-OTHER-07,Unifi:0,0,Minor,N,Open,2025-06-19 19:40:00,-3883353,3894096,> 48H,PRI-2506-VW187 CPAMS Alarm(PPG-FFT-OTHER-07) 19-06-2025 13:41:25 Fire Alarm Activate
+2025-06-19 11:06:03,NTT-20250619-93750,LR20250619-39207,NNOC010,PPR,SABAH,SABAH,PBP SELATAN,"Hypp TV,HSI,Voice",Total Outage,Service Down,Passive Element Nova,PPR_C036M_DP0008,Unifi:6,1,Minor,N,Open,2025-06-20 11:05:00,-3827853,3914190,> 48H,"[REACTIVE-FIBER] 
+PPR_C036M_DP0008
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-111896845685
+CTT appointment: 2025-06-20 11:30:00
+CFF return time: 2025-06-19 10:51:38
+CFF remark:
+Masalah Fiber high loss di FDP,.. pelanggan pakej 300Mbps"
+2025-06-18 16:33:57,NTT-20250618-93200,,,TGD,SABAH,SABAH,SANDAKAN,"Data,Voice",Total Outage,Fiber Express,FIBER CABLE,TGD_F03,Data (TM One):1,0,Minor,N,Open,2025-06-19 16:35:00,-3894453,3980916,> 48H,"Pending ETE [DCA] IVT (Sabah)
+
+Customer Name: JABATAN PENDAFTARAN NEGARA (JPN) DAERAH TONGOD
+TT No: INC0005665079
+Service ID: LV1087778697 | BS1087778708
+BW/ SLA: 10 Mbps 99.7%
+core Info: TGD_F02_C21,C22
+Zone: TONGOD TELUPID
+Issue: IPME protection down & no power issue
+Address : TKT -,LOT PETI SURAT 159,JPN DAERAH TONGOD D/A PEJABAT DAERAH TONGOD,89300 TONGOD,SABAH
+PIC : Pn Celavistinah Gustin 0138561328"
+2025-06-18 11:38:05,NTT-20250618-92788,LR20250618-38191,NNOC010,RNU,SABAH,SABAH,PBP UTARA,"Hypp TV,Voice,HSI",Total Outage,Service Down,Passive Element Nova,RNU_C007M_DP001A,Unifi:3,1,Minor,N,Open,2025-06-19 11:37:00,-3912333,3998668,> 48H,"[REACTIVE-FIBER] 
+RNU_C007M_DP001A
+Requestor: TM30341-Karmila Binti Mohd Shrif
+CAMELIA test bypassed!
+CTT no: 1-111668633125
+CTT appointment: 2025-06-20 14:30:00
+CFF return time: 2025-06-18 11:29:15
+CFF remark:
+Tiang telekom miring gara? tanah licak,kepada team ENZ"
+2025-06-13 08:24:19,NTT-20250613-88084,,FM,BLN,SABAH,SABAH,SANDAKAN,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,Inside Power BLN,Pre-Unifi:0,0,Minor,N,Open,2025-06-13 11:21:00,-4431693,4442294,> 48H,"TM NODE BKT TRIG (HS)
+
+PRI-2506-VT449 CPAMS Alarm (Bkt Trig (HS):THL-RTU-02) 11/06/2025 20:01:21 RTU Offline
+
+GPS coordinate:5.84176118.0939
+# NID Metro E (NID ND)
+1. IP address (cpams RTU): 10.158.178.200
+2. IP gateway: 10.158.178.3
+3. EPE ID: EPEHWERA04  8/0/21 
+4. CCT: PS1042636750"
+2025-06-05 07:19:38,NTT-20250605-81345,,NNOC017,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KBD_F28,UnifiData (G&W):0,0,Minor,N,Open,2025-08-14 07:19:00,910587,5137375,> 48H,"[FOMS] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F28 down at KBD,Sabah since 2025-06-05 06:17:16hrs. Check CABLE CUT at KBD_F28(C18) cut at 1.064KM [total length 1.707KM] from KBD"
+2025-06-04 18:11:46,NTT-20250604-81057,,ROBIN-RPA,BKTG,,SABAH,,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,BKTG-RTU-03,Unifi:0,0,Minor,N,Open,2025-06-04 21:11:00,-5173893,5184647,> 48H,PRI-2506-VQ225 CPAMS Alarm(BKTG-RTU-03) 04-06-2025 15:01:02 RTU Offline
+2025-06-04 12:29:54,NTT-20250604-80540,,ROBIN-RPA,RTMLWMD,,SABAH,,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,RTMLWMD-RTU-02,Unifi:0,0,Minor,N,Open,2025-06-04 15:29:00,-5194413,5205159,> 48H,PRI-2506-VQ128 CPAMS Alarm(RTMLWMD-RTU-02) 04-06-2025 11:46:09 RTU Offline
+2025-06-04 05:54:19,NTT-20250604-80236,,NNOC017,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KBD_F21,UnifiData (G&W):0,0,Minor,N,Open,2025-09-02 05:54:00,2547087,5228894,> 48H,"[FOMS] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F21 down at KBD,Sabah since 2025-06-04 04:53:52hrs. Check CABLE CUT at KBD_F21(C192) cut at 2.905KM [total length 9.824KM] from KBD"
+2025-06-03 11:16:39,NTT-20250603-79394,,Mahlih Bin Tasin,KBU,SABAH,SABAH,KOTA KINABALU 1,n/a,No Impact,CABLE THEFT,FIBER CABLE,KBU_F73_MHSEAL,Unifi:0,0,Minor,N,Open,2025-07-04 17:00:00,-2596953,5295954,> 48H,"[FINM_MHSeal] Prior to GNTT-20250324-05122 (Sabah; Inanam - Kota Kinabalu) Multiple link, NE and services down at sector INM - KBU since 24/03@2054Hrs-26/3@0325hrs.
+Root cause: Multiple FOC UG cut at KM10.9 from KBU Node due to theft attempts 
+Coordinate: 6.01233, 116.11309
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2025-06-03 09:16:36,NTT-20250603-79282,,,MGL,SABAH,SABAH,KOTA KINABALU 2,n/a,Fault Rectification,LTE - Others,NGT IP,CSRZT41.DSTUA0997,Data (G&W):1,0,Minor,N,Open,2025-06-03 17:13:00,-5274573,5303157,> 48H,"FMT Mobile 5G RTE ALERT! (SABAH REGION, SABAH) [5G RTE][NSA][EXPRESS] csrzt41.dstua0997 PROTECT Line Leg Down since 01-06-2025 09:24HRS
+
+ADDRESS: JLN PEKAN TAMPARULI, TAMPARULI, 89250 TAMPARULI, SABAH  
+LAT/LONG: 6.1363 , 116.2684
+
+FIBER INFO:
+PROTECT Line Fibre info: [TRN_F07_C41,C42_1.97KM | MGL - TPL K100A*B CH9530 100GB]
+
+READING:
+CSR(dBm): RX :  N/A/[-14.4,0.5]      TX : -1.7/[-8.2,1.5]
+AGG(dBm): RX : -17.9/[-14.4,0.5]     TX : -2.7/[-8.2,1.5] xgei-0/3/1/1"
+2025-06-02 10:26:56,NTT-20250602-78648,,,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,LTE - Others,NGT IP,CSRZT41.DSTAW0848,Data (G&W):0,0,Minor,N,Open,2025-06-11 13:18:00,-4597473,5385337,> 48H,"[5G RTE][NSA][Performance] csrzt41.dstaw0848 Power Related Issue  | Repeated Mains Fail Alarm | DSTAW0848_TMMEROTAIKECIL | SALTW6066 |
+There are 18 Times mains fail alarm in May2025. We need your detail investigation including
+1) Cable connection,
+2) Incoming power stability,
+3) Grounding/earthing test result
+4) Output load
+5) Breaker capacity/sensitivity"
+2025-05-29 15:50:49,NTT-20250529-76027,,,ERA,SABAH,SABAH,SANDAKAN,n/a,No Impact,LTE - Others,NGT IP,CSRZT41.DSSDK0740,Data (G&W):0,0,Minor,N,Open,2025-06-19 20:00:00,-3882153,5711504,> 48H,"[5G RTE][NSA][Performance] RCCBB breaker tripped || csrzt41.dssdk0740 csrzt41.dssdk0740 [1+1]
+
+Site: 5G_DSSDK0740_TMSANDAKAN
+Add: TM SANDAKAN, JLN SAPI NANGOH,90000 SANDAKAN, SABAH
+Lat/Long: 5.85951 / 118.10561
+Date: 19/6/2025
+Time: 10:30am"
+2025-05-16 08:30:24,NTT-20250516-63920,,Yuslan Bin Andi Mappiyare,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KBD-TPL 48C_J_A_LFC,Unifi:0,0,Minor,N,Open,2025-05-17 18:00:00,-6740553,6861129,> 48H,[FINM] Cable with low free core more than 50% core is faulty. Recommend NFF to repair.
+2025-05-15 19:03:18,NTT-20250515-63695,,NNOC017,KDT,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KDT_F17,UnifiData (G&W):0,0,Minor,N,Open,2025-09-25 19:03:00,4581627,6909555,> 48H,"[FOMS] FIBER (East Malaysia;Kudat) NOC detected KDT_F17 down at KDT,Sabah since 2025-05-15 19:02:58hrs. Check PATCHING CONNECTION at KDT_F17(Port11) cut at 0.022KM [total length 4.299KM] from KDT"
+2025-05-06 09:55:35,NTT-20250506-55686,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F04,UnifiData (G&W):0,0,Minor,N,Open,2025-08-10 09:55:00,574347,7720018,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F04 down at TWU,Sabah since 2025-05-06 09:54:45hrs. Check PATCHING CONNECTION at TWU_F04(Port14) cut at 0.033KM [total length 1.122KM] from TWU"
+2025-04-23 14:14:28,NTT-20250423-45638,,FM Azlan 0138566360,BFT,SABAH,SABAH,PBP SELATAN,n/a,No Impact,NFM - Temperature High,Facilities Related Equipment,Inside Power BFT,Pre-Unifi:0,0,Minor,N,Open,2025-04-23 17:12:00,-8817033,8827685,> 48H,"TM NODE BKT TAMPALAGUS (HS)
+
+PRI-2504-UY915 CPAMS Alarm (Bkt Tampalagus (HS):BTPGHS-TMP-OTHER-011) 23/04/2025 10:20:20 Temperature High: TEMP05 @L1: ATUR"
+2025-04-18 15:11:58,NTT-20250418-41448,,ROBIN-RPA,TNM,SABAH,SABAH,PBP SELATAN,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,TNM_G803R,Unifi:0,0,Critical,N,Open,2025-08-31 21:52:00,2431767,9256235,> 48H,[NGOSS] ACCESS-Trunk/uplink card alarm - TNM_G803R:SFP+ 10/1
+2025-04-11 10:40:39,NTT-20250411-34283,,Shah,SOO,SABAH,SABAH,PBP SELATAN,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,SOO_G901R,Unifi:0,0,Minor,N,Open,2025-08-27 20:40:00,2081847,9877314,> 48H,"ACCESS -  Trunk/uplink card alarm, SOO_G901R: 10:3 Port down & 9:3 High Loss.
+
+RX optical power at OLT : -40.00dBm."
+2025-03-27 19:20:16,NTT-20250327-23501,,Shahizan Bin Abd Aziz,KLP,,,,n/a,Total Outage,BCAST - Analog FM Fail,Terrestrial Broadcast,FMT001 R1 KLP PA.1,Broadcast:1,0,Major,N,Open,2025-03-27 22:18:00,-11131473,11142137,> 48H,[BSMA] Rx complaint from MCR Sabah RTM R1 - R6 fail at Layang2 since 2025-03-27 @ 1813hrs
+2025-03-25 17:01:17,NTT-20250325-21544,,Shah,PPR,SABAH,SABAH,PBP SELATAN,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,PPR_G904R,Unifi:0,0,Minor,N,Open,2025-07-31 23:40:00,-240153,11323276,> 48H,ACCESS - Trunk/uplink card alarm. PPR_G904R port 10:1 down.
+2025-03-17 10:52:24,NTT-20250317-13612,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F51,UnifiData (G&W):0,0,Minor,N,Open,2025-10-01 10:52:00,5070567,12036609,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F51-F52 down at TWU,Sabah since 2025-03-17 10:51:35hrs. Check PATCHING CONNECTION at TWU_F51-F52(Port5) cut at 0.000KM [total length 12.532KM] from TWU"
+2025-03-14 22:25:40,NTT-20250314-11707,,Shahizan Bin Abd Aziz,TLP,SABAH,SABAH,SANDAKAN,n/a,No Impact,BCAST - Others,Terrestrial Broadcast,FMC035 STAR TLP DE.1,Broadcast:0,0,Minor,N,Open,2025-03-15 01:23:00,-12243573,12254213,> 48H,[BSMA] Trace cable SURIA FM TELIPOT
+2025-03-06 09:04:22,NTT-20250306-02469,,NNOC017,KMU,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KMU_F33,UnifiData (G&W):0,0,Minor,N,Open,2025-10-08 09:03:00,5668827,12993491,> 48H,"[FOMS] FIBER (East Malaysia;Kota Marudu) NOC detected KMU_F033 down at KMU,Sabah since 2025-03-06 09:02:50hrs. Check PATCHING CONNECTION at KMU_F033(Port10) cut at 0.023KM [total length 9.954KM] from KMU"
+2025-03-04 01:58:59,NTT-20250304-00107,,NNOC017,KMU,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KMU_F01,UnifiData (G&W):0,0,Minor,N,Open,2025-10-08 01:58:00,5643327,13191814,> 48H,"[FOMS] FIBER (East Malaysia;Kota Marudu) NOC detected KMU_F01 down at KMU,Sabah since 2025-03-04 01:58:17hrs. Check PATCHING CONNECTION at KMU_F01(Port11) cut at 0.089KM [total length 4.295KM] from KMU"
+2025-03-01 17:58:21,NTT-20250301-98518,,Shahizan Bin Abd Aziz,KBU,SABAH,SABAH,KOTA KINABALU 1,n/a,No Impact,BCAST - Analog FM Fail,NGN Core,KBULSWHW01,Broadcast:0,0,Major,N,Open,2025-03-01 20:55:00,-13382853,13393452,> 48H,(EASTERN : TRM-KBU): [BSMA] [BSMA] Detect link alarm for BNM MRS network TRM.MS2.01 - KBU.MS2.01  since 2025-03-01 @17:30Hrs
+2025-02-19 15:03:47,NTT-20250219-89796,,NNOC017,KDT,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KDT_F27,UnifiData (G&W):0,0,Minor,N,Open,2025-08-17 15:03:00,1197627,14267926,> 48H,"[FOMS] FIBER (East Malaysia;Kudat) NOC detected KDT_F27 down at KDT,Sabah since 2025-02-19 15:02:05hrs. Check PATCHING CONNECTION at KDT_F27(Port14) cut at 0.022KM [total length 0.893KM] from KDT"
+2025-02-13 11:02:46,NTT-20250213-83606,,NNOC017,KDS,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KDS_F02,UnifiData (G&W):0,0,Minor,N,Open,2025-08-17 23:36:00,1228407,14800787,> 48H,"[FOMS] FIBER (East Malaysia;Kundasang) NOC detected KDS_F02 down at KDS,Sabah since 2025-02-13 11:00:55hrs. Check PATCHING CONNECTION at KDS_F02(Port5) cut at 0.075KM [total length 0.478KM] from KDS"
+2025-02-10 11:51:12,NTT-20250210-80575,,Mahlih Bin Tasin,KBU,SABAH,SABAH,KOTA KINABALU 1,n/a,No Impact,"CABLE THEFT,CABLE_BREAKDOWN",FIBER CABLE,TGACS_MRCS_MH4_MHSEAL,Unifi:0,0,Minor,N,Open,2025-03-14 17:00:00,-12273753,15057081,> 48H,"[FINM_MHSeal] Prior to NTT-20250208-78683 MB! SKR1M (Tanjung Aru CS-Miri CS) IPLC-138| 08/02@0400hrs- Power cable cut at MH4 from TGACS facing MRCS due to theft
+
+Request NFF to Seal with concrete method similar to 5G Scenario 6 Manhole Seal
+
+Estimated Time To Resolved :
+1 months for seal with cement"
+2025-02-08 19:01:49,NTT-20250208-79218,,ROBIN-RPA,BFT,SABAH,SABAH,PBP SELATAN,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,BFT_G803R,Unifi:0,0,Critical,N,Open,2025-08-31 15:44:00,2409687,15204044,> 48H,[NGOSS] ACCESS-Trunk/uplink card alarm - BFT_G803R:SFP+ 10/1
+2025-02-05 09:04:30,NTT-20250205-75907,,,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,LTE - Low Fiber Reading Issue,NGT IP,CSRZT41.DSKBD0138,Data (G&W):0,0,Minor,N,Open,2025-02-05 18:03:00,-15466773,15499083,> 48H,"[5G RTE][NSA][Performance] csrzt41.dskbd0138 CSR Protect/AGG Main Low Fibre Reading
+
+ADDRESS:TAMAN NIKMAT, JALAN KOTA KINABALU PANGKALAN ABAI, 89150 KOTA BELUD, SABAH 
+LAT/LONG:6.340592,116.4031
+
+FIBER INFO:
+CSR Protect Fibre Info LINK:10GE xgei-1/1/0/2.csrzt41.dskbd0138--xgei-0/0/1/11.aggzt41.kbd [KBD_F27_C47,48_9.5KM]
+AGG Main Fibre Info LINK:xgei-0/0/1/11.aggzt41.kbd--xgei-1/1/0/2.csrzt41.dskbd0138 [KBD_F27_C47,48_9.5KM]
+
+Fibre Reading :
+CSR:Protect
+08:50:45 Malaysia Wed Feb 5 2025
+Interface         Type              Wavelength  RxPower(dBm)          TxPower(dBm)          Status
+xgei-1/1/0/1      10G-10km-SFP+     1310nm      -11.5/[-14.4,0.5]     -2.8/[-8.2,1.5]       Normal
+xgei-1/1/0/2      10G-10km-SFP+     1310nm      -17.6/[-14.4,0.5]     -2.8/[-8.2,1.5]       Abnormal
+
+
+AGG:Main
+08:53:15 Malaysia Wed Feb 5 2025
+Interface         Type              Wavelength  RxPower(dBm)          TxPower(dBm)          Status
+xgei-0/0/1/11     10G-10km-SFP+     1310nm      -17.9/[-14.4,0.5]     -2.7/[-8.2,1.5]       Abnormal
+xgei-0/1/1/11     10G-10km-SFP+     1310nm      -14.1/[-14.4,0.5]     -2.8/[-8.2,1.5]       Normal"
+2025-01-31 14:23:17,NTT-20250131-72016,,ROBIN-RPA,SOO,SABAH,SABAH,PBP SELATAN,n/a,No Impact,ANM-Trunk/uplink card alarm,Access NE,SOO_G802R,Unifi:0,0,Critical,N,Open,2025-08-31 23:50:00,2438847,15911956,> 48H,"[NGOSS] ACCESS-Multiple Trunk/uplink card alarm - SOO_G802R:SFP+ 9/1
+SOO_G802R:SFP+ 10/1"
+2025-01-30 23:09:36,NTT-20250130-71560,,NNOC017,SPA,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,SPA_F07,UnifiData (G&W):0,0,Minor,N,Open,2025-09-10 23:09:00,3300387,15966777,> 48H,"[FOMS] FIBER (East Malaysia;Semporna) NOC detected SPA_F07 down at SPA,Sabah since 2025-01-30 23:08:37hrs. Check CABLE CUT at SPA_F07(C48) cut at 0.619KM [total length 0.735KM] from SPA"
+2025-01-15 13:01:44,NTT-20250115-57454,"LR20250115-81608,LR20250131-98697,LR20250128-96387",zul,KBD,SABAH,SABAH,PBP UTARA,"Voice,Hypp TV,HSI",Total Outage,ANM-NE Offline,Access NE,KBD_G004R,Unifi:22,11,Critical,N,Open,2025-10-10 18:18:00,5874927,17299249,> 48H,"ACCESS-NE Offline - KBD_G004R - EQPT Vandalism.
+(Sabah; Kota Belud)* OLT-KBD_G004R-22Subs| 15/01@1301hrs- TBC
+#ending AND for relocation & purchasing new OLT ETTR:30/04/25"
+2025-01-14 11:44:51,NTT-20250114-56189,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F14,UnifiData (G&W):0,0,Minor,N,Open,2025-09-30 11:44:00,4987287,17390262,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F14 down at TWU,Sabah since 2025-01-14 11:42:08hrs. Check CABLE CUT at TWU_F14(C40) cut at 1.121KM [total length 1.394KM] from TWU"
+2025-01-14 10:19:37,NTT-20250114-56056,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F44,UnifiData (G&W):0,0,Minor,N,Open,2025-08-19 10:19:00,1353387,17395376,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F44 down at TWU,Sabah since 2025-01-14 10:17:09hrs. Check PATCHING CONNECTION at TWU_F44(Port47) cut at 0.033KM [total length 3.886KM] from TWU"
+2025-01-14 10:13:34,NTT-20250114-56047,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F20,UnifiData (G&W):0,0,Minor,N,Open,2025-07-22 10:13:00,-1066173,17395739,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F20 down at TWU,Sabah since 2025-01-14 10:11:18hrs. Check PATCHING CONNECTION at TWU_F20(Port26) cut at 0.033KM [total length 1.810KM] from TWU"
+2025-01-14 09:24:36,NTT-20250114-55990,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F39,UnifiData (G&W):0,0,Minor,N,Open,2025-08-26 09:24:00,1954887,17398677,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F39 down at TWU,Sabah since 2025-01-14 09:23:17hrs. Check PATCHING CONNECTION at TWU_F39(Port42) cut at 0.033KM [total length 0.945KM] from TWU"
+2025-01-14 04:12:06,NTT-20250114-55770,,NNOC017,KMU,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KMU_F12,UnifiData (G&W):0,0,Minor,N,Open,2025-08-11 04:12:00,640167,17417427,> 48H,"[FOMS] FIBER (East Malaysia;Kota Marudu) NOC detected KMU_F12 down at KMU,Sabah since 2025-01-14 04:08:10hrs. Check CABLE CUT at KMU_F12(C40) cut at 0.158KM [total length 17.552KM] from KMU"
+2025-01-14 02:24:38,NTT-20250114-55724,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F40,UnifiData (G&W):0,0,Minor,N,Open,2025-08-04 02:24:00,28887,17423875,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F40 down at TWU,Sabah since 2025-01-14 02:23:28hrs. Check PATCHING CONNECTION at TWU_F40(Port43) cut at 0.033KM [total length 0.938KM] from TWU"
+2025-01-14 02:23:23,NTT-20250114-55723,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F32,UnifiData (G&W):0,0,Minor,N,Open,2025-07-15 02:23:00,-1699173,17423950,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F32 down at TWU,Sabah since 2025-01-14 02:23:01hrs. Check CABLE CUT at TWU_F32(C16) cut at 0.945KM [total length 3.805KM] from TWU"
+2025-01-14 02:22:49,NTT-20250114-55721,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F37,UnifiData (G&W):0,0,Minor,N,Open,2025-08-18 02:22:00,1238367,17423984,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F37 down at TWU,Sabah since 2025-01-14 02:21:19hrs. Check PATCHING CONNECTION at TWU_F37(Port40) cut at 0.024KM [total length 3.531KM] from TWU"
+2025-01-14 02:21:24,NTT-20250114-55719,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F21,UnifiData (G&W):0,0,Minor,N,Open,2025-08-25 02:21:00,1843107,17424069,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F21 down at TWU,Sabah since 2025-01-14 02:20:29hrs. Check PATCHING CONNECTION at TWU_F21(Port27) cut at 0.033KM [total length 1.589KM] from TWU"
+2025-01-14 02:13:25,NTT-20250114-55713,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F06,UnifiData (G&W):0,0,Minor,N,Open,2025-08-25 02:13:00,1842627,17424548,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F06 down at TWU,Sabah since 2025-01-14 02:12:23hrs. Check CABLE CUT at TWU_F06(C13) cut at 1.977KM [total length 2.139KM] from TWU"
+2025-01-13 22:05:31,NTT-20250113-55603,,NNOC017,KMU,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KMU_F07,UnifiData (G&W):0,0,Minor,N,Open,2025-09-15 22:05:00,3728547,17439422,> 48H,"[FOMS] FIBER (East Malaysia;Kota Marudu) NOC detected KMU_F07 down at KMU,Sabah since 2025-01-13 22:04:37hrs. Check CABLE CUT at KMU_F07(C17) cut at 0.158KM [total length 6.522KM] from KMU"
+2025-01-13 22:02:14,NTT-20250113-55597,,NNOC017,RNU,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,RNU_F13,UnifiData (G&W):0,0,Minor,N,Open,2025-09-15 22:02:00,3728367,17439619,> 48H,"[FOMS] FIBER (East Malaysia;Ranau) NOC detected RNU_F13 down at RNU,Sabah since 2025-01-13 22:00:03hrs. Check PATCHING CONNECTION at RNU_F13(Port9) cut at 0.100KM [total length 0.666KM] from RNU"
+2025-01-13 17:29:22,NTT-20250113-55380,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F46,UnifiData (G&W):0,0,Minor,N,Open,2025-09-15 17:29:00,3711987,17455991,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F46 down at TWU,Sabah since 2025-01-13 17:28:33hrs. Check CABLE CUT at TWU_F46(C94) cut at 4.314KM [total length 8.162KM] from TWU"
+2025-01-13 17:22:44,NTT-20250113-55371,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F38,UnifiData (G&W):0,0,Minor,N,Open,2025-09-16 17:22:00,3797967,17456389,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F38 down at TWU,Sabah since 2025-01-13 17:21:41hrs. Check CABLE CUT at TWU_F38(C74) cut at 3.531KM [total length 9.080KM] from TWU"
+2025-01-13 17:17:37,NTT-20250113-55359,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F31,UnifiData (G&W):0,0,Minor,N,Open,2025-09-17 17:17:00,3884067,17456696,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F31 down at TWU,Sabah since 2025-01-13 17:16:20hrs. Check PATCHING CONNECTION at TWU_F31(Port34) cut at 0.024KM [total length 1.797KM] from TWU"
+2025-01-13 17:11:27,NTT-20250113-55347,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F16,UnifiData (G&W):0,0,Minor,N,Open,2025-09-17 17:11:00,3883707,17457066,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F16 down at TWU,Sabah since 2025-01-13 17:09:06hrs. Check PATCHING CONNECTION at TWU_F16(Port23) cut at 0.034KM [total length 3.489KM] from TWU"
+2025-01-13 17:08:25,NTT-20250113-55341,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F10,UnifiData (G&W):0,0,Minor,N,Open,2025-09-17 17:08:00,3883527,17457248,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F10 down at TWU,Sabah since 2025-01-13 17:07:24hrs. Check CABLE CUT at TWU_F10(C20) cut at 4.025KM [total length 4.539KM] from TWU"
+2025-01-13 17:04:24,NTT-20250113-55332,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F03,UnifiData (G&W):0,0,Minor,N,Open,2025-08-24 17:04:00,1809687,17457489,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F03 down at TWU,Sabah since 2025-01-13 17:03:18hrs. Check PATCHING CONNECTION at TWU_F03(Port13) cut at 0.000KM [total length 1.977KM] from TWU"
+2025-01-13 17:00:21,NTT-20250113-55326,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F47,UnifiData (G&W):0,0,Minor,N,Open,2025-08-24 17:00:00,1809447,17457732,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F47-F48 down at TWU,Sabah since 2025-01-13 16:59:44hrs. Check PATCHING CONNECTION at TWU_F47-F48(Port6) cut at 0.000KM [total length 10.847KM] from TWU"
+2025-01-13 16:04:24,NTT-20250113-55223,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F07,UnifiData (G&W):0,0,Minor,N,Open,2025-09-24 16:04:00,4484487,17461089,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F07 down at TWU,Sabah since 2025-01-13 16:03:55hrs. Check CABLE CUT at TWU_F07(C23) cut at 3.374KM [total length 4.034KM] from TWU"
+2025-01-13 15:53:25,NTT-20250113-55206,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F12,UnifiData (G&W):0,0,Minor,N,Open,2025-09-24 15:53:00,4483827,17461748,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F12 down at TWU,Sabah since 2025-01-13 15:51:05hrs. Check CABLE CUT at TWU_F12(C15) cut at 3.883KM [total length 4.054KM] from TWU"
+2025-01-13 15:13:24,NTT-20250113-55123,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F45,UnifiData (G&W):0,0,Minor,N,Open,2025-09-28 15:13:00,4827027,17464149,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F45-F46 down at TWU,Sabah since 2025-01-13 15:12:16hrs. Check CABLE CUT at TWU_F45-F46(C81) cut at 2.772KM [total length 5.362KM] from TWU"
+2025-01-13 15:12:47,NTT-20250113-55122,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F19,UnifiData (G&W):0,0,Minor,N,Open,2025-09-19 15:12:00,4049367,17464186,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F19 down at TWU,Sabah since 2025-01-13 15:10:39hrs. Check CABLE CUT at TWU_F19(C22) cut at 1.810KM [total length 16.271KM] from TWU"
+2025-01-13 15:06:36,NTT-20250113-55106,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F35,UnifiData (G&W):0,0,Minor,N,Open,2025-09-19 15:06:00,4049007,17464557,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F35 down at TWU,Sabah since 2025-01-13 15:05:05hrs. Check CABLE CUT at TWU_F35(C10) cut at 3.374KM [total length 10.621KM] from TWU"
+2025-01-13 14:55:32,NTT-20250113-55093,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F17,UnifiData (G&W):0,0,Minor,N,Open,2025-09-21 14:55:00,4221147,17465221,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F17 down at TWU,Sabah since 2025-01-13 14:53:52hrs. Check CABLE CUT at TWU_F17(C43) cut at 2.307KM [total length 6.523KM] from TWU"
+2025-01-13 14:49:26,NTT-20250113-55086,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F23,UnifiData (G&W):0,0,Minor,N,Open,2025-09-21 14:49:00,4220787,17465587,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F23 down at TWU,Sabah since 2025-01-13 14:47:53hrs. Check CABLE CUT at TWU_F23(C15) cut at 3.355KM [total length 4.326KM] from TWU"
+2025-01-13 13:03:26,NTT-20250113-54910,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F41,UnifiData (G&W):0,0,Minor,N,Open,2025-09-21 13:03:00,4214427,17471947,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F41-F42 down at TWU,Sabah since 2025-01-13 13:00:17hrs. Check CABLE CUT at TWU_F41-F42(C192) cut at 1.977KM [total length 7.335KM] from TWU"
+2025-01-13 13:00:08,NTT-20250113-54903,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F53,UnifiData (G&W):0,0,Minor,N,Open,2025-09-21 13:00:00,4214247,17472145,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F53A down at TWU,Sabah since 2025-01-13 12:56:55hrs. Check PATCHING CONNECTION at TWU_F53A(Port7) cut at 0.000KM [total length 8.771KM] from TWU"
+2025-01-13 12:58:37,NTT-20250113-54899,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F36,UnifiData (G&W):0,0,Minor,N,Open,2025-09-21 12:58:00,4214127,17472236,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F36 down at TWU,Sabah since 2025-01-13 12:54:27hrs. Check PATCHING CONNECTION at TWU_F36(Port39) cut at 0.033KM [total length 3.542KM] from TWU"
+2025-01-10 23:08:20,NTT-20250110-52933,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F20,UnifiData (G&W):0,0,Minor,N,Open,2025-09-16 23:08:00,3818727,17694853,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F20 down at TRN,Sabah since 2025-01-10 23:04:06hrs. Check CABLE CUT at TRN_F20(C16) cut at 2.566KM [total length 5.516KM] from TRN"
+2025-01-10 15:54:27,NTT-20250110-52683,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F42,UnifiData (G&W):0,0,Minor,N,Open,2025-09-16 15:54:00,3792687,17720886,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F42 down at TWU,Sabah since 2025-01-10 15:53:39hrs. Check CABLE CUT at TWU_F42(C36) cut at 2.354KM [total length 9.891KM] from TWU"
+2025-01-10 15:43:44,NTT-20250110-52669,,NNOC017,TWU,SABAH,SABAH,TAWAU,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TWU_F43,UnifiData (G&W):0,0,Minor,N,Open,2025-09-24 15:43:00,4483227,17721529,> 48H,"[FOMS] FIBER (East Malaysia;Tawau) NOC detected TWU_F43-F44 down at TWU,Sabah since 2025-01-10 15:41:43hrs. Check CABLE CUT at TWU_F43-F44(C192) cut at 1.589KM [total length 4.921KM] from TWU"
+2025-01-06 10:21:06,NTT-20250106-48144,,NNOC017,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KBD_F03,UnifiData (G&W):0,0,Minor,N,Open,2025-09-26 10:21:00,4636707,18086487,> 48H,"[FOMS] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F03 down at KBD,Sabah since 2023-02-07 13:07:46hrs. Check CABLE CUT at KBD_F03(C23) cut at 0.164KM [total length 1.026KM] from KBD"
+2024-12-11 15:21:13,NTT-20241211-26031,,ROBIN-RPA,NBN,SABAH,SABAH,PBP SELATAN,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,NBW-RTU-04,Unifi:0,0,Minor,N,Open,2024-12-11 18:20:00,-20304153,20314880,> 48H,PRI-2412-TN610 CPAMS Alarm(NBW-RTU-04) 11-12-2024 14:43:46 RTU Offline
+2024-12-10 10:26:36,NTT-20241210-24743,,Mohammad Hamli Bin Ono,INM,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,CABLE THEFT,FIBER CABLE,INM_C032_MHSEAL,Unifi:0,0,Minor,N,Open,2025-01-10 17:00:00,-17716953,20418957,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+
+Lat Long & Location : 6.021124, 116.147910 (JALAN SENJA,JALAN TUARAN )
+100Meter dari cabinet INM C032
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-12-04 11:01:28,NTT-20241204-19268,,ROBIN-RPA,M72,,SABAH,,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,M72-RTU-01,Unifi:0,0,Minor,N,Open,2024-12-04 14:01:00,-20924493,20935265,> 48H,PRI-2412-TL261 CPAMS Alarm(M72-RTU-01) 04-12-2024 10:19:00 RTU Offline
+2024-12-04 00:55:27,NTT-20241204-18928,,ROBIN-RPA,KBU,SABAH,SABAH,KOTA KINABALU 1,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,KBU-RTU-61,Unifi:0,0,Minor,N,Open,2024-12-04 03:55:00,-20960853,20971626,> 48H,PRI-2412-TL139 CPAMS Alarm(KBU-RTU-61) 04-12-2024 00:15:47 RTU Offline
+2024-12-03 09:16:05,NTT-20241203-18040,,ROBIN-RPA,TLP,SABAH,SABAH,SANDAKAN,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,TLP-RTU-02,Unifi:0,0,Minor,N,Open,2024-12-03 12:15:00,-21017253,21027988,> 48H,PRI-2412-TK822 CPAMS Alarm(TLP-RTU-02) 02-12-2024 22:49:49 RTU Offline
+2024-12-03 09:14:51,NTT-20241203-18037,,ROBIN-RPA,TGD,SABAH,SABAH,SANDAKAN,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,TGD-RTU-02,Unifi:0,0,Minor,N,Open,2024-12-03 12:14:00,-21017313,21028062,> 48H,PRI-2412-TK821 CPAMS Alarm(TGD-RTU-02) 02-12-2024 22:48:35 RTU Offline
+2024-11-28 16:02:23,NTT-20241128-14117,,ROBIN-RPA,KDT,SABAH,SABAH,PBP UTARA,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,KDT-RTU-02,Unifi:0,0,Minor,N,Open,2024-11-28 19:02:00,-21424833,21435610,> 48H,PRI-2411-TJ994 CPAMS Alarm(KDT-RTU-02) 28-11-2024 15:19:18 RTU Offline
+2024-11-28 16:01:09,NTT-20241128-14111,,ROBIN-RPA,PIS,SABAH,SABAH,PBP UTARA,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,PIS-RTU-02,Unifi:0,0,Minor,N,Open,2024-11-28 19:00:00,-21424953,21435684,> 48H,PRI-2411-TJ995 CPAMS Alarm(PIS-RTU-02) 28-11-2024 15:19:18 RTU Offline
+2024-11-28 10:08:28,NTT-20241128-13626,,Jaflee B. Hj. Hassan,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,"CABLE THEFT,CABLE_BREAKDOWN",FIBER CABLE,KBD_F25_MHSEAL,Unifi:0,0,Minor,N,Open,2024-12-30 12:00:00,-18685353,21456845,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+
+Lat Long & Location : 6.292963, 116.515537 (SK NAHABA, KOTA BELUD)
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-11-28 09:57:41,NTT-20241128-13611,,Mohammad Hamli Bin Ono,INM,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,"CABLE THEFT,CABLE_BREAKDOWN",FIBER CABLE,INM_F51_MHSEAL,Unifi:0,0,Minor,N,Open,2024-12-30 12:00:00,-18685353,21457492,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+
+Lat Long & Location : 5.997500, 116.130597 (JLN INANAM LAUT)
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-11-28 08:41:03,NTT-20241128-13549,,ROBIN-RPA,BWN,SABAH,SABAH,PBP SELATAN,n/a,No Impact,NFM - RTU Offline,Facilities Related Equipment,BWN-RTU-02,Unifi:0,0,Minor,N,Open,2024-11-28 11:40:00,-21451353,21462090,> 48H,PRI-2411-TJ914 CPAMS Alarm(BWN-RTU-02) 28-11-2024 08:05:23 RTU Offline
+2024-11-19 10:53:42,NTT-20241119-04732,,Mohammad Hamli Bin Ono,PPG,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,PPG_FDC_C001_MHSEAL,Unifi:0,0,Minor,N,Open,2024-12-20 17:00:00,-19531353,22231731,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+Info & Location : 
+ACP VENDOR bergerak membuat Rondaan Cegah Jenayah (ronda kabel TM) dikawasan PENAMPANG,KOTA KINABALU .
+ 
+1. JLN KARAMUNSING
+2. JLN TUNKU ABDUL RAHMAN
+3. JALAN KEBAJIKAN
+4. JLN FOO SANG
+5. JLN SANG KANCIL
+6. JLN PENAMPANG
+7. JLN BULATAN NENAS
+
+LAPOR TAMAT TUGAS. TERDAPAT MANHOLE DI JALAN AEROPOD,JALAN PENAMPANG,JALAN PALAS,JLN MAT SALLEH,LORONG TOSARAYA  MASIH TERBUKA DAN KABEL BERJUNTAI DAN BERADA KEADAAN RENDAH.
+
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-11-19 10:44:34,NTT-20241119-04715,,Jaflee B. Hj. Hassan,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_FDC_C001_MHSEAL,Unifi:0,0,Minor,N,Open,2024-12-20 13:43:00,-19543173,22232279,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+Location : Hadapan IPG Kampus Kent, Jalan Bolong
+Lat Long : 6.178653, 116.23044
+
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-11-19 10:36:29,NTT-20241119-04705,,Jaflee B. Hj. Hassan,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F13_MHSEAL,Unifi:0,0,Minor,N,Open,2024-12-20 13:35:00,-19543653,22232764,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+Location : Jalan Tuaran Sungai Damit
+Lat Long : 6.175525, 116.234655
+
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-11-05 14:46:01,NTT-20241105-91102,,Jaflee B. Hj. Hassan,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KBD_F19_MHSEAL,Unifi:0,0,Minor,N,Open,2024-12-05 17:42:00,-20824833,23427392,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+Location : Hadapan Perpustakaan Negeri Sabah Cwgn Kota Belud, Jalan Hasbollah
+Lat Long : 6.352815, 116.430885 
+
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-11-05 14:38:28,NTT-20241105-91088,,Mohammad Hamli Bin Ono,INM,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,INM_F08_MHSEAL,Unifi:0,0,Minor,N,Open,2024-11-05 17:33:00,-23417373,23427845,> 48H,"[FINM_MHseal] Received complain from (ACP/3rd party/management), required NFF to seal MH to prevent next incident.
+Lat Long : 6.000987, 116.141443
+Estimated Time To Resolved :
+14 day for seal with lead or 1 months for seal with cement"
+2024-09-22 18:04:34,NTT-20240922-49357,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F35,UnifiData (G&W):0,0,Minor,N,Open,2025-07-15 18:04:00,-1642713,27217079,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F35-F36 down at TRN,Sabah since 2024-09-22 18:03:17hrs. Check CABLE CUT at TRN_F35-F36(C96) cut at 3.293KM [total length 9.430KM] from TRN"
+2024-07-29 14:03:44,NTT-20240729-97626,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F37,UnifiData (G&W):0,0,Minor,N,Open,2025-06-16 14:03:00,-4162773,31983529,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F37-F38 down at TRN,Sabah since 2024-07-29 14:03:03hrs. Check CABLE CUT at TRN_F37-F38(C192) cut at 7.306KM [total length 10.547KM] from TRN"
+2024-07-23 17:06:29,NTT-20240723-92728,,NNOC017,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KBD_F15,UnifiData (G&W):0,0,Minor,N,Open,2025-06-23 17:06:00,-3546993,32490964,> 48H,"[FOMS] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F15 down at KBD,Sabah since 2024-07-23 17:05:20hrs. Check CABLE CUT at KBD_F15(C48) cut at 1.653KM [total length 4.398KM] from KBD"
+2024-07-22 21:37:39,NTT-20240722-91754,,NNOC017,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,KBD_F10,UnifiData (G&W):0,0,Minor,N,Open,2025-06-23 21:37:00,-3530733,32561094,> 48H,"[FOMS] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F10 down at KBD,Sabah since 2023-06-10 05:39:55hrs. Check PATCHING CONNECTION at KBD_F10(Port6) cut at 0.020KM [total length 2.176KM] from KBD"
+2024-07-18 14:04:56,NTT-20240718-87953,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F15,UnifiData (G&W):0,0,Minor,N,Open,2025-06-23 14:04:00,-3557913,32933857,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F15 down at TRN,Sabah since 2023-02-16 09:16:15hrs. Check CABLE CUT at TRN_F15(C48) cut at 0.860KM [total length 2.505KM] from TRN"
+2024-07-18 14:03:13,NTT-20240718-87951,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F12,UnifiData (G&W):0,0,Minor,N,Open,2025-06-23 14:03:00,-3557973,32933960,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F12 down at TRN,Sabah since 2023-07-11 03:31:39hrs. Check CABLE CUT at TRN_F12(C17) cut at 0.329KM [total length 1.354KM] from TRN"
+2024-07-18 13:56:41,NTT-20240718-87939,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F13,UnifiData (G&W):0,0,Minor,N,Open,2025-06-16 13:56:00,-4163193,32934352,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F13 down at TRN,Sabah since 2022-11-09 04:30:02hrs. Check CABLE CUT at TRN_F13(C96) cut at 2.562KM [total length 0.010KM] from TRN"
+2024-07-07 14:34:55,NTT-20240707-77478,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F06,UnifiData (G&W):0,0,Minor,N,Open,2025-06-30 14:34:00,-2951313,33882458,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F06 down at TRN,Sabah since 2023-06-25 07:04:22hrs. Check CABLE CUT at TRN_F06(C48) cut at 1.560KM [total length 12.352KM] from TRN"
+2024-07-07 14:30:52,NTT-20240707-77474,,NNOC017,TRN,SABAH,SABAH,PBP UTARA,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,TRN_F09,UnifiData (G&W):0,0,Minor,N,Open,2025-08-20 14:30:00,1454847,33882701,> 48H,"[FOMS] FIBER (East Malaysia;Tuaran) NOC detected TRN_F09 down at TRN,Sabah since 2023-01-09 00:22:19hrs. Check CABLE CUT at TRN_F09(C48) cut at 0.318KM [total length 1.883KM] from TRN"
+2024-06-04 02:38:48,NTT-20240604-47825,,,KBD,SABAH,SABAH,PBP UTARA,Data,Total Outage,CABLE_BREAKDOWN,FIBER CABLE,KBD_F14,Data (TM One):1,0,Minor,N,Open,2024-06-04 05:37:00,-36765933,36776625,> 48H,"[DCA] Alert! (Sabah; Kota Belud) Multiple IPME failed at KBD since 04/06@1926Hrs
+
+IPME (1+1) : 0 / 5
+1. Markas 5 Briged - total down
+2. ATMNWC Kem Kota Belud - total down
+3. Markas Angakatan Petugas 450 - backup down & running on main"
+2024-02-05 11:13:29,NTT-20240205-48234,,,BWN,SABAH,SABAH,PBP SELATAN,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,BWN-MBT 48C_J_A_LFC,Unifi:0,0,Minor,N,Open,2024-04-12 14:12:00,-41314233,47113744,> 48H,[FINM] Cable with low free core more than 50% core is faulty. Recommend NFF to repair.
+2024-02-02 15:41:50,NTT-20240202-46423,,,BFT,SABAH,SABAH,PBP SELATAN,n/a,No Impact,CABLE_BREAKDOWN,FIBER CABLE,BFT-MBT 48C_J_LFC,Unifi:0,0,Minor,N,Open,2024-04-12 18:40:00,-41298153,47356843,> 48H,[FINM] Cable with low free core more than 50% core is faulty. Recommend NFF to repair for SRR requirement.
+2023-07-11 05:29:24,NTT-20230711-60678,,Kimi,LLN,SABAH,SABAH,LABUAN,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,LLN_F06,Unifi:0,0,Minor,N,Open,2023-07-14 08:28:00,-64922073,65191989,> 48H,"[FOMS3] FIBER (East Malaysia;Layang-Layangan) NOC detected LLN_F06 down at LLN,Sabah since 2023-06-09 12:39:09hrs. Check CABLE CUT at LLN_F06(C3) cut at 16.950KM [total length 19.054KM] from LLN"
+2023-07-11 05:03:36,NTT-20230711-60668,,Kimi,RNU,SABAH,SABAH,PBP UTARA,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,RNU_F17,Unifi:0,0,Minor,N,Open,2023-07-14 08:03:00,-64923573,65193537,> 48H,"[FOMS3] FIBER (East Malaysia;Ranau) NOC detected RNU_F18 down at RNU,Sabah since 2023-02-16 09:10:02hrs. Check CABLE CUT at RNU_F18(C192) cut at 0.458KM [total length 2.996KM] from RNU"
+2023-07-11 02:44:46,NTT-20230711-60644,,Kimi,ERA,SABAH,SABAH,SANDAKAN,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,ERA_F30,Unifi:0,0,Minor,N,Open,2023-07-14 07:44:00,-64924713,65201867,> 48H,"[FOMS3] FIBER (East Malaysia;Elopura) NOC detected ERA_F41-F42 down at ERA,Sabah since 2023-06-07 14:16:26hrs. Check CABLE CUT at ERA_F41-F42(C192) cut at 14.280KM [total length 14.559KM] from ERA"
+2023-07-11 02:18:47,NTT-20230711-60637,,Kimi,ERA,SABAH,SABAH,SANDAKAN,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,ERA_F31,Unifi:0,0,Minor,N,Open,2023-07-14 07:18:00,-64926273,65203426,> 48H,"[FOMS3] FIBER (East Malaysia;Elopura) NOC detected ERA_F33 down at ERA,Sabah since 2023-04-28 10:57:15hrs. Check CABLE CUT at ERA_F33(C24) cut at 2.755KM [total length 4.501KM] from ERA"
+2023-07-11 02:11:08,NTT-20230711-60633,,Kimi,KBD,SABAH,SABAH,PBP UTARA,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,KBD_F05,Unifi:0,0,Minor,N,Open,2023-07-14 07:11:00,-64926693,65203885,> 48H,"[FOMS3] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F05 down at KBD,Sabah since 2023-02-16 09:28:13hrs. Check CABLE CUT at KBD_F05(C48) cut at 3.098KM [total length 4.370KM] from KBD
+[FOMS3] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F05 down at KBD,Sabah since 2023-05-13 05:21:17hrs. Check CABLE CUT at KBD_F05(C48) cut at 2.190KM [total length 4.370KM] from KBD
+[FOMS3] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F05 down at KBD,Sabah since 2023-03-10 13:51:12hrs. Check CABLE CUT at KBD_F05(C48) cut at 3.012KM [total length 4.370KM] from KBD
+[FOMS3] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F05 down at KBD,Sabah since 2023-05-02 06:02:48hrs. Check CABLE CUT at KBD_F05(C48) cut at 2.255KM [total length 4.370KM] from KBD
+[FOMS3] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F05 down at KBD,Sabah since 2023-06-08 03:17:52hrs. Check CABLE CUT at KBD_F05(C48) cut at 2.125KM [total length 4.370KM] from KBD
+[FOMS3] FIBER (East Malaysia;Kota Belud) NOC detected KBD_F05 down at KBD,Sabah since 2023-04-07 01:44:03hrs. Check CABLE CUT at KBD_F05(C48) cut at 2.397KM [total length 4.370KM] from KBD"
+2023-07-11 02:03:05,NTT-20230711-60630,,Kimi,MGL,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,MGL_F22,Unifi:0,0,Minor,N,Open,2023-07-13 05:02:00,-65020833,65204368,> 48H,"[FOMS3] FIBER (East Malaysia;Menggatal) NOC detected MGL_F25 down at MGL,Sabah since 2022-11-01 14:04:53hrs. Check PATCHING CONNECTION at MGL_F25(Port10) cut at 0.000KM [total length 9.258KM] from MGL
+
+Please check core FOMS & update core no if change core at Swift and Flash
+Before close case, please call 1800884747 option 1 [Access] to verify alarm"
+2023-07-10 23:50:30,NTT-20230710-60565,,Kimi,LLN,SABAH,SABAH,LABUAN,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,LLN_F17,Unifi:0,0,Minor,N,Open,2023-07-13 02:49:00,-65028813,65212323,> 48H,"[FOMS3] FIBER (East Malaysia;Layang-Layangan) NOC detected LLN_F16 down at LLN,Sabah since 2022-12-22 22:15:26hrs. Check CABLE CUT at LLN_F16(C48) cut at 1.284KM [total length 1.418KM] from LLN
+
+Please check core FOMS & update core no if change core at Swift and Flash
+Before close case, please call 1800884747 option 1 [Access] to verify alarm"
+2023-07-10 22:29:24,NTT-20230710-60526,,Kimi,NBN,SABAH,SABAH,PBP SELATAN,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,NBN_F03,Unifi:0,0,Minor,N,Open,2023-07-13 01:28:00,-65033673,65217189,> 48H,"[FOMS3] FIBER (East Malaysia;Nabawan) NOC detected NBN-F03 down at NBN,Sabah since 2023-05-02 13:18:43hrs. Check PATCHING CONNECTION at NBN-F03(Port6) cut at 0.090KM [total length 1.088KM] from NBN
+
+[FOMS3] FIBER (East Malaysia;Nabawan) NOC detected NBN-F03 down at NBN,Sabah since 2023-05-02 12:07:08hrs. Check CABLE CUT at NBN-F03(C16) cut at 0.218KM [total length 1.088KM] from NBN
+
+Please check core FOMS & update core no if change core at Swift and Flash
+Call 1800884747 option 1 [Access] to verify alarm"
+2023-07-10 22:02:56,NTT-20230710-60519,,Kimi,KBU,SABAH,SABAH,KOTA KINABALU 1,n/a,No Impact,FOMS Fiber LOS alarm,FIBER CABLE,KBU_F97,Unifi:0,0,Minor,N,Open,2023-07-13 01:00:00,-65035353,65218777,> 48H,"[FOMS3] FIBER (East Malaysia;Kota Kinabalu) NOC detected KBU-F97/F98 down at KBU,Sabah since 2023-04-08 20:36:28hrs. Check CABLE CUT at KBU-F97/F98(C192) cut at 10.850KM [total length 12.397KM] from KBU
+
+[FOMS3] FIBER (East Malaysia;Kota Kinabalu) NOC detected KBU-F97/F98 down at KBU,Sabah since 2023-04-07 04:39:03hrs. Check CABLE CUT at KBU-F97/F98(C192) cut at 10.929KM [total length 12.397KM] from KBU
+
+Please check core FOMS & update core no if change core at Swift and Flash
+Call 1800884747 option 1 [Access] to verify alarm"
