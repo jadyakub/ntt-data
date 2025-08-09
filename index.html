@@ -274,7 +274,7 @@
     window.addEventListener("DOMContentLoaded", async ()=>{
       await refreshFromGitHub(true);
       await readAssignments(); // <<< important: load centralized assignments
-      setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*1000);
+      setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*3600);
       [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
       if(refreshBtn) refreshBtn.addEventListener("click",()=>syncNow());
     });
