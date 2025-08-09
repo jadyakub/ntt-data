@@ -1,238 +1,513 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NTT Log Viewer + Team Assignment</title>
+  <title>NTT Log Viewer</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <style>
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 14px; }
-    th, td { text-align: center; }
+    body { font-family: 'Inter','Segoe UI',Tahoma,Geneva,Verdana,sans-serif; font-size:13px; }
+    @media print {
+      header,.shadow,.rounded-xl,input,select,button,#searchInput,#descriptionModal,#summaryDashboard,#assignModal,script{display:none!important}
+      main{padding:0;background:#fff;box-shadow:none}
+      table{font-size:12px} th,td{padding:4px 8px!important}
+    }
+    @media (hover:none) and (pointer:coarse), screen and (max-width:640px){
+      :root{--m-pad:12px}
+      main,header,.team-section,.grid,table,.overflow-x-auto{width:100%!important;max-width:100%!important}
+      body{overflow-x:hidden}
+      header{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:.5rem!important;padding:var(--m-pad)!important}
+      nav{display:flex!important;flex-direction:row;gap:1rem;margin-top:.5rem}
+      main>.grid:first-of-type{display:flex!important;flex-direction:column!important;gap:.5rem!important}
+      main>.grid:first-of-type .grid{display:flex!important;flex-direction:column!important;gap:.5rem!important}
+      #summaryDashboard{display:flex!important;flex-direction:column!important;gap:.75rem!important}
+      .overflow-x-auto{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+      #logTable{min-width:720px}
+      #logTable th,#logTable td{text-align:center;white-space:nowrap}
+      #assignModal{align-items:flex-start!important;padding-top:var(--m-pad)!important}
+      #assignModal>div{width:100%!important;max-width:none!important;border-radius:.75rem!important}
+    }
+    #logTable th,#logTable td{text-align:center}
+    #logTable thead th{position:sticky;top:0;z-index:1}
+    #toast{position:fixed;bottom:16px;right:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 10px 20px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s;font-size:12px}
+    #toast.show{opacity:1;transform:translateY(0)}
   </style>
 </head>
-<body class="min-h-screen bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800">
 
-  <!-- Header -->
-  <header class="bg-indigo-600 text-white px-5 py-4 shadow flex items-center justify-between">
-    <h1 class="text-lg font-bold tracking-wide">📊 NTT Log Viewer + Assignment</h1>
-    <div class="text-xs opacity-90">Netlify Functions demo</div>
+  <header class="bg-indigo-700 text-white px-6 py-4 shadow flex flex-wrap gap-3 items-center justify-between">
+    <h1 class="text-xl font-bold tracking-wide">📊 NTT Log Viewer</h1>
+    <div class="flex items-center gap-3">
+      <div id="lastUpdated" class="text-sm text-gray-100"></div>
+      <button id="refreshBtn" class="text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded border border-white/20">⟳ Sync from GitHub</button>
+    </div>
   </header>
 
-  <main class="max-w-7xl mx-auto p-4 space-y-4">
+  <main class="w-full min-h-screen px-2 sm:px-6 lg:px-8 py-6 bg-white shadow rounded-xl">
 
-    <!-- Controls -->
-    <section class="bg-white rounded-xl shadow p-4 grid gap-3 md:grid-cols-4">
-      <div class="md:col-span-2">
-        <label class="block text-sm font-semibold mb-1">Filter TM Node</label>
-        <select id="nodeFilter" class="w-full border rounded-lg px-3 py-2">
-          <option value="">All</option>
-          <option>KGU</option><option>TBN</option><option>TNM</option><option>SOO</option><option>NBN</option>
+    <!-- Filters -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <select id="filterNode" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
+          <option value="">Filter by TM Node</option>
+          <option value="KGU">KGU</option><option value="TBN">TBN</option>
+          <option value="SOO">SOO</option><option value="NBN">NBN</option><option value="TNM">TNM</option>
         </select>
+        <select id="filterDomain" class="border border-gray-300 rounded px-2 py-2 shadow-sm"><option value="">Filter by Domain</option></select>
+        <select id="filterAging" class="border border-gray-300 rounded px-2 py-2 shadow-sm"><option value="">Filter by Aging</option></select>
       </div>
-      <div>
-        <label class="block text-sm font-semibold mb-1">Search</label>
-        <input id="searchInput" class="w-full border rounded-lg px-3 py-2" placeholder="Find NTT / Domain / Network ID"/>
-      </div>
-      <div class="flex items-end gap-2">
-        <button id="reloadBtn" class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Reload CSV</button>
-        <button id="syncBtn" class="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">Sync Assignments</button>
-      </div>
-    </section>
+    </div>
 
-    <!-- Mini dashboard -->
-    <section class="grid md:grid-cols-4 gap-3">
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="text-sm text-gray-500">Team Faison</div>
-        <div id="cFaison" class="text-2xl font-bold">0</div>
-      </div>
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="text-sm text-gray-500">Team Fauzie</div>
-        <div id="cFauzie" class="text-2xl font-bold">0</div>
-      </div>
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="text-sm text-gray-500">Team Rudi</div>
-        <div id="cRudi" class="text-2xl font-bold">0</div>
-      </div>
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="text-sm text-gray-500">Team Rosdee</div>
-        <div id="cRosdee" class="text-2xl font-bold">0</div>
-      </div>
-    </section>
+    <div class="mb-4">
+      <input id="searchInput" type="text" placeholder="🔍 Search keyword (e.g., dp faulty)" class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+    </div>
 
-    <!-- Assignment bar -->
-    <section class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row items-center gap-3">
-      <div class="font-semibold">Assign selected to:</div>
-      <select id="teamSelect" class="border rounded-lg px-3 py-2">
-        <option value="">— choose team —</option>
-        <option value="Team Faison">Team Faison</option>
-        <option value="Team Fauzie">Team Fauzie</option>
-        <option value="Team Rudi">Team Rudi</option>
-        <option value="Team Rosdee">Team Rosdee</option>
-      </select>
-      <button id="assignBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Assign</button>
-      <div class="text-xs text-gray-500 ml-auto">Tip: use the checkbox column to select rows</div>
-    </section>
+    <div id="nttSummary" class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
+      <div id="nttSummaryContainer" class="flex flex-wrap gap-4 justify-start sm:justify-between"></div>
+    </div>
 
-    <!-- Table -->
-    <section class="bg-white rounded-xl shadow overflow-auto">
-      <table class="min-w-full">
-        <thead class="bg-gray-50">
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
+      <div id="zoneDashboard" class="space-y-2"></div>
+    </div>
+
+    <div id="summaryDashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-sm"></div>
+
+    <div class="overflow-x-auto text-sm">
+      <table class="min-w-full table-auto border-collapse text-center" id="logTable">
+        <thead class="bg-gray-200 text-sm uppercase tracking-wider">
           <tr>
-            <th class="px-3 py-2"><input id="selectAll" type="checkbox"/></th>
-            <th class="px-3 py-2">NTT Number</th>
-            <th class="px-3 py-2">TM Node</th>
-            <th class="px-3 py-2">Domain</th>
-            <th class="px-3 py-2">Network ID</th>
-            <th class="px-3 py-2">Assigned Team</th>
+            <th class="px-4 py-2">Date</th><th class="px-4 py-2">NTT Number</th><th class="px-4 py-2">TM Node</th>
+            <th class="px-4 py-2">Symptom</th><th class="px-4 py-2">Domain</th><th class="px-4 py-2">Network ID</th>
+            <th class="px-4 py-2">CTTs Linked</th><th class="px-4 py-2">Aging</th><th class="px-4 py-2">Days</th>
           </tr>
         </thead>
-        <tbody id="tbody"></tbody>
+        <tbody id="logTableBody"></tbody>
       </table>
-    </section>
-
+    </div>
   </main>
 
+  <!-- Description Modal -->
+  <div id="descriptionModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-2xl shadow-xl">
+      <h2 class="text-lg font-semibold mb-2">Description</h2>
+      <pre id="descriptionContent" class="text-sm whitespace-pre-wrap max-h-96 overflow-y-auto bg-gray-100 p-3 rounded"></pre>
+      <button onclick="document.getElementById('descriptionModal').classList.add('hidden')" class="w-full sm:w-auto px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">Close</button>
+    </div>
+  </div>
+
+  <!-- Team Assign Modal (3 kolum + Show Pool) -->
+  <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
+      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">📋 Team NTT Assignment — <span id="assignTeamTitle"></span></div>
+        <button id="assignModalClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+      <div class="p-4 space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <input id="assignSearch" type="text" placeholder="Search NTT / Network ID / Symptom" class="flex-1 border rounded px-3 py-2">
+          <div class="text-sm flex items-center gap-4">
+            <span>Assigned: <b id="assignCount">0</b></span>
+            <label class="flex items-center gap-1"><input id="showPool" type="checkbox" class="h-4 w-4"><span>Show Pool</span></label>
+            <label class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><span>Show Done</span></label>
+          </div>
+        </div>
+        <div class="border rounded overflow-hidden">
+          <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
+            <div class="col-span-6">NTT</div>
+            <div class="col-span-4">NETWORK ID</div>
+            <div class="col-span-2">AGING</div>
+          </div>
+          <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NTT Detail Modal -->
+  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
+      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">🗂️ NTT Log Detail</div>
+        <button id="nttDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+      <div class="p-4 space-y-4 text-sm">
+        <div class="rounded-lg border border-indigo-200 p-3 bg-indigo-50/40">
+          <div class="font-semibold mb-1">📍 Location for: <span id="detailLocationFor" class="font-mono"></span></div>
+          <div class="grid grid-cols-1 gap-1">
+            <div>Street: <span id="detailStreet" class="font-medium"></span></div>
+            <div>Section: <span id="detailSection" class="font-medium"></span></div>
+            <div>Coordinates: <a id="detailCoordsLink" href="#" target="_blank" class="text-indigo-600 underline">-</a></div>
+          </div>
+        </div>
+        <div>
+          <div class="font-semibold mb-1">Description</div>
+          <pre id="detailDescription" class="text-xs whitespace-pre-wrap max-h-80 overflow-y-auto bg-gray-100 p-3 rounded border"></pre>
+        </div>
+        <div class="text-xs text-gray-600">
+          <div>NTT: <b id="detailNttNo"></b></div>
+          <div>Assigned: <b id="detailAssignedTo">Unassigned</b></div>
+        </div>
+        <div class="space-y-2">
+          <div class="font-semibold">Upload Evidence:</div>
+          <input id="evidenceInput" type="file" class="block w-full text-xs border rounded px-2 py-1">
+          <button id="uploadEvidenceBtn" class="w-full sm:w-auto px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">Upload Evidence</button>
+          <div id="evidenceStatus" class="text-xs text-gray-600"></div>
+        </div>
+        <div class="flex items-center justify-between pt-2">
+          <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
+          <div class="text-xs text-gray-500">Mark as <b>Done</b> & tambah productivity (sekali sahaja per NTT).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
   <script>
-    // ====== Config ======
-    const cloudCSVUrl =
-      "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv?nocache=" + Date.now();
+    const lastUpdatedEl = document.getElementById("lastUpdated");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const logTableBody = document.getElementById("logTableBody");
+    const filterNode = document.getElementById("filterNode");
+    const filterDomain = document.getElementById("filterDomain");
+    const filterAging = document.getElementById("filterAging");
+    const searchInput = document.getElementById("searchInput");
+    const summaryDashboard = document.getElementById("summaryDashboard");
+    const descriptionModal = document.getElementById("descriptionModal");
+    const descriptionContent = document.getElementById("descriptionContent");
+    const toast = document.getElementById("toast");
 
-    const functionURL = "/.netlify/functions/assignments"; // GET / POST
+    /* ===== Centralized Assignments (GitHub CSV) ===== */
+    const ASSIGN_REMOTE_RAW = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_assignments.csv";
+    const ASSIGN_SAVE_ENDPOINT = "/.netlify/functions/assignments";
+    const ASSIGN_KEY = "nttAssignments";
+    const ASSIGN_VER_KEY = "nttAssignmentsVersion";
 
-    // ====== State ======
-    let fullData = [];           // CSV rows
-    let assignments = {};        // { nttNumber: "Team ..." }
+    function cacheAssignments(map){ localStorage.setItem(ASSIGN_KEY, JSON.stringify(map)); localStorage.setItem(ASSIGN_VER_KEY, String(Date.now())); }
+    function readAssignmentsCache(){ try{ return JSON.parse(localStorage.getItem(ASSIGN_KEY)||"{}"); }catch{ return {}; } }
 
-    // ====== Helpers ======
-    const $ = (id) => document.getElementById(id);
-
-    function renderTable() {
-      const node = $("nodeFilter").value.trim();
-      const q = $("searchInput").value.trim().toLowerCase();
-
-      const rows = fullData.filter(r => {
-        const byNode = !node || (r["TM Node"] || r.Node || "").toUpperCase().startsWith(node.toUpperCase());
-        const s = (r["NTT Number"] + " " + (r["TM Node"]||r.Node) + " " + r.Domain + " " + r["Network ID"]).toLowerCase();
-        const bySearch = !q || s.includes(q);
-        return byNode && bySearch;
-      });
-
-      const tb = $("tbody");
-      tb.innerHTML = "";
-
-      rows.forEach(r => {
-        const ntt = (r["NTT Number"] || "").trim();
-        const tr = document.createElement("tr");
-        tr.className = "border-t";
-
-        tr.innerHTML = `
-          <td class="px-3 py-2"><input type="checkbox" data-ntt="${ntt}"/></td>
-          <td class="px-3 py-2 font-semibold">${ntt}</td>
-          <td class="px-3 py-2">${r["TM Node"] || r.Node || ""}</td>
-          <td class="px-3 py-2">${r.Domain || ""}</td>
-          <td class="px-3 py-2">${r["Network ID"] || ""}</td>
-          <td class="px-3 py-2">${assignments[ntt] || "-"}</td>
-        `;
-        tb.appendChild(tr);
-      });
-
-      updateDashboardCounts();
-    }
-
-    function updateDashboardCounts() {
-      const counts = { "Team Faison":0, "Team Fauzie":0, "Team Rudi":0, "Team Rosdee":0 };
-      Object.values(assignments).forEach(t => { if (counts[t] !== undefined) counts[t]++; });
-      $("cFaison").textContent = counts["Team Faison"];
-      $("cFauzie").textContent = counts["Team Fauzie"];
-      $("cRudi").textContent   = counts["Team Rudi"];
-      $("cRosdee").textContent = counts["Team Rosdee"];
-    }
-
-    async function loadCSV() {
-      return new Promise((resolve, reject) => {
-        Papa.parse(cloudCSVUrl, {
-          download: true,
-          header: true,
-          complete: (res) => resolve(res.data.filter(Boolean)),
-          error: reject
-        });
-      });
-    }
-
-    async function loadAssignmentsFromAPI() {
+    async function loadAssignmentsRemote() {
       try {
-        const res = await fetch(functionURL);
-        if (!res.ok) throw new Error("GET failed");
-        const data = await res.json();
-        assignments = data.assignments || {};
-        localStorage.setItem("assignments", JSON.stringify(assignments)); // cache
-      } catch (e) {
-        // Fallback to localStorage
-        const cached = localStorage.getItem("assignments");
-        assignments = cached ? JSON.parse(cached) : {};
-        console.warn("Using localStorage fallback for assignments:", e.message);
+        const res = await fetch(ASSIGN_REMOTE_RAW + "?nocache=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP "+res.status);
+        const csv = await res.text();
+        const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+        const map = {};
+        (parsed.data || []).forEach(r => {
+          const ntt = (r["NTT Number"]||"").trim();
+          if (!ntt) return;
+          map[ntt] = {
+            team:(r["Team"]||"").trim(),
+            status:(r["Status"]||"assigned").trim(),
+            note:r["Note"]||"",
+            at:r["UpdatedAt"]||null
+          };
+        });
+        cacheAssignments(map);
+        return map;
+      } catch(e) {
+        return readAssignmentsCache();
       }
     }
 
-    async function saveAssignmentsToAPI(newOnes) {
-      try {
-        const res = await fetch(functionURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ assignments: newOnes })
-        });
-        if (!res.ok) throw new Error("POST failed");
-        const data = await res.json();
-        assignments = data.assignments || assignments;
-        localStorage.setItem("assignments", JSON.stringify(assignments));
-        return true;
-      } catch (e) {
-        console.warn("API save failed, keeping local only:", e.message);
-        // Merge to local fallback
-        assignments = { ...assignments, ...newOnes };
-        localStorage.setItem("assignments", JSON.stringify(assignments));
-        return false;
+    async function upsertAssignmentRemote({ nttNumber, team, status="assigned", note="" }) {
+      const res = await fetch(ASSIGN_SAVE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nttNumber, team, status, note })
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const { row } = await res.json();
+      const cache = readAssignmentsCache();
+      cache[nttNumber] = { team: row.Team, status: row.Status, note: row.Note, at: row.UpdatedAt };
+      cacheAssignments(cache);
+      return row;
+    }
+
+    async function readAssignments(){ return await loadAssignmentsRemote(); } // for first load
+    function getAssignment(ntt){ return readAssignmentsCache()[ntt] || null; }
+    async function saveAssignment(ntt, team, note=""){ await upsertAssignmentRemote({ nttNumber: ntt, team, note, status:"assigned" }); }
+    async function setDoneRemote(ntt, done=true){
+      const current = getAssignment(ntt) || {};
+      await upsertAssignmentRemote({ nttNumber: ntt, team: current.team || "", status: done ? "done" : "assigned" });
+    }
+    window.addEventListener("storage",(e)=>{ if(e.key===ASSIGN_VER_KEY) applyFilters(); });
+
+    /* ===== Productivity & Evidence (local) ===== */
+    const PRODUCTIVITY_KEY="nttProductivity";
+    function readProd(){ try{ return JSON.parse(localStorage.getItem(PRODUCTIVITY_KEY)||'{"counts":{},"items":{}}'); }catch{ return {counts:{},items:{}}; } }
+    function writeProd(p){ localStorage.setItem(PRODUCTIVITY_KEY, JSON.stringify(p)); }
+    function incProductivity(team, ntt){ const p=readProd(); if(p.items[ntt]) return; p.items[ntt]=true; p.counts[team]=(p.counts[team]||0)+1; writeProd(p); }
+    function productivityCount(team){ const p=readProd(); return p.counts[team]||0; }
+    function evidenceKey(ntt){ return `evidence:${ntt}`; }
+    function saveEvidence(ntt, base64, name){ localStorage.setItem(evidenceKey(ntt), JSON.stringify({base64,name,at:new Date().toISOString()})); }
+    function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evidenceKey(ntt))||"null"); }catch{return null;} }
+
+    /* ===== Network ID Location ===== */
+    const LOCATION_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/network_id_location.csv";
+    let locationIndex=null;
+    async function loadLocationIndex(force=false){
+      if(locationIndex && !force) return locationIndex;
+      try{ const cached=JSON.parse(localStorage.getItem("nttLocationIndex")||"null"); if(cached && Array.isArray(cached.rows)){ locationIndex=cached.rows; return locationIndex; } }catch{}
+      const resp=await fetch(LOCATION_RAW_URL+"?nocache="+Date.now(),{cache:"no-store"});
+      const text=await resp.text();
+      const parsed=Papa.parse(text,{header:true,skipEmptyLines:true});
+      locationIndex=(parsed.data||[]).map(r=>({networkId:(r["Network ID"]||"").trim(),locationFor:(r["Network ID"]||"").trim(),street:r["Street Name"]||"",section:r["Section"]||"",lat:(r["Latitude"]||"").toString().trim(),lng:(r["Longitude"]||"").toString().trim()}));
+      localStorage.setItem("nttLocationIndex", JSON.stringify({rows:locationIndex, at:Date.now()}));
+      return locationIndex;
+    }
+    function findLocationByNetworkId(nid){ if(!locationIndex) return null; return locationIndex.find(r=>r.networkId===(nid||"").trim())||null; }
+
+    /* ===== Data ===== */
+    let fullData=[]; let currentFilteredData=[];
+    const allowedNodes=["KGU","TBN","SOO","NBN","TNM"];
+    const REPO_RAW_URL="https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
+    const AUTO_REFRESH_SECONDS=30;
+    const nowStr=()=>new Date().toLocaleString();
+    const cloudUrl=()=>REPO_RAW_URL+"?nocache="+Date.now();
+    function showToast(msg){ if(!toast) return; toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1800); }
+
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshFromGitHub(); });
+
+    window.addEventListener("DOMContentLoaded", async ()=>{
+      await refreshFromGitHub(true);
+      await readAssignments(); // <<< important: load centralized assignments
+      setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*1000);
+      [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
+      if(refreshBtn) refreshBtn.addEventListener("click",()=>syncNow());
+    });
+
+    function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); }
+
+    async function refreshFromGitHub(firstLoad=false){
+      try{
+        const resp=await fetch(cloudUrl(),{cache:"no-store"});
+        if(!resp.ok) throw new Error("HTTP "+resp.status);
+        const csvText=await resp.text();
+        const parsed=Papa.parse(csvText,{header:true,skipEmptyLines:true});
+        const data=(parsed.data||[]).map(row=>({
+          "NTT Create Date":row["NTT Create Date"],"NTT Number":row["NTT Number"],
+          "TM Node":(row["TM Node"]||"").trim().toUpperCase(),"Symptom":row["Symptom"],
+          "Domain":(row["Domain"]||"").trim(),"Network ID":row["Network ID"],"CTTs Linked":row["CTTs Linked"],
+          "Aging Category":(row["Aging Category"]||"").trim(),"Zone":(row["Zone"]||"").trim().toUpperCase(),
+          "Description":row["Description"]
+        })).filter(r=>allowedNodes.includes(r["TM Node"]));
+        fullData=data; localStorage.setItem("nttData",JSON.stringify(fullData));
+        populateFilters(fullData); applyFilters();
+        lastUpdatedEl.textContent="Last updated from GitHub: "+nowStr();
+        lastUpdatedEl.className="text-sm text-green-100"; if(!firstLoad) showToast("Data refreshed");
+      }catch(e){
+        const cached=localStorage.getItem("nttData");
+        if(cached){ fullData=JSON.parse(cached); populateFilters(fullData); applyFilters();
+          lastUpdatedEl.textContent="Using cache (GitHub not reachable): "+nowStr(); lastUpdatedEl.className="text-sm text-yellow-200"; showToast("Using cache");
+        } else { lastUpdatedEl.textContent="Failed to load from GitHub: "+e.message; lastUpdatedEl.className="text-sm text-red-200"; showToast("Failed to load data"); }
       }
     }
 
-    // ====== Events ======
-    $("nodeFilter").addEventListener("change", renderTable);
-    $("searchInput").addEventListener("input", renderTable);
-    $("reloadBtn").addEventListener("click", async () => {
-      fullData = await loadCSV();
-      renderTable();
-    });
-    $("syncBtn").addEventListener("click", async () => {
-      await loadAssignmentsFromAPI();
-      renderTable();
-    });
+    function getDayDifference(dateStr){ const t=new Date(), d=new Date(dateStr); if(isNaN(d.getTime())) return NaN; return Math.floor((t-d)/(1000*60*60*24)); }
 
-    $("selectAll").addEventListener("change", (e) => {
-      document.querySelectorAll('#tbody input[type="checkbox"]').forEach(cb => cb.checked = e.target.checked);
-    });
+    function populateTable(data){
+      const out=[];
+      for(const row of data){
+        const ageCat=row["Aging Category"]||"";
+        const agingClass=ageCat.includes("48H")?"bg-red-500":(ageCat.includes("24H")?"bg-orange-400":"bg-green-500");
+        const daysCount=getDayDifference(row["NTT Create Date"]);
+        const asg=getAssignment(row["NTT Number"]);
+        const badge=asg?('<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">'+asg.team+(asg.status==="done"?" • done":"")+'</span>'):"";
+        out.push(
+          '<tr class="border-b hover:bg-gray-50">'
+          +'<td class="px-4 py-2">'+(row["NTT Create Date"]||"")+'</td>'
+          +'<td class="px-4 py-2"><button class="text-indigo-600 underline" data-desc="'+String(row["Description"]||"").replace(/\"/g,'&quot;')+'">'+(row["NTT Number"]||"")+' '+badge+'</button></td>'
+          +'<td class="px-4 py-2">'+(row["TM Node"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["Symptom"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["Domain"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["Network ID"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["CTTs Linked"]||"")+'</td>'
+          +'<td class="px-4 py-2"><span class="px-2 py-1 rounded text-white '+agingClass+'">'+ageCat+'</span></td>'
+          +'<td class="px-4 py-2">'+(isFinite(daysCount)?daysCount:"-")+'</td></tr>'
+        );
+      }
+      logTableBody.innerHTML=out.join("");
+      logTableBody.querySelectorAll('button[data-desc]').forEach(btn=>{
+        btn.addEventListener('click',()=>{ descriptionContent.textContent=(btn.getAttribute('data-desc')||""); descriptionModal.classList.remove('hidden'); });
+      });
+    }
 
-    $("assignBtn").addEventListener("click", async () => {
-      const team = $("teamSelect").value;
-      if (!team) { alert("Please choose a team first."); return; }
+    function populateFilters(data){
+      const domainSet=new Set(data.map(d=>(d["Domain"]||"").trim()).filter(Boolean));
+      domainSet.add("LTE 4G");
+      const domains=[...domainSet].sort();
+      const agings=[...new Set(data.map(d=>(d["Aging Category"]||"").trim()).filter(Boolean))].sort();
+      filterDomain.innerHTML='<option value="">Filter by Domain</option>'+domains.map(d=>`<option value="${d}">${d}</option>`).join('');
+      filterAging.innerHTML='<option value="">Filter by Aging</option>'+agings.map(a=>`<option value="${a}">${a}</option>`).join('');
+    }
 
-      const checked = Array.from(document.querySelectorAll('#tbody input[type="checkbox"]:checked'));
-      if (checked.length === 0) { alert("Please select at least one row."); return; }
+    function applyFilters(){
+      const node=filterNode.value, domain=filterDomain.value, aging=filterAging.value, keyword=(searchInput.value||"").toLowerCase();
+      const filtered=fullData.filter(row=>{
+        const okNode=!node||(row["TM Node"]||"")===node;
+        const okDomain=!domain||(row["Domain"]||"")===domain;
+        const okAging=!aging||(row["Aging Category"]||"")===aging;
+        const okSearch=!keyword||Object.values(row).some(v=>String(v||"").toLowerCase().includes(keyword));
+        return okNode&&okDomain&&okAging&&okSearch;
+      });
+      currentFilteredData=filtered;
+      populateTable(filtered); populateDashboard(filtered); updateNTTSummary(filtered); populateZoneDashboard(filtered);
+    }
 
-      const updates = {};
-      checked.forEach(cb => { updates[cb.dataset.ntt] = team; });
-      await saveAssignmentsToAPI(updates);
-      renderTable();
-      $("selectAll").checked = false;
-    });
+    function toggleTeam(teamId){ const section=document.getElementById(teamId); if(section) section.classList.toggle("hidden"); }
 
-    // ====== Init ======
-    (async () => {
-      fullData = await loadCSV();
-      await loadAssignmentsFromAPI();
-      renderTable();
-    })();
+    const TEAM_ALIASES={"TEAM FAISON":["TEAM FAISON"],"TEAM FAUZIE":["TEAM FAUZIE"],"TEAM RUDI":["TEAM RUDI"],"TEAM ROSDEE":["TEAM ROSDEE"]};
+    function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
 
+    function populateDashboard(data){
+      const teams={"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
+      const agingLabels=["< 8H","8H - 12H","12H - 24H","24H - 48H","> 48H"]; const icons=["🟢","🟡","🔶","🔸","🔴"];
+      summaryDashboard.innerHTML="";
+      const assignments=readAssignmentsCache();
+
+      Object.entries(teams).forEach(([team,nodes])=>{
+        const teamId=team.replace(/\s+/g,"_");
+        let summaryHTML='<div class="border border-green-600 rounded p-2"><div class="flex justify-between items-center mb-2"><h2 class="text-center font-bold text-green-700">'+team+'</h2><button onclick="toggleTeam(\''+teamId+'\')" class="text-xs bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded">Hide</button></div><div id="'+teamId+'" class="team-section">';
+        nodes.forEach(node=>{
+          summaryHTML+='<div class="grid grid-cols-5 gap-2 text-xs mb-2">';
+          agingLabels.forEach((ag,idx)=>{
+            const count=data.filter(d=>d["TM Node"]===node && d["Aging Category"]===ag).length;
+            const color=ag.includes("48H")?"bg-red-500 text-white":(ag.includes("24H")?"bg-orange-400 text-white":"bg-gray-100");
+            summaryHTML+=`<div class="px-2 py-1 rounded ${color}">${icons[idx]} ${node} ${ag}: ${count}</div>`;
+          });
+          const total=data.filter(d=>d["TM Node"]===node).length;
+          summaryHTML+=`<div class="col-span-5 text-center text-blue-700 mt-1">📘 Total ${node}: ${total}</div></div>`;
+        });
+        const assignedForTeam=data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status!=="done"; }).length;
+        const doneForTeam=data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status==="done"; }).length;
+        const prod=productivityCount(team);
+        summaryHTML+=`</div><div class="mt-2 flex items-center justify-between"><div class="text-xs space-x-2"><span class="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-700 font-semibold">🗂️ Assigned: ${assignedForTeam}</span><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 text-emerald-700 font-semibold">✅ Done: ${doneForTeam}</span><span class="inline-flex items-center px-2 py-1 rounded bg-sky-100 text-sky-700 font-semibold">📈 Productivity: ${prod}</span></div><button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button></div></div>`;
+        summaryDashboard.innerHTML+=summaryHTML;
+      });
+
+      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{ btn.addEventListener('click',()=>openAssignModal(btn.getAttribute('data-team'))); });
+    }
+
+    function updateNTTSummary(data){
+      const cfg=[{label:"< 8H",ring:"ring-green-400",text:"text-green-600"},{label:"8H - 12H",ring:"ring-yellow-400",text:"text-yellow-600"},{label:"12H - 24H",ring:"ring-orange-400",text:"text-orange-500"},{label:"24H - 48H",ring:"ring-red-400",text:"text-red-500"},{label:"> 48H",ring:"ring-rose-400",text:"text-rose-600"}];
+      const c=document.getElementById("nttSummaryContainer"); c.innerHTML=""; const frag=document.createDocumentFragment();
+      cfg.forEach(cat=>{ const count=data.filter(d=>(d["Aging Category"]||"")===cat.label).length; const overdue=cat.label==="> 48H"? data.filter(d=>(d["Aging Category"]||"")===cat.label && getDayDifference(d["NTT Create Date"])>2).length:0; const w=document.createElement('div'); w.className='flex flex-col items-center'; w.innerHTML=`<div class="w-14 h-14 rounded-full ring-4 ${cat.ring} flex items-center justify-center text-lg font-bold text-gray-800">${count}</div><span class="text-xs mt-1 ${cat.text}">${cat.label}${overdue?` • overdue: ${overdue}`:""}</span>`; frag.appendChild(w); }); c.appendChild(frag);
+    }
+
+    function populateZoneDashboard(data){
+      const targetZone="PBP SELATAN", targetDomain="PASSIVE ELEMENT NOVA", nodes=["KGU","TBN","SOO","NBN","TNM"];
+      const filtered=data.filter(d=>String(d["Zone"]||"").trim().toUpperCase()===targetZone && String(d["Domain"]||"").trim().toUpperCase()===targetDomain && nodes.includes(String(d["TM Node"]||"").trim().toUpperCase()));
+      const el=document.getElementById("zoneDashboard");
+      if(!filtered.length){ el.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>'; return; }
+      const counts=Object.fromEntries(nodes.map(n=>[n,0])); filtered.forEach(r=>{ const n=String(r["TM Node"]||"").trim().toUpperCase(); if(n in counts) counts[n]++; });
+      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]); const max=Math.max(...sorted.map(([,c])=>c),1);
+      el.innerHTML=sorted.map(([n,cnt])=>`<div class="flex items-center justify-between gap-2"><div class="text-sm font-medium w-16">${n}</div><div class="w-full bg-gray-200 rounded h-4 relative"><div class="bg-red-500 h-4 rounded transition-all duration-500" style="width:${cnt/max*100}%"></div><span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${cnt}</span></div></div>`).join("");
+      const total=sorted.reduce((s,[,c])=>s+c,0); el.innerHTML+=`<div class="flex justify-between mt-4 pt-2 border-t text-sm font-semibold text-gray-700"><div>Grand Total</div><div>${total}</div></div>`;
+    }
+
+    /* ===== NTT Detail ===== */
+    async function openNttDetail(ntt){
+      const row=(currentFilteredData.length?currentFilteredData:fullData).find(r=>String(r["NTT Number"])===String(ntt));
+      if(!row){ showToast("NTT not found"); return; }
+      const modal=document.getElementById("nttDetailModal");
+      const el=id=>document.getElementById(id);
+      el("detailNttNo").textContent=row["NTT Number"];
+      const asg=getAssignment(row["NTT Number"]); el("detailAssignedTo").textContent=asg?(asg.team+(asg.status==="done"?" • done":"")):"Unassigned";
+      try{ await loadLocationIndex(); }catch{}
+      const loc=findLocationByNetworkId(row["Network ID"]);
+      el("detailLocationFor").textContent=loc?.locationFor || row["Network ID"] || "-";
+      el("detailStreet").textContent=loc?.street || "-";
+      el("detailSection").textContent=loc?.section || "-";
+      const lat=loc?.lat,lng=loc?.lng, gm=(lat&&lng)?`https://www.google.com/maps?q=${lat},${lng}`:"#";
+      el("detailCoordsLink").textContent=(lat&&lng)?`${lat}, ${lng}`:"-"; el("detailCoordsLink").href=gm;
+      el("detailDescription").textContent=row["Description"]||"-";
+      const ev=readEvidence(row["NTT Number"]); el("evidenceStatus").textContent=ev?`Uploaded: ${ev.name} @ ${new Date(ev.at).toLocaleString()}`:"No evidence yet.";
+      el("uploadEvidenceBtn").onclick=()=>{ const inp=el("evidenceInput"); if(!inp.files||!inp.files[0]){showToast("Choose a file first");return;} const f=inp.files[0]; const r=new FileReader(); r.onload=()=>{ saveEvidence(row["NTT Number"], r.result, f.name); el("evidenceStatus").textContent=`Uploaded: ${f.name} @ ${new Date().toLocaleString()}`; showToast("Evidence uploaded (local)"); }; r.readAsDataURL(f); };
+      el("resolveBtn").onclick=async()=>{ const n=row["NTT Number"]; const a=getAssignment(n); await setDoneRemote(n,true); if(a?.team) incProductivity(a.team,n); applyFilters(); showToast("NTT marked as Done"); closeNttDetail(); };
+      modal.classList.remove("hidden"); modal.classList.add("flex");
+    }
+    function closeNttDetail(){ const m=document.getElementById("nttDetailModal"); m.classList.add("hidden"); m.classList.remove("flex"); }
+    document.getElementById("nttDetailClose").addEventListener("click", closeNttDetail);
+
+    /* ===== Assign Modal (with Show Pool) ===== */
+    function openAssignModal(team){
+      const modal=document.getElementById('assignModal');
+      const title=document.getElementById('assignTeamTitle');
+      const listEl=document.getElementById('assignList');
+      const searchEl=document.getElementById('assignSearch');
+      const showDoneEl=document.getElementById('showDone');
+      const showPoolEl=document.getElementById('showPool');
+      const countEl=document.getElementById('assignCount');
+      title.textContent=team;
+
+      async function handleAssign(ntt){
+        await saveAssignment(ntt, team);
+        applyFilters();
+        render();
+        showToast(`Assigned ${ntt} → ${team}`);
+      }
+
+      function render(){
+        const asgMap=readAssignmentsCache();
+        const q=(searchEl.value||'').toLowerCase();
+        const showDone=showDoneEl.checked;
+        const showPool=showPoolEl.checked;
+
+        // Pool: semua NTT ikut filter (kecuali jika showPool off -> hanya assigned team ini)
+        const base=(currentFilteredData.length?currentFilteredData:fullData).filter(r=>{
+          const a=asgMap[r['NTT Number']];
+          if(!showPool){
+            if(!a || a.team!==team) return false;
+            if(!showDone && a.status==='done') return false;
+          }
+          if(!q) return true;
+          return [r['NTT Number'], r['Network ID'], r['Symptom']].some(v => (v||'').toString().toLowerCase().includes(q));
+        });
+
+        countEl.textContent = base.filter(r => asgMap[r['NTT Number']]?.team===team && asgMap[r['NTT Number']]?.status!=='done').length;
+
+        listEl.innerHTML = base.map(r=>{
+          const aging=(r['Aging Category']||'').trim();
+          const cls=aging.includes('48H')?'bg-red-500':(aging.includes('24H')?'bg-orange-400':'bg-green-500');
+          const desc=(r['Description']||'').toString().replace(/"/g,'&quot;');
+          const a=asgMap[r['NTT Number']];
+          const isThisTeam=a?.team===team;
+          const rowCls = showPool ? (isThisTeam ? 'bg-white' : 'bg-yellow-50 hover:bg-yellow-100') : 'bg-white';
+          const hint = showPool ? (isThisTeam ? 'Open detail' : 'Click to assign to '+team) : 'Open detail';
+          return `<div class="grid grid-cols-12 items-center px-3 py-2 text-sm ${rowCls}">
+            <div class="col-span-6">
+              <button class="rowAction text-indigo-700 underline font-medium" data-ntt="${r['NTT Number']}" title="${hint}">
+                ${r['NTT Number']}
+              </button>
+              <div class="text-xs text-gray-500">${r['Domain']||''}${a?` • ${a.team}${a.status==='done'?' • done':''}`:''}</div>
+            </div>
+            <div class="col-span-4 truncate">${r['Network ID']||''}</div>
+            <div class="col-span-2 text-right"><span class="text-white text-[11px] px-2 py-0.5 rounded ${cls}">${aging||'-'}</span></div>
+          </div>`;
+        }).join('');
+
+        // click behavior
+        listEl.querySelectorAll('.rowAction').forEach(btn=>{
+          btn.addEventListener('click', async ()=>{
+            const ntt=btn.getAttribute('data-ntt');
+            const a=readAssignmentsCache()[ntt];
+            if(showPool && (!a || a.team!==team)){
+              await handleAssign(ntt); // assign ke team ini
+            } else {
+              openNttDetail(ntt); // buka detail
+            }
+          });
+        });
+      }
+
+      render();
+      searchEl.oninput=render; showDoneEl.onchange=render; showPoolEl.onchange=render;
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      document.getElementById('assignModalClose').onclick=()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); };
+    }
   </script>
 </body>
 </html>
