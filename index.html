@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +6,546 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NTT Log Viewer</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; }
+
+    @media print {
+      header, .shadow, .rounded-xl, input, select, button, #searchInput, #descriptionModal, #summaryDashboard, #assignModal, script { display: none !important; }
+      main { padding: 0; background: white; box-shadow: none; }
+      table { font-size: 12px; }
+      th, td { padding: 4px 8px !important; }
+    }
+
+    /* ===== Updated: Mobile portrait & landscape kekal satu kolum ===== */
+    @media (hover: none) and (pointer: coarse), screen and (max-width: 640px) {
+      :root { --m-pad: 12px; }
+
+      /* Lebar penuh & elak grid pecah */
+      main, header, .team-section, .grid, table, .overflow-x-auto {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      body { overflow-x: hidden; }
+
+      /* Header susun menegak */
+      header {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: .5rem !important;
+        padding: var(--m-pad) !important;
+      }
+      nav { display: flex !important; flex-direction: row; gap: 1rem; margin-top: 0.5rem; }
+
+      /* Filters blok pertama dalam <main>: paksa 1 kolum */
+      main > .grid:first-of-type {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: .5rem !important;
+      }
+      main > .grid:first-of-type .grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: .5rem !important;
+      }
+
+      /* Kad ringkasan/team dashboard: satu kolum */
+      #summaryDashboard {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: .75rem !important;
+      }
+
+      /* Jadual – boleh scroll sisi tanpa mengecilkan font */
+      .overflow-x-auto { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+      #logTable { min-width: 720px; }
+      #logTable th, #logTable td { white-space: nowrap; text-align: center; }
+
+      /* Modal assignment – muat penuh & tidak terpotong */
+      #assignModal { align-items: flex-start !important; padding-top: var(--m-pad) !important; }
+      #assignModal > div { width: 100% !important; max-width: none !important; border-radius: .75rem !important; }
+    }
+
+    /* Center table text + sticky header */
+    #logTable th, #logTable td { text-align: center; }
+    #logTable thead th { position: sticky; top: 0; z-index: 1; }
+
+    /* Toast */
+    #toast { position: fixed; bottom: 16px; right: 16px; background: #111827; color: #fff; padding: 10px 14px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,.25); opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s, transform .2s; font-size: 12px; }
+    #toast.show { opacity: 1; transform: translateY(0); }
+  </style>
 </head>
-<body class="min-h-screen grid place-items-center bg-gray-100">
-  <main class="text-center">
-    <h1 class="text-2xl font-bold">NTT Log Viewer</h1>
-    <p class="text-gray-600">Deployment test OK ✅</p>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-indigo-700 text-white px-6 py-4 shadow flex flex-wrap gap-3 items-center justify-between">
+    <h1 class="text-xl font-bold tracking-wide">📊 NTT Log Viewer</h1>
+    <div class="flex items-center gap-3">
+      <div id="lastUpdated" class="text-sm text-gray-100"></div>
+      <button id="refreshBtn" class="text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded border border-white/20">⟳ Sync from GitHub</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="w-full min-h-screen px-2 sm:px-6 lg:px-8 py-6 bg-white shadow rounded-xl">
+
+    <!-- Filters -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <select id="filterNode" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
+          <option value="">Filter by TM Node</option>
+          <option value="KGU">KGU</option>
+          <option value="TBN">TBN</option>
+          <option value="SOO">SOO</option>
+          <option value="NBN">NBN</option>
+          <option value="TNM">TNM</option>
+        </select>
+        <select id="filterDomain" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
+          <option value="">Filter by Domain</option>
+        </select>
+        <select id="filterAging" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
+          <option value="">Filter by Aging</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 Search keyword (e.g., dp faulty)"
+        class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
+    <!-- NTT Summary -->
+    <div id="nttSummary" class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
+      <div id="nttSummaryContainer" class="flex flex-wrap gap-4 justify-start sm:justify-between"></div>
+    </div>
+
+    <!-- Mini Dashboard: Zone Summary -->
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
+      <div id="zoneDashboard" class="space-y-2"></div>
+    </div>
+
+    <!-- Team Dashboard -->
+    <div id="summaryDashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-sm"></div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto text-sm">
+      <table class="min-w-full table-auto border-collapse text-center" id="logTable">
+        <thead class="bg-gray-200 text-sm uppercase tracking-wider">
+          <tr>
+            <th class="px-4 py-2">Date</th>
+            <th class="px-4 py-2">NTT Number</th>
+            <th class="px-4 py-2">TM Node</th>
+            <th class="px-4 py-2">Symptom</th>
+            <th class="px-4 py-2">Domain</th>
+            <th class="px-4 py-2">Network ID</th>
+            <th class="px-4 py-2">CTTs Linked</th>
+            <th class="px-4 py-2">Aging</th>
+            <th class="px-4 py-2">Days</th>
+          </tr>
+        </thead>
+        <tbody id="logTableBody"></tbody>
+      </table>
+    </div>
   </main>
+
+  <!-- Description Modal -->
+  <div id="descriptionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-2xl shadow-xl">
+      <h2 class="text-lg font-semibold mb-2">Description</h2>
+      <pre id="descriptionContent" class="text-sm whitespace-pre-wrap max-h-96 overflow-y-auto bg-gray-100 p-3 rounded"></pre>
+      <button onclick="document.getElementById('descriptionModal').classList.add('hidden')" class="w-full sm:w-auto px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">Close</button>
+    </div>
+  </div>
+
+  <!-- Team Assign Modal -->
+  <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
+      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">📋 Team NTT Assignment — <span id="assignTeamTitle"></span></div>
+        <button id="assignModalClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+      <div class="p-4 space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <input id="assignSearch" type="text" placeholder="Search NTT / Network ID / Symptom" class="flex-1 border rounded px-3 py-2">
+          <div class="text-sm flex items-center gap-4">
+            <span>Assigned: <b id="assignCount">0</b></span>
+            <span class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><label for="showDone">Show Done</label></span>
+          </div>
+        </div>
+        <div class="border rounded overflow-hidden">
+          <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
+  <div class="col-span-6">NTT</div>
+  <div class="col-span-4">NETWORK ID</div>
+  <div class="col-span-2">AGING</div>
+</div>
+<div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- Scripts -->
+  <script>
+    const lastUpdatedEl = document.getElementById("lastUpdated");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const logTableBody = document.getElementById("logTableBody");
+    const filterNode = document.getElementById("filterNode");
+    const filterDomain = document.getElementById("filterDomain");
+    const filterAging = document.getElementById("filterAging");
+    const searchInput = document.getElementById("searchInput");
+    const summaryDashboard = document.getElementById("summaryDashboard");
+    const descriptionModal = document.getElementById("descriptionModal");
+    const descriptionContent = document.getElementById("descriptionContent");
+    const toast = document.getElementById("toast");
+
+    /* ========== Assignment Store (localStorage) ========== */
+    const ASSIGN_KEY = "nttAssignments";
+    const ASSIGN_VER_KEY = "nttAssignmentsVersion";
+    function readAssignments(){ try{ return JSON.parse(localStorage.getItem(ASSIGN_KEY)||"{}"); }catch{ return {}; } }
+    function writeAssignments(obj){ localStorage.setItem(ASSIGN_KEY, JSON.stringify(obj)); localStorage.setItem(ASSIGN_VER_KEY, String(Date.now())); }
+    function saveAssignment(nttNumber, team, note=""){ const d=readAssignments(); d[nttNumber]={team, note, status:"assigned", at:new Date().toISOString()}; writeAssignments(d); }
+    function setDone(nttNumber, done=true){ const d=readAssignments(); if(!d[nttNumber]) return; d[nttNumber].status=done?"done":"assigned"; d[nttNumber].doneAt=done?new Date().toISOString():null; writeAssignments(d); }
+    function unassign(nttNumber){ const d=readAssignments(); delete d[nttNumber]; writeAssignments(d); }
+    function getAssignment(nttNumber){ return readAssignments()[nttNumber] || null; }
+    // auto refresh between tabs
+    window.addEventListener("storage", (e)=>{ if(e.key===ASSIGN_KEY||e.key===ASSIGN_VER_KEY) applyFilters(); });
+
+    /* ========== Data setup ========== */
+    let fullData = [];
+    let currentFilteredData = [];
+    const allowedNodes = ["KGU", "TBN", "SOO", "NBN", "TNM"];
+    const REPO_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
+    const AUTO_REFRESH_SECONDS = 30;
+
+    const nowStr = () => new Date().toLocaleString();
+    const cloudUrl = () => `${REPO_RAW_URL}?nocache=${Date.now()}`;
+
+    function showToast(msg){ if(!toast) return; toast.textContent = msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"), 1800); }
+
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshFromGitHub(); });
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      await refreshFromGitHub(true);
+      setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS * 1000);
+      [filterNode, filterDomain, filterAging, searchInput].forEach(el => el.addEventListener("input", applyFilters));
+      if (refreshBtn) refreshBtn.addEventListener("click", () => syncNow());
+    });
+
+    function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); }
+
+    async function refreshFromGitHub(firstLoad=false){
+      try{
+        const resp = await fetch(cloudUrl(), { cache: "no-store" });
+        if(!resp.ok) throw new Error("HTTP "+resp.status);
+        const csvText = await resp.text();
+        const parsed = Papa.parse(csvText, { header:true, skipEmptyLines:true });
+        const data = (parsed.data||[]).map(row=>({
+          "NTT Create Date": row["NTT Create Date"],
+          "NTT Number": row["NTT Number"],
+          "TM Node": (row["TM Node"]||"").trim().toUpperCase(),
+          "Symptom": row["Symptom"],
+          "Domain": (row["Domain"]||"").trim(),
+          "Network ID": row["Network ID"],
+          "CTTs Linked": row["CTTs Linked"],
+          "Aging Category": (row["Aging Category"]||"").trim(),
+          "Zone": (row["Zone"]||"").trim().toUpperCase(),
+          "Description": row["Description"]
+        })).filter(r=> allowedNodes.includes(r["TM Node"]));
+
+        fullData = data;
+        localStorage.setItem("nttData", JSON.stringify(fullData));
+        populateFilters(fullData);
+        applyFilters();
+        lastUpdatedEl.textContent = `Last updated from GitHub: ${nowStr()}`;
+        lastUpdatedEl.className = "text-sm text-green-100";
+        if(!firstLoad) showToast("Data refreshed");
+      }catch(e){
+        const cached = localStorage.getItem("nttData");
+        if(cached){
+          fullData = JSON.parse(cached);
+          populateFilters(fullData); applyFilters();
+          lastUpdatedEl.textContent = `Using cache (GitHub not reachable): ${nowStr()}`;
+        lastUpdatedEl.className = "text-sm text-yellow-200";
+          showToast("Using cache");
+        }else{
+          lastUpdatedEl.textContent = `Failed to load from GitHub: ${e.message}`;
+          lastUpdatedEl.className = "text-sm text-red-200";
+          showToast("Failed to load data");
+        }
+      }
+    }
+
+    function getDayDifference(dateStr){
+      const today=new Date();
+      const date=new Date(dateStr);
+      if(isNaN(date.getTime())) return NaN;
+      return Math.floor((today-date)/(1000*60*60*24));
+    }
+
+    function populateTable(data){
+      let rows = "";
+      for(const row of data){
+        const ageCat = row["Aging Category"] || "";
+        const agingClass = ageCat.includes("48H")?"bg-red-500": ageCat.includes("24H")?"bg-orange-400":"bg-green-500";
+        const daysCount = getDayDifference(row["NTT Create Date"]);
+        const asg = getAssignment(row["NTT Number"]);
+        const badge = asg ? `<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">${asg.team}${asg.status==="done"?" • done":""}</span>` : "";
+        rows += `
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2">${row["NTT Create Date"] || ""}</td>
+            <td class="px-4 py-2">
+              <button class="text-indigo-600 underline" data-desc="${(row["Description"]||"").toString().replace(/"/g,"&quot;")}">${row["NTT Number"] || ""} ${badge}</button>
+            </td>
+            <td class="px-4 py-2">${row["TM Node"] || ""}</td>
+            <td class="px-4 py-2">${row["Symptom"] || ""}</td>
+            <td class="px-4 py-2">${row["Domain"] || ""}</td>
+            <td class="px-4 py-2">${row["Network ID"] || ""}</td>
+            <td class="px-4 py-2">${row["CTTs Linked"] || ""}</td>
+            <td class="px-4 py-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat}</span></td>
+            <td class="px-4 py-2">${Number.isFinite(daysCount)?daysCount:"-"}</td>
+          </tr>`;
+      }
+      logTableBody.innerHTML = rows;
+      logTableBody.querySelectorAll('button[data-desc]').forEach(btn => btn.addEventListener('click', ()=>{
+        descriptionContent.textContent=(btn.getAttribute('data-desc')||"");
+        descriptionModal.classList.remove('hidden');
+      }));
+    }
+
+    function populateFilters(data){
+      const domainSet = new Set(data.map(d => (d["Domain"]||"").trim()).filter(Boolean));
+      domainSet.add("LTE 4G"); // always present
+      const domains = Array.from(domainSet).sort();
+      const agings = Array.from(new Set(data.map(d => (d["Aging Category"]||"").trim()).filter(Boolean))).sort();
+      filterDomain.innerHTML = '<option value="">Filter by Domain</option>' + domains.map(d => `<option value="${d}">${d}</option>`).join('');
+      filterAging.innerHTML  = '<option value="">Filter by Aging</option>'  + agings.map(a => `<option value="${a}">${a}</option>`).join('');
+    }
+
+    function applyFilters(){
+      const node = filterNode.value;
+      const domain = filterDomain.value;
+      const aging = filterAging.value;
+      const keyword = (searchInput.value||"").toLowerCase();
+
+      const filtered = fullData.filter(row=>{
+        const okNode   = !node   || (row["TM Node"]||"")===node;
+        const okDomain = !domain || (row["Domain"]||"")===domain;
+        const okAging  = !aging  || (row["Aging Category"]||"")===aging;
+        const okSearch = !keyword || Object.values(row).some(v => (String(v||"")).toLowerCase().includes(keyword));
+        return okNode && okDomain && okAging && okSearch;
+      });
+
+      currentFilteredData = filtered;
+      populateTable(filtered);
+      populateDashboard(filtered);
+      updateNTTSummary(filtered);
+      populateZoneDashboard(filtered);
+    }
+
+    function toggleTeam(teamId){
+      const section=document.getElementById(teamId);
+      if(section) section.classList.toggle("hidden");
+    }
+
+    // optional helper if you ever add aliases
+    const TEAM_ALIASES = {
+      "TEAM FAISON": ["TEAM FAISON"],
+      "TEAM FAUZIE": ["TEAM FAUZIE"],
+      "TEAM RUDI":   ["TEAM RUDI"],
+      "TEAM ROSDEE": ["TEAM ROSDEE"]
+    };
+    function teamsMatch(entryTeam, cardTeam){
+      const aliases = TEAM_ALIASES[cardTeam] || [cardTeam];
+      return aliases.includes(entryTeam);
+    }
+
+    function populateDashboard(data){
+      // Individual team cards – Faison and Fauzie split
+      const teams = {
+        "TEAM FAISON": ["KGU","TBN"],
+        "TEAM FAUZIE": ["KGU","TBN"],
+        "TEAM RUDI":   ["SOO","NBN"],
+        "TEAM ROSDEE": ["TNM"]
+      };
+
+      const agingLabels=["< 8H","8H - 12H","12H - 24H","24H - 48H","> 48H"];
+      const icons=["🟢","🟡","🔶","🔸","🔴"];
+      summaryDashboard.innerHTML="";
+      const assignments = readAssignments();
+
+      for(const [team, nodes] of Object.entries(teams)){
+        const teamId = team.replace(/\s+/g, "_");
+        let summaryHTML = `<div class="border border-green-600 rounded p-2">
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="text-center font-bold text-green-700">${team}</h2>
+            <button onclick="toggleTeam('${teamId}')" class="text-xs bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded">Hide</button>
+          </div>
+          <div id="${teamId}" class="team-section">`;
+
+        nodes.forEach(node=>{
+          summaryHTML += '<div class="grid grid-cols-5 gap-2 text-xs mb-2">';
+          agingLabels.forEach((aging,idx)=>{
+            const count = data.filter(d=> d["TM Node"]===node && d["Aging Category"]===aging).length;
+            const color = aging.includes("48H")?"bg-red-500 text-white": aging.includes("24H")?"bg-orange-400 text-white":"bg-gray-100";
+            summaryHTML += `<div class='px-2 py-1 rounded ${color}'>${icons[idx]} ${node} ${aging}: ${count}</div>`;
+          });
+          const total = data.filter(d=> d["TM Node"]===node).length;
+          summaryHTML += `<div class='col-span-5 text-center text-blue-700 mt-1'>📘 Total ${node}: ${total}</div></div>`;
+        });
+
+        const assignedForTeam = data.filter(d=>{
+          const a=assignments[d["NTT Number"]];
+          return a && teamsMatch(a.team, team) && a.status!=="done";
+        }).length;
+
+        const doneForTeam = data.filter(d=>{
+          const a=assignments[d["NTT Number"]];
+          return a && teamsMatch(a.team, team) && a.status==="done";
+        }).length;
+
+        summaryHTML += `</div>
+          <div class="mt-2 flex items-center justify-between">
+            <div class="text-xs">
+              <span class="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-700 font-semibold">🗂️ Assigned: ${assignedForTeam}</span>
+              <span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 text-emerald-700 font-semibold ml-2">✅ Done: ${doneForTeam}</span>
+            </div>
+            <button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button>
+          </div>
+        </div>`;
+
+        summaryDashboard.innerHTML += summaryHTML;
+      }
+
+      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{
+        btn.addEventListener('click', ()=> openAssignModal(btn.getAttribute('data-team')));
+      });
+    }
+
+    function updateNTTSummary(data){
+      const config=[
+        {label:"< 8H", ring:"ring-green-400", text:"text-green-600"},
+        {label:"8H - 12H", ring:"ring-yellow-400", text:"text-yellow-600"},
+        {label:"12H - 24H", ring:"ring-orange-400", text:"text-orange-500"},
+        {label:"24H - 48H", ring:"ring-red-400", text:"text-red-500"},
+        {label:"> 48H", ring:"ring-rose-400", text:"text-rose-600"}
+      ];
+      const container=document.getElementById("nttSummaryContainer");
+      container.innerHTML="";
+      const frag=document.createDocumentFragment();
+      config.forEach(cat=>{
+        const count=data.filter(d=>(d["Aging Category"]||"")===cat.label).length;
+        const overdue=cat.label==="> 48H"? data.filter(d=>(d["Aging Category"]||"")===cat.label && getDayDifference(d["NTT Create Date"])>2).length:0;
+        const w=document.createElement('div'); w.className='flex flex-col items-center';
+        w.innerHTML=`<div class="w-14 h-14 rounded-full ring-4 ${cat.ring} flex items-center justify-center text-lg font-bold text-gray-800">${count}</div><span class="text-xs mt-1 ${cat.text}">${cat.label}${overdue?` • overdue: ${overdue}`:""}</span>`;
+        frag.appendChild(w);
+      });
+      container.appendChild(frag);
+    }
+
+    function populateZoneDashboard(data){
+      const targetZone="PBP SELATAN";
+      const targetDomain="PASSIVE ELEMENT NOVA";
+      const nodes=["KGU","TBN","SOO","NBN","TNM"];
+      const filtered=data.filter(d=> (
+        (d["Zone"]||"").trim().toUpperCase()===targetZone) &&
+        ((d["Domain"]||"").trim().toUpperCase()===targetDomain) &&
+        nodes.includes((d["TM Node"]||"").trim().toUpperCase())
+      );
+      const zoneDashboard=document.getElementById("zoneDashboard");
+      if(filtered.length===0){
+        zoneDashboard.innerHTML=`<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>`;
+        return;
+      }
+      const counts=Object.fromEntries(nodes.map(n=>[n,0]));
+      filtered.forEach(r=>{
+        const node=(r["TM Node"]||"").trim().toUpperCase();
+        if(node in counts) counts[node]++;
+      });
+      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+      const maxCount=Math.max(...sorted.map(([,c])=>c),1);
+      zoneDashboard.innerHTML=sorted.map(([node,count])=>`
+        <div class="flex items-center justify-between gap-2">
+          <div class="text-sm font-medium w-16">${node}</div>
+          <div class="w-full bg-gray-200 rounded h-4 relative">
+            <div class="bg-red-500 h-4 rounded transition-all duration-500" style="width: ${(count/maxCount)*100}%"></div>
+            <span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${count}</span>
+          </div>
+        </div>`).join("");
+      const grandTotal=sorted.reduce((s,[,c])=>s+c,0);
+      zoneDashboard.innerHTML+=`<div class="flex justify-between mt-4 pt-2 border-t text-sm font-semibold text-gray-700"><div>Grand Total</div><div>${grandTotal}</div></div>`;
+    }
+
+    /* ========== Modal logic ========== */
+    function openAssignModal(team){
+      const modal=document.getElementById('assignModal');
+      const title=document.getElementById('assignTeamTitle');
+      const listEl=document.getElementById('assignList');
+      const searchEl=document.getElementById('assignSearch');
+      const showDoneEl=document.getElementById('showDone');
+      const countEl=document.getElementById('assignCount');
+      title.textContent=team;
+
+     function render(){
+  const asgMap = readAssignments();
+  const q = (searchEl.value || '').toLowerCase();
+  const showDone = showDoneEl.checked;
+
+  const rows = (currentFilteredData.length ? currentFilteredData : fullData).filter(r => {
+    const a = asgMap[r['NTT Number']];
+    if (!a || a.team !== team) return false;           // hanya item assigned kepada team ini
+    if (!showDone && a.status === 'done') return false; // sembunyi 'done' jika Show Done off
+    if (!q) return true;
+    return [r['NTT Number'], r['Network ID'], r['Symptom']]
+      .some(v => (v || '').toString().toLowerCase().includes(q));
+  });
+
+  countEl.textContent = rows.length;
+        listEl.innerHTML = rows.map(r => {
+    const aging = (r['Aging Category'] || '').trim();
+    const cls = aging.includes('48H') ? 'bg-red-500'
+            : aging.includes('24H') ? 'bg-orange-400'
+            : 'bg-green-500';
+    const desc = (r['Description'] || '').toString().replace(/"/g, '&quot;');
+    return `
+      <div class="grid grid-cols-12 items-center px-3 py-2 text-sm">
+        <div class="col-span-6">
+          <div class="font-medium text-indigo-700 underline cursor-pointer" title="${desc}">${r['NTT Number']}</div>
+          <div class="text-xs text-gray-500">${r['Domain'] || ''}</div>
+        </div>
+        <div class="col-span-4 truncate">${r['Network ID'] || ''}</div>
+        <div class="col-span-2 text-right">
+          <span class="text-white text-[11px] px-2 py-0.5 rounded ${cls}">${aging || '-'}</span>
+        </div>
+      </div>`;
+  }).join('');
+        listEl.querySelectorAll('.doneToggle').forEach(cb=>{
+          cb.addEventListener('change', ()=>{
+            const ntt=cb.getAttribute('data-ntt');
+            setDone(ntt, cb.checked);
+            applyFilters();
+            render();
+          });
+        });
+      }
+
+      render();
+      searchEl.oninput=render; showDoneEl.onchange=render;
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      document.getElementById('assignModalClose').onclick=()=>{
+        modal.classList.add('hidden'); modal.classList.remove('flex');
+      };
+    }
+  </script>
 </body>
 </html>
