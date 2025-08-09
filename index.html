@@ -78,11 +78,22 @@
     <div class="overflow-x-auto text-sm">
       <table class="min-w-full table-auto border-collapse text-center" id="logTable">
         <thead class="bg-gray-200 text-sm uppercase tracking-wider">
-          <tr>
-            <th class="px-4 py-2">Date</th><th class="px-4 py-2">NTT Number</th><th class="px-4 py-2">TM Node</th>
-            <th class="px-4 py-2">Symptom</th><th class="px-4 py-2">Domain</th><th class="px-4 py-2">Network ID</th>
-            <th class="px-4 py-2">CTTs Linked</th><th class="px-4 py-2">Aging</th><th class="px-4 py-2">Days</th>
-          </tr>
+         <tr>
+  <th class="px-4 py-2">Date</th>
+  <th class="px-4 py-2">NTT Number</th>
+  <th class="px-4 py-2">TM Node</th>
+  <th class="px-4 py-2">Symptom</th>
+  <th class="px-4 py-2">Domain</th>
+  <th class="px-4 py-2">Network ID</th>
+  <th class="px-4 py-2">CTTs Linked</th>
+  <th class="px-4 py-2">Aging</th>
+  <th class="px-4 py-2">Days</th>
+  <!-- NEW: desktop-only columns -->
+  <th class="px-4 py-2 hidden sm:table-cell">Assignee</th>
+  <th class="px-4 py-2 hidden sm:table-cell">Status</th>
+  <th class="px-4 py-2 hidden sm:table-cell">Actions</th>
+</tr>
+
         </thead>
         <tbody id="logTableBody"></tbody>
       </table>
@@ -200,7 +211,7 @@
           if (!ntt) return;
           map[ntt] = {
             team:(r["Team"]||"").trim(),
-            status:(r["Status"]||"assigned").trim(),
+            status:(r["Status"]||"assigned").trim().toLowerCase(), // assigned | in progress | unassigned | done
             note:r["Note"]||"",
             at:r["UpdatedAt"]||null
           };
@@ -213,20 +224,32 @@
     }
 
     async function upsertAssignmentRemote({ nttNumber, team, status="assigned", note="" }) {
-      const res = await fetch(ASSIGN_SAVE_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nttNumber, team, status, note })
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const { row } = await res.json();
-      const cache = readAssignmentsCache();
-      cache[nttNumber] = { team: row.Team, status: row.Status, note: row.Note, at: row.UpdatedAt };
-      cacheAssignments(cache);
-      return row;
+      // Optimistic local update first (UI terus kemas kini)
+      const optimistic = { team: (team||"").trim(), status: (status||"assigned").toLowerCase(), note: note||"", at: new Date().toISOString() };
+      const preCache = readAssignmentsCache();
+      preCache[nttNumber] = optimistic;
+      cacheAssignments(preCache);
+
+      try {
+        const res = await fetch(ASSIGN_SAVE_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nttNumber, team: optimistic.team, status: optimistic.status, note: optimistic.note })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const { row } = await res.json();
+        const cache = readAssignmentsCache();
+        cache[nttNumber] = { team: row.Team, status: row.Status.toLowerCase(), note: row.Note, at: row.UpdatedAt };
+        cacheAssignments(cache);
+        return row;
+      } catch (e) {
+        // Kekal dengan cache optimistik; akan sync semula bila endpoint sedia
+        showToast("Saved locally (will sync when online)");
+        return { Team: optimistic.team, Status: optimistic.status, Note: optimistic.note, UpdatedAt: optimistic.at };
+      }
     }
 
-    async function readAssignments(){ return await loadAssignmentsRemote(); } // for first load
+    async function readAssignments(){ return await loadAssignmentsRemote(); } // for first load(){ return await loadAssignmentsRemote(); } // for first load
     function getAssignment(ntt){ return readAssignmentsCache()[ntt] || null; }
     async function saveAssignment(ntt, team, note=""){ await upsertAssignmentRemote({ nttNumber: ntt, team, note, status:"assigned" }); }
     async function setDoneRemote(ntt, done=true){
@@ -273,7 +296,7 @@
 
     window.addEventListener("DOMContentLoaded", async ()=>{
       await refreshFromGitHub(true);
-      await readAssignments(); // <<< important: load centralized assignments
+      await readAssignments(); // load centralized assignments
       setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*3600);
       [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
       if(refreshBtn) refreshBtn.addEventListener("click",()=>syncNow());
@@ -309,29 +332,124 @@
     function getDayDifference(dateStr){ const t=new Date(), d=new Date(dateStr); if(isNaN(d.getTime())) return NaN; return Math.floor((t-d)/(1000*60*60*24)); }
 
     function populateTable(data){
-      const out=[];
-      for(const row of data){
-        const ageCat=row["Aging Category"]||"";
-        const agingClass=ageCat.includes("48H")?"bg-red-500":(ageCat.includes("24H")?"bg-orange-400":"bg-green-500");
-        const daysCount=getDayDifference(row["NTT Create Date"]);
-        const asg=getAssignment(row["NTT Number"]);
-        const badge=asg?('<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">'+asg.team+(asg.status==="done"?" • done":"")+'</span>'):"";
+      var out = [];
+      for(var i=0;i<data.length;i++){
+        var row = data[i];
+        var ageCat = row["Aging Category"] || "";
+        var agingClass = ageCat.indexOf("48H")!==-1?"bg-red-500":(ageCat.indexOf("24H")!==-1?"bg-orange-400":"bg-green-500");
+        var daysCount = getDayDifference(row["NTT Create Date"]);
+        var asg = getAssignment(row["NTT Number"]); // may be null
+
+        // ---- STATUS BADGE (desktop column)
+        var stat = asg && asg.status ? asg.status : "assigned"; // assigned | in progress | unassigned | done
+        var statusLabel = (stat === "done") ? "RESOLVED" : (stat === "in progress" ? "IN PROGRESS" : (stat === "unassigned" ? "UNASSIGNED" : "ASSIGNED"));
+        var badgeClass =
+          (stat === "done")        ? "bg-emerald-100 text-emerald-700" :
+          (stat === "in progress") ? "bg-amber-100 text-amber-700"     :
+          (stat === "unassigned")  ? "bg-gray-100 text-gray-600"       :
+                                      "bg-indigo-100 text-indigo-700";
+        var statusBadge = '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold '+badgeClass+'">'+statusLabel+'</span>';
+
+        // ---- ASSIGNEE BADGE (desktop column)
+        var assigneeBadge = '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold '
+                          + (asg && asg.team? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600')
+                          + '">'
+                          + ((asg && asg.team) ? asg.team : 'UNASSIGNED')
+                          + '</span>';
+
+        // Team select (Actions)
+        var teamSelect = '<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="'+(row["NTT Number"]||'')+'">'
+                       + TEAM_LIST.map(function(t){
+                           var sel = (asg && asg.team===t) ? ' selected' : '';
+                           var label = 'Team ' + t.split(' ')[1].charAt(0) + t.split(' ')[1].slice(1).toLowerCase();
+                           return '<option value="'+t+'"'+sel+'">'+label+'</option>';
+                         }).join('')
+                       + '</select>';
+
+        // Status select (Actions)
+        var statusSelect = '<select class="statusSelect border rounded px-2 py-1 text-sm ml-2" data-ntt="'+(row["NTT Number"]||'')+'">'
+                         + '<option value="UNASSIGNED"'+(stat==='unassigned' ? ' selected':'')+'>UNASSIGNED</option>'
+                         + '<option value="ASSIGNED"'+(stat==='assigned' || !asg ? ' selected':'')+'>ASSIGNED</option>'
+                         + '<option value="IN PROGRESS"'+(stat==='in progress' ? ' selected':'')+'>IN PROGRESS</option>'
+                         + '<option value="RESOLVED"'+(stat==='done' ? ' selected':'')+'>RESOLVED</option>'
+                         + '</select>';
+
+        // inline badge in NTT column
+        var inlineBadge = asg && asg.team ? ('<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">'
+                          + asg.team + (stat==="done"?" • done":"") + '</span>') : "";
+
         out.push(
           '<tr class="border-b hover:bg-gray-50">'
-          +'<td class="px-4 py-2">'+(row["NTT Create Date"]||"")+'</td>'
-          +'<td class="px-4 py-2"><button class="text-indigo-600 underline" data-desc="'+String(row["Description"]||"").replace(/\"/g,'&quot;')+'">'+(row["NTT Number"]||"")+' '+badge+'</button></td>'
-          +'<td class="px-4 py-2">'+(row["TM Node"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["Symptom"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["Domain"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["Network ID"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["CTTs Linked"]||"")+'</td>'
-          +'<td class="px-4 py-2"><span class="px-2 py-1 rounded text-white '+agingClass+'">'+ageCat+'</span></td>'
-          +'<td class="px-4 py-2">'+(isFinite(daysCount)?daysCount:"-")+'</td></tr>'
+            +'<td class="px-4 py-2">'+(row["NTT Create Date"]||"")+'</td>'
+            +'<td class="px-4 py-2">'
+              +'<button class="text-indigo-600 underline" data-desc="'+String(row["Description"]||"").replace(/\"/g,'&quot;')+'">'+(row["NTT Number"]||"")+'</button>'
+              + inlineBadge
+            +'</td>'
+            +'<td class="px-4 py-2">'+(row["TM Node"]||"")+'</td>'
+            +'<td class="px-4 py-2">'+(row["Symptom"]||"")+'</td>'
+            +'<td class="px-4 py-2">'+(row["Domain"]||"")+'</td>'
+            +'<td class="px-4 py-2">'+(row["Network ID"]||"")+'</td>'
+            +'<td class="px-4 py-2">'+(row["CTTs Linked"]||"")+'</td>'
+            +'<td class="px-4 py-2"><span class="px-2 py-1 rounded text-white '+agingClass+'">'+ageCat+'</span></td>'
+            +'<td class="px-4 py-2">'+(isFinite(daysCount)?daysCount:"-")+'</td>'
+            +'<td class="px-4 py-2 hidden sm:table-cell">'+ assigneeBadge +'</td>'
+            +'<td class="px-4 py-2 hidden sm:table-cell">'+ statusBadge +'</td>'
+            +'<td class="px-4 py-2 hidden sm:table-cell">'+ teamSelect + statusSelect +'</td>'
+          +'</tr>'
         );
       }
-      logTableBody.innerHTML=out.join("");
-      logTableBody.querySelectorAll('button[data-desc]').forEach(btn=>{
-        btn.addEventListener('click',()=>{ descriptionContent.textContent=(btn.getAttribute('data-desc')||""); descriptionModal.classList.remove('hidden'); });
+
+      logTableBody.innerHTML = out.join("");
+
+      // open description modal
+      logTableBody.querySelectorAll('button[data-desc]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          descriptionContent.textContent=(btn.getAttribute('data-desc')||"");
+          descriptionModal.classList.remove('hidden');
+        });
+      });
+
+      // --- Actions handlers
+      // Team change
+      logTableBody.querySelectorAll('.assigneeSelect').forEach(function(sel){
+        sel.addEventListener('change', async function(){
+          const ntt = sel.getAttribute('data-ntt');
+          const team = sel.value;
+          const current = getAssignment(ntt);
+          const nextStatus = (!current || current.status === "unassigned") ? "assigned" : (current.status || "assigned");
+          await upsertAssignmentRemote({ nttNumber: ntt, team, status: nextStatus, note: (current && current.note) || "" });
+          if(current && current.status === "done"){ await setDoneRemote(ntt, true); }
+          applyFilters();
+          showToast('Assignee updated');
+        });
+      });
+
+      // Status change
+      logTableBody.querySelectorAll('.statusSelect').forEach(function(sel){
+        sel.addEventListener('change', async function(){
+          const ntt = sel.getAttribute('data-ntt');
+          const desired = sel.value; // UNASSIGNED | ASSIGNED | IN PROGRESS | RESOLVED
+          let a = getAssignment(ntt);
+
+          if(!a && desired !== 'UNASSIGNED'){
+            await saveAssignment(ntt, TEAM_LIST[0], "");
+            a = getAssignment(ntt);
+          }
+
+          if(desired === 'RESOLVED'){
+            await setDoneRemote(ntt, true);
+            if(a && a.team) incProductivity(a.team, ntt);
+          } else if(desired === 'UNASSIGNED'){
+            await upsertAssignmentRemote({ nttNumber: ntt, team: "", status: "unassigned", note: (a && a.note) || "" });
+          } else {
+            const teamVal = (a && a.team) ? a.team : TEAM_LIST[0];
+            const statusVal = (desired === 'IN PROGRESS') ? 'in progress' : 'assigned';
+            await upsertAssignmentRemote({ nttNumber: ntt, team: teamVal, status: statusVal, note: (a && a.note) || "" });
+          }
+
+          applyFilters();
+          showToast('Status updated');
+        });
       });
     }
 
@@ -360,6 +478,8 @@
     function toggleTeam(teamId){ const section=document.getElementById(teamId); if(section) section.classList.toggle("hidden"); }
 
     const TEAM_ALIASES={"TEAM FAISON":["TEAM FAISON"],"TEAM FAUZIE":["TEAM FAUZIE"],"TEAM RUDI":["TEAM RUDI"],"TEAM ROSDEE":["TEAM ROSDEE"]};
+    const TEAM_LIST = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"]; // for select
+
     function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
 
     function populateDashboard(data){
@@ -381,7 +501,7 @@
           const total=data.filter(d=>d["TM Node"]===node).length;
           summaryHTML+=`<div class="col-span-5 text-center text-blue-700 mt-1">📘 Total ${node}: ${total}</div></div>`;
         });
-        const assignedForTeam=data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status!=="done"; }).length;
+        const assignedForTeam=data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status!=="done" && a.status!=="unassigned"; }).length; // ASSIGNED & IN PROGRESS
         const doneForTeam=data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status==="done"; }).length;
         const prod=productivityCount(team);
         summaryHTML+=`</div><div class="mt-2 flex items-center justify-between"><div class="text-xs space-x-2"><span class="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-700 font-semibold">🗂️ Assigned: ${assignedForTeam}</span><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 text-emerald-700 font-semibold">✅ Done: ${doneForTeam}</span><span class="inline-flex items-center px-2 py-1 rounded bg-sky-100 text-sky-700 font-semibold">📈 Productivity: ${prod}</span></div><button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button></div></div>`;
@@ -415,7 +535,7 @@
       const modal=document.getElementById("nttDetailModal");
       const el=id=>document.getElementById(id);
       el("detailNttNo").textContent=row["NTT Number"];
-      const asg=getAssignment(row["NTT Number"]); el("detailAssignedTo").textContent=asg?(asg.team+(asg.status==="done"?" • done":"")):"Unassigned";
+      const asg=getAssignment(row["NTT Number"]); el("detailAssignedTo").textContent=(asg && asg.team)?(asg.team+(asg.status==="done"?" • done":"")):"Unassigned";
       try{ await loadLocationIndex(); }catch{}
       const loc=findLocationByNetworkId(row["Network ID"]);
       el("detailLocationFor").textContent=loc?.locationFor || row["Network ID"] || "-";
@@ -456,23 +576,24 @@
         const showDone=showDoneEl.checked;
         const showPool=showPoolEl.checked;
 
-        // Pool: semua NTT ikut filter (kecuali jika showPool off -> hanya assigned team ini)
         const base=(currentFilteredData.length?currentFilteredData:fullData).filter(r=>{
           const a=asgMap[r['NTT Number']];
           if(!showPool){
             if(!a || a.team!==team) return false;
-            if(!showDone && a.status==='done') return false;
+            if(a.status==='done' || a.status==='unassigned') return false;
           }
           if(!q) return true;
           return [r['NTT Number'], r['Network ID'], r['Symptom']].some(v => (v||'').toString().toLowerCase().includes(q));
         });
 
-        countEl.textContent = base.filter(r => asgMap[r['NTT Number']]?.team===team && asgMap[r['NTT Number']]?.status!=='done').length;
+        countEl.textContent = base.filter(r => {
+          const a = asgMap[r['NTT Number']];
+          return a?.team===team && a?.status!=='done' && a?.status!=='unassigned';
+        }).length;
 
         listEl.innerHTML = base.map(r=>{
           const aging=(r['Aging Category']||'').trim();
           const cls=aging.includes('48H')?'bg-red-500':(aging.includes('24H')?'bg-orange-400':'bg-green-500');
-          const desc=(r['Description']||'').toString().replace(/"/g,'&quot;');
           const a=asgMap[r['NTT Number']];
           const isThisTeam=a?.team===team;
           const rowCls = showPool ? (isThisTeam ? 'bg-white' : 'bg-yellow-50 hover:bg-yellow-100') : 'bg-white';
@@ -489,15 +610,14 @@
           </div>`;
         }).join('');
 
-        // click behavior
         listEl.querySelectorAll('.rowAction').forEach(btn=>{
           btn.addEventListener('click', async ()=>{
             const ntt=btn.getAttribute('data-ntt');
             const a=readAssignmentsCache()[ntt];
             if(showPool && (!a || a.team!==team)){
-              await handleAssign(ntt); // assign ke team ini
+              await handleAssign(ntt);
             } else {
-              openNttDetail(ntt); // buka detail
+              openNttDetail(ntt);
             }
           });
         });
