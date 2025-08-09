@@ -1,4 +1,4 @@
-﻿NTT Create Date,NTT Number,LR Number,Owner,TM Node,Region,Network State,Zone,Category,Service,Symptom,Domain,Network ID,Service Impact,CTTs Linked,Severity,MB Flag,NTT Status,ETTR,Time before breach ETTR,NTT Aging,Aging Category,Description
+NTT Create Date,NTT Number,LR Number,Owner,TM Node,Region,Network State,Zone,Category,Service,Symptom,Domain,Network ID,Service Impact,CTTs Linked,Severity,MB Flag,NTT Status,ETTR,Time before breach ETTR,NTT Aging,Aging Category,Description
 2025-08-07 22:37:05,NTT-20250807-37601,,,MGL,SABAH,SABAH,KOTA KINABALU 2,n/a,No Impact,LTE - Others,NGT IP,CSRZT41.DSBKI0234,Data (G&W):0,0,Minor,N,Open,2025-08-08 05:36:00,23694,1441,< 8H,"[5G RTE][NSA][EXP] CSR Multiple Link Down since 2025-08-07 21:44hrs.
 1.csrzt41.dsbki0234 Main - [MGL_F51_C129,C130_19.0KM]
 2.csrzt41.dsbki0184 Main - [MGL_F51_C126,188_9.08KM]
