@@ -1,667 +1,238 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NTT Log Viewer</title>
+  <title>NTT Log Viewer + Team Assignment</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <style>
-    body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; }
-
-    @media print {
-      header, .shadow, .rounded-xl, input, select, button, #searchInput, #descriptionModal, #summaryDashboard, #assignModal, script { display: none !important; }
-      main { padding: 0; background: white; box-shadow: none; }
-      table { font-size: 12px; }
-      th, td { padding: 4px 8px !important; }
-    }
-
-    /* Mobile kekal satu kolum */
-    @media (hover: none) and (pointer: coarse), screen and (max-width: 640px) {
-      :root { --m-pad: 12px; }
-      main, header, .team-section, .grid, table, .overflow-x-auto { width: 100% !important; max-width: 100% !important; }
-      body { overflow-x: hidden; }
-      header { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: .5rem !important; padding: var(--m-pad) !important; }
-      nav { display: flex !important; flex-direction: row; gap: 1rem; margin-top: 0.5rem; }
-      main > .grid:first-of-type { display: flex !important; flex-direction: column !important; gap: .5rem !important; }
-      main > .grid:first-of-type .grid { display: flex !important; flex-direction: column !important; gap: .5rem !important; }
-      #summaryDashboard { display: flex !important; flex-direction: column !important; gap: .75rem !important; }
-      .overflow-x-auto { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-      #logTable { min-width: 720px; }
-      #logTable th, #logTable td { white-space: nowrap; text-align: center; }
-      #assignModal { align-items: flex-start !important; padding-top: var(--m-pad) !important; }
-      #assignModal > div { width: 100% !important; max-width: none !important; border-radius: .75rem !important; }
-    }
-
-    /* Table */
-    #logTable th, #logTable td { text-align: center; }
-    #logTable thead th { position: sticky; top: 0; z-index: 1; }
-
-    /* Toast */
-    #toast { position: fixed; bottom: 16px; right: 16px; background: #111827; color: #fff; padding: 10px 14px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,.25); opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s, transform .2s; font-size: 12px; }
-    #toast.show { opacity: 1; transform: translateY(0); }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 14px; }
+    th, td { text-align: center; }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="min-h-screen bg-gray-100 text-gray-800">
 
   <!-- Header -->
-  <header class="bg-indigo-700 text-white px-6 py-4 shadow flex flex-wrap gap-3 items-center justify-between">
-    <h1 class="text-xl font-bold tracking-wide">📊 NTT Log Viewer</h1>
-    <div class="flex items-center gap-3">
-      <div id="lastUpdated" class="text-sm text-gray-100"></div>
-      <button id="refreshBtn" class="text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded border border-white/20">⟳ Sync from GitHub</button>
-    </div>
+  <header class="bg-indigo-600 text-white px-5 py-4 shadow flex items-center justify-between">
+    <h1 class="text-lg font-bold tracking-wide">📊 NTT Log Viewer + Assignment</h1>
+    <div class="text-xs opacity-90">Netlify Functions demo</div>
   </header>
 
-  <!-- Main -->
-  <main class="w-full min-h-screen px-2 sm:px-6 lg:px-8 py-6 bg-white shadow rounded-xl">
+  <main class="max-w-7xl mx-auto p-4 space-y-4">
 
-    <!-- Filters -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <select id="filterNode" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
-          <option value="">Filter by TM Node</option>
-          <option value="KGU">KGU</option>
-          <option value="TBN">TBN</option>
-          <option value="SOO">SOO</option>
-          <option value="NBN">NBN</option>
-          <option value="TNM">TNM</option>
-        </select>
-        <select id="filterDomain" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
-          <option value="">Filter by Domain</option>
-        </select>
-        <select id="filterAging" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
-          <option value="">Filter by Aging</option>
+    <!-- Controls -->
+    <section class="bg-white rounded-xl shadow p-4 grid gap-3 md:grid-cols-4">
+      <div class="md:col-span-2">
+        <label class="block text-sm font-semibold mb-1">Filter TM Node</label>
+        <select id="nodeFilter" class="w-full border rounded-lg px-3 py-2">
+          <option value="">All</option>
+          <option>KGU</option><option>TBN</option><option>TNM</option><option>SOO</option><option>NBN</option>
         </select>
       </div>
-    </div>
+      <div>
+        <label class="block text-sm font-semibold mb-1">Search</label>
+        <input id="searchInput" class="w-full border rounded-lg px-3 py-2" placeholder="Find NTT / Domain / Network ID"/>
+      </div>
+      <div class="flex items-end gap-2">
+        <button id="reloadBtn" class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Reload CSV</button>
+        <button id="syncBtn" class="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">Sync Assignments</button>
+      </div>
+    </section>
 
-    <!-- Search -->
-    <div class="mb-4">
-      <input id="searchInput" type="text" placeholder="🔍 Search keyword (e.g., dp faulty)" class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
-    </div>
+    <!-- Mini dashboard -->
+    <section class="grid md:grid-cols-4 gap-3">
+      <div class="bg-white rounded-xl shadow p-4">
+        <div class="text-sm text-gray-500">Team Faison</div>
+        <div id="cFaison" class="text-2xl font-bold">0</div>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4">
+        <div class="text-sm text-gray-500">Team Fauzie</div>
+        <div id="cFauzie" class="text-2xl font-bold">0</div>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4">
+        <div class="text-sm text-gray-500">Team Rudi</div>
+        <div id="cRudi" class="text-2xl font-bold">0</div>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4">
+        <div class="text-sm text-gray-500">Team Rosdee</div>
+        <div id="cRosdee" class="text-2xl font-bold">0</div>
+      </div>
+    </section>
 
-    <!-- NTT Summary -->
-    <div id="nttSummary" class="mb-6">
-      <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
-      <div id="nttSummaryContainer" class="flex flex-wrap gap-4 justify-start sm:justify-between"></div>
-    </div>
-
-    <!-- Zone Summary -->
-    <div class="mb-6">
-      <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
-      <div id="zoneDashboard" class="space-y-2"></div>
-    </div>
-
-    <!-- Team Dashboard -->
-    <div id="summaryDashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-sm"></div>
+    <!-- Assignment bar -->
+    <section class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row items-center gap-3">
+      <div class="font-semibold">Assign selected to:</div>
+      <select id="teamSelect" class="border rounded-lg px-3 py-2">
+        <option value="">— choose team —</option>
+        <option value="Team Faison">Team Faison</option>
+        <option value="Team Fauzie">Team Fauzie</option>
+        <option value="Team Rudi">Team Rudi</option>
+        <option value="Team Rosdee">Team Rosdee</option>
+      </select>
+      <button id="assignBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Assign</button>
+      <div class="text-xs text-gray-500 ml-auto">Tip: use the checkbox column to select rows</div>
+    </section>
 
     <!-- Table -->
-    <div class="overflow-x-auto text-sm">
-      <table class="min-w-full table-auto border-collapse text-center" id="logTable">
-        <thead class="bg-gray-200 text-sm uppercase tracking-wider">
+    <section class="bg-white rounded-xl shadow overflow-auto">
+      <table class="min-w-full">
+        <thead class="bg-gray-50">
           <tr>
-            <th class="px-4 py-2">Date</th>
-            <th class="px-4 py-2">NTT Number</th>
-            <th class="px-4 py-2">TM Node</th>
-            <th class="px-4 py-2">Symptom</th>
-            <th class="px-4 py-2">Domain</th>
-            <th class="px-4 py-2">Network ID</th>
-            <th class="px-4 py-2">CTTs Linked</th>
-            <th class="px-4 py-2">Aging</th>
-            <th class="px-4 py-2">Days</th>
+            <th class="px-3 py-2"><input id="selectAll" type="checkbox"/></th>
+            <th class="px-3 py-2">NTT Number</th>
+            <th class="px-3 py-2">TM Node</th>
+            <th class="px-3 py-2">Domain</th>
+            <th class="px-3 py-2">Network ID</th>
+            <th class="px-3 py-2">Assigned Team</th>
           </tr>
         </thead>
-        <tbody id="logTableBody"></tbody>
+        <tbody id="tbody"></tbody>
       </table>
-    </div>
+    </section>
+
   </main>
 
-  <!-- Description Modal (asal) -->
-  <div id="descriptionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-2xl shadow-xl">
-      <h2 class="text-lg font-semibold mb-2">Description</h2>
-      <pre id="descriptionContent" class="text-sm whitespace-pre-wrap max-h-96 overflow-y-auto bg-gray-100 p-3 rounded"></pre>
-      <button onclick="document.getElementById('descriptionModal').classList.add('hidden')" class="w-full sm:w-auto px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">Close</button>
-    </div>
-  </div>
-
-  <!-- Assign Modal (3 kolum) -->
-  <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
-    <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
-      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
-        <div class="font-semibold">📋 Team NTT Assignment — <span id="assignTeamTitle"></span></div>
-        <button id="assignModalClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
-      </div>
-      <div class="p-4 space-y-3">
-        <div class="flex items-center justify-between gap-3">
-          <input id="assignSearch" type="text" placeholder="Search NTT / Network ID / Symptom" class="flex-1 border rounded px-3 py-2">
-          <div class="text-sm flex items-center gap-4">
-            <span>Assigned: <b id="assignCount">0</b></span>
-            <span class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><label for="showDone">Show Done</label></span>
-          </div>
-        </div>
-        <div class="border rounded overflow-hidden">
-          <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
-            <div class="col-span-6">NTT</div>
-            <div class="col-span-4">NETWORK ID</div>
-            <div class="col-span-2">AGING</div>
-          </div>
-          <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NTT Detail Modal (baru) -->
-  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
-    <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
-      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
-        <div class="font-semibold">🗂️ NTT Log Detail</div>
-        <button id="nttDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
-      </div>
-
-      <div class="p-4 space-y-4 text-sm">
-        <div class="rounded-lg border border-indigo-200 p-3 bg-indigo-50/40">
-          <div class="font-semibold mb-1">📍 Location for: <span id="detailLocationFor" class="font-mono"></span></div>
-          <div class="grid grid-cols-1 gap-1">
-            <div>Street: <span id="detailStreet" class="font-medium"></span></div>
-            <div>Section: <span id="detailSection" class="font-medium"></span></div>
-            <div>Coordinates: <a id="detailCoordsLink" href="#" target="_blank" class="text-indigo-600 underline">-</a></div>
-          </div>
-        </div>
-
-        <div>
-          <div class="font-semibold mb-1">Description</div>
-          <pre id="detailDescription" class="text-xs whitespace-pre-wrap max-h-80 overflow-y-auto bg-gray-100 p-3 rounded border"></pre>
-        </div>
-
-        <div class="text-xs text-gray-600">
-          <div>NTT: <b id="detailNttNo"></b></div>
-          <div>Assigned: <b id="detailAssignedTo">Unassigned</b></div>
-        </div>
-
-        <div class="space-y-2">
-          <div class="font-semibold">Upload Evidence:</div>
-          <input id="evidenceInput" type="file" class="block w-full text-xs border rounded px-2 py-1">
-          <button id="uploadEvidenceBtn" class="w-full sm:w-auto px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">Upload Evidence</button>
-          <div id="evidenceStatus" class="text-xs text-gray-600"></div>
-        </div>
-
-        <div class="flex items-center justify-between pt-2">
-          <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
-          <div class="text-xs text-gray-500">Resolving will mark this NTT as <b>Done</b> and increase team productivity (once per NTT).</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div id="toast"></div>
-
-  <!-- Scripts -->
   <script>
-    const lastUpdatedEl = document.getElementById("lastUpdated");
-    const refreshBtn = document.getElementById("refreshBtn");
-    const logTableBody = document.getElementById("logTableBody");
-    const filterNode = document.getElementById("filterNode");
-    const filterDomain = document.getElementById("filterDomain");
-    const filterAging = document.getElementById("filterAging");
-    const searchInput = document.getElementById("searchInput");
-    const summaryDashboard = document.getElementById("summaryDashboard");
-    const descriptionModal = document.getElementById("descriptionModal");
-    const descriptionContent = document.getElementById("descriptionContent");
-    const toast = document.getElementById("toast");
+    // ====== Config ======
+    const cloudCSVUrl =
+      "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv?nocache=" + Date.now();
 
-    /* ===== Assign Store ===== */
-    const ASSIGN_KEY = "nttAssignments";
-    const ASSIGN_VER_KEY = "nttAssignmentsVersion";
-    function readAssignments(){ try{ return JSON.parse(localStorage.getItem(ASSIGN_KEY)||"{}"); }catch{ return {}; } }
-    function writeAssignments(obj){ localStorage.setItem(ASSIGN_KEY, JSON.stringify(obj)); localStorage.setItem(ASSIGN_VER_KEY, String(Date.now())); }
-    function saveAssignment(nttNumber, team, note=""){ const d=readAssignments(); d[nttNumber]={team, note, status:"assigned", at:new Date().toISOString()}; writeAssignments(d); }
-    function setDone(nttNumber, done=true){ const d=readAssignments(); if(!d[nttNumber]) return; d[nttNumber].status=done?"done":"assigned"; d[nttNumber].doneAt=done?new Date().toISOString():null; writeAssignments(d); }
-    function unassign(nttNumber){ const d=readAssignments(); delete d[nttNumber]; writeAssignments(d); }
-    function getAssignment(nttNumber){ return readAssignments()[nttNumber] || null; }
-    window.addEventListener("storage", (e)=>{ if(e.key===ASSIGN_KEY||e.key===ASSIGN_VER_KEY) applyFilters(); });
+    const functionURL = "/.netlify/functions/assignments"; // GET / POST
 
-    /* ===== Productivity & Evidence ===== */
-    const PRODUCTIVITY_KEY = "nttProductivity";  // {counts:{TEAM:n}, items:{NTT:true}}
-    function readProd(){ try{ return JSON.parse(localStorage.getItem(PRODUCTIVITY_KEY)||'{"counts":{},"items":{}}'); }catch{ return {counts:{},items:{}}; } }
-    function writeProd(p){ localStorage.setItem(PRODUCTIVITY_KEY, JSON.stringify(p)); }
-    function incProductivity(team, ntt){ const p=readProd(); if(p.items[ntt]) return; p.items[ntt]=true; p.counts[team]=(p.counts[team]||0)+1; writeProd(p); }
-    function productivityCount(team){ const p=readProd(); return p.counts[team]||0; }
+    // ====== State ======
+    let fullData = [];           // CSV rows
+    let assignments = {};        // { nttNumber: "Team ..." }
 
-    function evidenceKey(ntt){ return 'evidence:'+ntt; }
-    function saveEvidence(ntt, base64, name){ localStorage.setItem(evidenceKey(ntt), JSON.stringify({base64,name,at:new Date().toISOString()})); }
-    function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evidenceKey(ntt))||"null"); }catch{return null;} }
+    // ====== Helpers ======
+    const $ = (id) => document.getElementById(id);
 
-    /* ===== Network ID Location ===== */
-    const LOCATION_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/network_id_location.csv";
-    let locationIndex = null;
-    async function loadLocationIndex(force=false){
-      if(locationIndex && !force) return locationIndex;
-      try{
-        const cached = JSON.parse(localStorage.getItem("nttLocationIndex")||"null");
-        if(cached && Array.isArray(cached.rows)){ locationIndex=cached.rows; return locationIndex; }
-      }catch{}
-      const resp = await fetch(LOCATION_RAW_URL+"?nocache="+Date.now(), {cache:"no-store"});
-      if(!resp.ok) throw new Error("Location CSV HTTP "+resp.status);
-      const text = await resp.text();
-      const parsed = Papa.parse(text, {header:true, skipEmptyLines:true});
-      locationIndex = (parsed.data||[]).map(function(r){
-        return {
-          networkId: (r["Network ID"]||"").trim(),
-          locationFor: (r["Network ID"]||"").trim(),
-          street: r["Street Name"] || "",
-          section: r["Section"] || "",
-          lat: (r["Latitude"]||"").toString().trim(),
-          lng: (r["Longitude"]||"").toString().trim()
-        };
+    function renderTable() {
+      const node = $("nodeFilter").value.trim();
+      const q = $("searchInput").value.trim().toLowerCase();
+
+      const rows = fullData.filter(r => {
+        const byNode = !node || (r["TM Node"] || r.Node || "").toUpperCase().startsWith(node.toUpperCase());
+        const s = (r["NTT Number"] + " " + (r["TM Node"]||r.Node) + " " + r.Domain + " " + r["Network ID"]).toLowerCase();
+        const bySearch = !q || s.includes(q);
+        return byNode && bySearch;
       });
-      localStorage.setItem("nttLocationIndex", JSON.stringify({rows:locationIndex, at:Date.now()}));
-      return locationIndex;
+
+      const tb = $("tbody");
+      tb.innerHTML = "";
+
+      rows.forEach(r => {
+        const ntt = (r["NTT Number"] || "").trim();
+        const tr = document.createElement("tr");
+        tr.className = "border-t";
+
+        tr.innerHTML = `
+          <td class="px-3 py-2"><input type="checkbox" data-ntt="${ntt}"/></td>
+          <td class="px-3 py-2 font-semibold">${ntt}</td>
+          <td class="px-3 py-2">${r["TM Node"] || r.Node || ""}</td>
+          <td class="px-3 py-2">${r.Domain || ""}</td>
+          <td class="px-3 py-2">${r["Network ID"] || ""}</td>
+          <td class="px-3 py-2">${assignments[ntt] || "-"}</td>
+        `;
+        tb.appendChild(tr);
+      });
+
+      updateDashboardCounts();
     }
-    function findLocationByNetworkId(nid){
-      if(!locationIndex) return null;
-      return locationIndex.find(function(r){ return r.networkId === (nid||"").trim(); }) || null;
+
+    function updateDashboardCounts() {
+      const counts = { "Team Faison":0, "Team Fauzie":0, "Team Rudi":0, "Team Rosdee":0 };
+      Object.values(assignments).forEach(t => { if (counts[t] !== undefined) counts[t]++; });
+      $("cFaison").textContent = counts["Team Faison"];
+      $("cFauzie").textContent = counts["Team Fauzie"];
+      $("cRudi").textContent   = counts["Team Rudi"];
+      $("cRosdee").textContent = counts["Team Rosdee"];
     }
 
-    /* ===== Data setup ===== */
-    let fullData = [];
-    let currentFilteredData = [];
-    const allowedNodes = ["KGU", "TBN", "SOO", "NBN", "TNM"];
-    const REPO_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
-    const AUTO_REFRESH_SECONDS = 30;
+    async function loadCSV() {
+      return new Promise((resolve, reject) => {
+        Papa.parse(cloudCSVUrl, {
+          download: true,
+          header: true,
+          complete: (res) => resolve(res.data.filter(Boolean)),
+          error: reject
+        });
+      });
+    }
 
-    const nowStr = () => new Date().toLocaleString();
-    const cloudUrl = () => REPO_RAW_URL+"?nocache="+Date.now();
+    async function loadAssignmentsFromAPI() {
+      try {
+        const res = await fetch(functionURL);
+        if (!res.ok) throw new Error("GET failed");
+        const data = await res.json();
+        assignments = data.assignments || {};
+        localStorage.setItem("assignments", JSON.stringify(assignments)); // cache
+      } catch (e) {
+        // Fallback to localStorage
+        const cached = localStorage.getItem("assignments");
+        assignments = cached ? JSON.parse(cached) : {};
+        console.warn("Using localStorage fallback for assignments:", e.message);
+      }
+    }
 
-    function showToast(msg){ if(!toast) return; toast.textContent = msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"), 1800); }
+    async function saveAssignmentsToAPI(newOnes) {
+      try {
+        const res = await fetch(functionURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ assignments: newOnes })
+        });
+        if (!res.ok) throw new Error("POST failed");
+        const data = await res.json();
+        assignments = data.assignments || assignments;
+        localStorage.setItem("assignments", JSON.stringify(assignments));
+        return true;
+      } catch (e) {
+        console.warn("API save failed, keeping local only:", e.message);
+        // Merge to local fallback
+        assignments = { ...assignments, ...newOnes };
+        localStorage.setItem("assignments", JSON.stringify(assignments));
+        return false;
+      }
+    }
 
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshFromGitHub(); });
-
-    window.addEventListener("DOMContentLoaded", async () => {
-      await refreshFromGitHub(true);
-      setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS * 1000);
-      [filterNode, filterDomain, filterAging, searchInput].forEach(el => el.addEventListener("input", applyFilters));
-      if (refreshBtn) refreshBtn.addEventListener("click", () => syncNow());
+    // ====== Events ======
+    $("nodeFilter").addEventListener("change", renderTable);
+    $("searchInput").addEventListener("input", renderTable);
+    $("reloadBtn").addEventListener("click", async () => {
+      fullData = await loadCSV();
+      renderTable();
+    });
+    $("syncBtn").addEventListener("click", async () => {
+      await loadAssignmentsFromAPI();
+      renderTable();
     });
 
-    function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); }
+    $("selectAll").addEventListener("change", (e) => {
+      document.querySelectorAll('#tbody input[type="checkbox"]').forEach(cb => cb.checked = e.target.checked);
+    });
 
-    async function refreshFromGitHub(firstLoad=false){
-      try{
-        const resp = await fetch(cloudUrl(), { cache: "no-store" });
-        if(!resp.ok) throw new Error("HTTP "+resp.status);
-        const csvText = await resp.text();
-        const parsed = Papa.parse(csvText, { header:true, skipEmptyLines:true });
-        const data = (parsed.data||[]).map(function(row){
-          return {
-            "NTT Create Date": row["NTT Create Date"],
-            "NTT Number": row["NTT Number"],
-            "TM Node": (row["TM Node"]||"").trim().toUpperCase(),
-            "Symptom": row["Symptom"],
-            "Domain": (row["Domain"]||"").trim(),
-            "Network ID": row["Network ID"],
-            "CTTs Linked": row["CTTs Linked"],
-            "Aging Category": (row["Aging Category"]||"").trim(),
-            "Zone": (row["Zone"]||"").trim().toUpperCase(),
-            "Description": row["Description"]
-          };
-        }).filter(function(r){ return allowedNodes.indexOf(r["TM Node"]) !== -1; });
+    $("assignBtn").addEventListener("click", async () => {
+      const team = $("teamSelect").value;
+      if (!team) { alert("Please choose a team first."); return; }
 
-        fullData = data;
-        localStorage.setItem("nttData", JSON.stringify(fullData));
-        populateFilters(fullData);
-        applyFilters();
-        lastUpdatedEl.textContent = "Last updated from GitHub: "+nowStr();
-        lastUpdatedEl.className = "text-sm text-green-100";
-        if(!firstLoad) showToast("Data refreshed");
-      }catch(e){
-        const cached = localStorage.getItem("nttData");
-        if(cached){
-          fullData = JSON.parse(cached);
-          populateFilters(fullData); applyFilters();
-          lastUpdatedEl.textContent = "Using cache (GitHub not reachable): "+nowStr();
-          lastUpdatedEl.className = "text-sm text-yellow-200";
-          showToast("Using cache");
-        }else{
-          lastUpdatedEl.textContent = "Failed to load from GitHub: "+e.message;
-          lastUpdatedEl.className = "text-sm text-red-200";
-          showToast("Failed to load data");
-        }
-      }
-    }
+      const checked = Array.from(document.querySelectorAll('#tbody input[type="checkbox"]:checked'));
+      if (checked.length === 0) { alert("Please select at least one row."); return; }
 
-    function getDayDifference(dateStr){
-      const today=new Date();
-      const date=new Date(dateStr);
-      if(isNaN(date.getTime())) return NaN;
-      return Math.floor((today-date)/(1000*60*60*24));
-    }
+      const updates = {};
+      checked.forEach(cb => { updates[cb.dataset.ntt] = team; });
+      await saveAssignmentsToAPI(updates);
+      renderTable();
+      $("selectAll").checked = false;
+    });
 
-    function populateTable(data){
-      var out = [];
-      for(var i=0;i<data.length;i++){
-        var row = data[i];
-        var ageCat = row["Aging Category"] || "";
-        var agingClass = ageCat.indexOf("48H")!==-1?"bg-red-500":(ageCat.indexOf("24H")!==-1?"bg-orange-400":"bg-green-500");
-        var daysCount = getDayDifference(row["NTT Create Date"]);
-        var asg = getAssignment(row["NTT Number"]);
-        var badge = asg ? ('<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">'+asg.team+(asg.status==="done"?" • done":"")+'</span>') : "";
-        out.push(
-          '<tr class="border-b hover:bg-gray-50">'
-          +'<td class="px-4 py-2">'+(row["NTT Create Date"]||"")+'</td>'
-          +'<td class="px-4 py-2">'
-            +'<button class="text-indigo-600 underline" data-desc="'+String(row["Description"]||"").replace(/\"/g,'&quot;')+'">'+(row["NTT Number"]||"")+' '+badge+'</button>'
-          +'</td>'
-          +'<td class="px-4 py-2">'+(row["TM Node"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["Symptom"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["Domain"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["Network ID"]||"")+'</td>'
-          +'<td class="px-4 py-2">'+(row["CTTs Linked"]||"")+'</td>'
-          +'<td class="px-4 py-2"><span class="px-2 py-1 rounded text-white '+agingClass+'">'+ageCat+'</span></td>'
-          +'<td class="px-4 py-2">'+(isFinite(daysCount)?daysCount:"-")+'</td>'
-          +'</tr>'
-        );
-      }
-      logTableBody.innerHTML = out.join("");
-      logTableBody.querySelectorAll('button[data-desc]').forEach(function(btn){
-        btn.addEventListener('click', function(){
-          descriptionContent.textContent=(btn.getAttribute('data-desc')||"");
-          descriptionModal.classList.remove('hidden');
-        });
-      });
-    }
+    // ====== Init ======
+    (async () => {
+      fullData = await loadCSV();
+      await loadAssignmentsFromAPI();
+      renderTable();
+    })();
 
-    function populateFilters(data){
-      const domainSet = new Set(data.map(function(d){ return (d["Domain"]||"").trim(); }).filter(Boolean));
-      domainSet.add("LTE 4G");
-      const domains = Array.from(domainSet).sort();
-      const agings = Array.from(new Set(data.map(function(d){ return (d["Aging Category"]||"").trim(); }).filter(Boolean))).sort();
-      filterDomain.innerHTML = '<option value="">Filter by Domain</option>' + domains.map(function(d){ return '<option value="'+d+'">'+d+'</option>'; }).join('');
-      filterAging.innerHTML  = '<option value="">Filter by Aging</option>'  + agings.map(function(a){ return '<option value="'+a+'">'+a+'</option>'; }).join('');
-    }
-
-    function applyFilters(){
-      const node = filterNode.value;
-      const domain = filterDomain.value;
-      const aging = filterAging.value;
-      const keyword = (searchInput.value||"").toLowerCase();
-
-      const filtered = fullData.filter(function(row){
-        const okNode   = !node   || (row["TM Node"]||"")===node;
-        const okDomain = !domain || (row["Domain"]||"")===domain;
-        const okAging  = !aging  || (row["Aging Category"]||"")===aging;
-        const okSearch = !keyword || Object.values(row).some(function(v){ return String(v||"").toLowerCase().includes(keyword); });
-        return okNode && okDomain && okAging && okSearch;
-      });
-
-      currentFilteredData = filtered;
-      populateTable(filtered);
-      populateDashboard(filtered);
-      updateNTTSummary(filtered);
-      populateZoneDashboard(filtered);
-    }
-
-    function toggleTeam(teamId){
-      const section=document.getElementById(teamId);
-      if(section) section.classList.toggle("hidden");
-    }
-
-    const TEAM_ALIASES = {
-      "TEAM FAISON": ["TEAM FAISON"],
-      "TEAM FAUZIE": ["TEAM FAUZIE"],
-      "TEAM RUDI":   ["TEAM RUDI"],
-      "TEAM ROSDEE": ["TEAM ROSDEE"]
-    };
-    function teamsMatch(entryTeam, cardTeam){
-      const aliases = TEAM_ALIASES[cardTeam] || [cardTeam];
-      return aliases.indexOf(entryTeam) !== -1;
-    }
-
-    function populateDashboard(data){
-      const teams = {
-        "TEAM FAISON": ["KGU","TBN"],
-        "TEAM FAUZIE": ["KGU","TBN"],
-        "TEAM RUDI":   ["SOO","NBN"],
-        "TEAM ROSDEE": ["TNM"]
-      };
-
-      const agingLabels=["< 8H","8H - 12H","12H - 24H","24H - 48H","> 48H"];
-      const icons=["🟢","🟡","🔶","🔸","🔴"];
-      summaryDashboard.innerHTML="";
-      const assignments = readAssignments();
-
-      Object.entries(teams).forEach(function(pair){
-        const team = pair[0];
-        const nodes = pair[1];
-        const teamId = team.replace(/\s+/g, "_");
-        let summaryHTML = '<div class="border border-green-600 rounded p-2">'
-          +'<div class="flex justify-between items-center mb-2">'
-            +'<h2 class="text-center font-bold text-green-700">'+team+'</h2>'
-            +'<button onclick="toggleTeam(\''+teamId+'\')" class="text-xs bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded">Hide</button>'
-          +'</div>'
-          +'<div id="'+teamId+'" class="team-section">';
-
-        nodes.forEach(function(node){
-          summaryHTML += '<div class="grid grid-cols-5 gap-2 text-xs mb-2">';
-          agingLabels.forEach(function(aging,idx){
-            const count = data.filter(function(d){ return d["TM Node"]===node && d["Aging Category"]===aging; }).length;
-            const color = aging.indexOf("48H")!==-1?"bg-red-500 text-white":(aging.indexOf("24H")!==-1?"bg-orange-400 text-white":"bg-gray-100");
-            summaryHTML += '<div class="px-2 py-1 rounded '+color+'">'+icons[idx]+' '+node+' '+aging+': '+count+'</div>';
-          });
-          const total = data.filter(function(d){ return d["TM Node"]===node; }).length;
-          summaryHTML += '<div class="col-span-5 text-center text-blue-700 mt-1">📘 Total '+node+': '+total+'</div></div>';
-        });
-
-        const assignedForTeam = data.filter(function(d){
-          const a=assignments[d["NTT Number"]];
-          return a && teamsMatch(a.team, team) && a.status!=="done";
-        }).length;
-
-        const doneForTeam = data.filter(function(d){
-          const a=assignments[d["NTT Number"]];
-          return a && teamsMatch(a.team, team) && a.status==="done";
-        }).length;
-
-        const prod = productivityCount(team);
-
-        summaryHTML += '</div>'
-          +'<div class="mt-2 flex items-center justify-between">'
-            +'<div class="text-xs space-x-2">'
-              +'<span class="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-700 font-semibold">🗂️ Assigned: '+assignedForTeam+'</span>'
-              +'<span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 text-emerald-700 font-semibold">✅ Done: '+doneForTeam+'</span>'
-              +'<span class="inline-flex items-center px-2 py-1 rounded bg-sky-100 text-sky-700 font-semibold">📈 Productivity: '+prod+'</span>'
-            +'</div>'
-            +'<button data-team="'+team+'" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button>'
-          +'</div>'
-        +'</div>';
-
-        summaryDashboard.innerHTML += summaryHTML;
-      });
-
-      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(function(btn){
-        btn.addEventListener('click', function(){ openAssignModal(btn.getAttribute('data-team')); });
-      });
-    }
-
-    function updateNTTSummary(data){
-      const config=[
-        {label:"< 8H", ring:"ring-green-400", text:"text-green-600"},
-        {label:"8H - 12H", ring:"ring-yellow-400", text:"text-yellow-600"},
-        {label:"12H - 24H", ring:"ring-orange-400", text:"text-orange-500"},
-        {label:"24H - 48H", ring:"ring-red-400", text:"text-red-500"},
-        {label:"> 48H", ring:"ring-rose-400", text:"text-rose-600"}
-      ];
-      const container=document.getElementById("nttSummaryContainer");
-      container.innerHTML="";
-      const frag=document.createDocumentFragment();
-      config.forEach(function(cat){
-        const count=data.filter(function(d){ return (d["Aging Category"]||"")===cat.label; }).length;
-        const overdue = cat.label==="> 48H" ? data.filter(function(d){ return (d["Aging Category"]||"")===cat.label && getDayDifference(d["NTT Create Date"])>2; }).length : 0;
-        const extra = overdue ? (' • overdue: '+overdue) : "";
-        const w=document.createElement('div');
-        w.className='flex flex-col items-center';
-        w.innerHTML='<div class="w-14 h-14 rounded-full ring-4 '+cat.ring+' flex items-center justify-center text-lg font-bold text-gray-800">'+count+'</div>'
-                   +'<span class="text-xs mt-1 '+cat.text+'">'+cat.label+extra+'</span>';
-        frag.appendChild(w);
-      });
-      container.appendChild(frag);
-    }
-
-    function populateZoneDashboard(data){
-      const targetZone="PBP SELATAN";
-      const targetDomain="PASSIVE ELEMENT NOVA";
-      const nodes=["KGU","TBN","SOO","NBN","TNM"];
-      const filtered=data.filter(function(d){
-        return (String(d["Zone"]||"").trim().toUpperCase()===targetZone)
-          && (String(d["Domain"]||"").trim().toUpperCase()===targetDomain)
-          && (nodes.indexOf(String(d["TM Node"]||"").trim().toUpperCase())!==-1);
-      });
-      const zoneDashboard=document.getElementById("zoneDashboard");
-      if(filtered.length===0){
-        zoneDashboard.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>';
-        return;
-      }
-      const counts={}; nodes.forEach(function(n){ counts[n]=0; });
-      filtered.forEach(function(r){
-        const node=String(r["TM Node"]||"").trim().toUpperCase();
-        if(counts.hasOwnProperty(node)) counts[node]++;
-      });
-      const sorted=Object.entries(counts).sort(function(a,b){ return b[1]-a[1]; });
-      const maxCount=Math.max.apply(null, sorted.map(function(x){return x[1];}).concat([1]));
-      zoneDashboard.innerHTML=sorted.map(function(pair){
-        var node=pair[0], count=pair[1];
-        return '<div class="flex items-center justify-between gap-2">'
-          +'<div class="text-sm font-medium w-16">'+node+'</div>'
-          +'<div class="w-full bg-gray-200 rounded h-4 relative">'
-            +'<div class="bg-red-500 h-4 rounded transition-all duration-500" style="width: '+(count/maxCount*100)+'%"></div>'
-            +'<span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">'+count+'</span>'
-          +'</div>'
-        +'</div>';
-      }).join("");
-      const grandTotal=sorted.reduce(function(s,p){return s+p[1];},0);
-      zoneDashboard.innerHTML+='<div class="flex justify-between mt-4 pt-2 border-t text-sm font-semibold text-gray-700"><div>Grand Total</div><div>'+grandTotal+'</div></div>';
-    }
-
-    /* ===== NTT Detail ===== */
-    async function openNttDetail(nttNumber){
-      const row = (currentFilteredData.length? currentFilteredData: fullData)
-                    .find(function(r){ return String(r["NTT Number"]) === String(nttNumber); });
-      if(!row){ showToast("NTT not found"); return; }
-
-      const modal = document.getElementById("nttDetailModal");
-      const el = function(id){ return document.getElementById(id); };
-      el("detailNttNo").textContent = row["NTT Number"];
-      const asg = getAssignment(row["NTT Number"]);
-      el("detailAssignedTo").textContent = asg ? (asg.team + (asg.status==="done"?" • done":"")) : "Unassigned";
-
-      try { await loadLocationIndex(); } catch(_) {}
-      const loc = findLocationByNetworkId(row["Network ID"]);
-      el("detailLocationFor").textContent = (loc && loc.locationFor) ? loc.locationFor : (row["Network ID"] || "-");
-      el("detailStreet").textContent = (loc && loc.street) ? loc.street : "-";
-      el("detailSection").textContent = (loc && loc.section) ? loc.section : "-";
-      const lat = loc && loc.lat, lng = loc && loc.lng;
-      const gm = (lat && lng) ? ('https://www.google.com/maps?q='+lat+','+lng) : "#";
-      el("detailCoordsLink").textContent = (lat && lng) ? (lat+', '+lng) : "-";
-      el("detailCoordsLink").href = gm;
-
-      el("detailDescription").textContent = row["Description"] || "-";
-
-      const ev = readEvidence(row["NTT Number"]);
-      el("evidenceStatus").textContent = ev ? ('Uploaded: '+ev.name+' @ '+new Date(ev.at).toLocaleString()) : "No evidence yet.";
-
-      el("uploadEvidenceBtn").onclick = function(){
-        const inp = el("evidenceInput");
-        if(!inp.files || !inp.files[0]){ showToast("Choose a file first"); return; }
-        const file = inp.files[0];
-        const r = new FileReader();
-        r.onload = function(){
-          saveEvidence(row["NTT Number"], r.result, file.name);
-          el("evidenceStatus").textContent = 'Uploaded: '+file.name+' @ '+new Date().toLocaleString();
-          showToast("Evidence uploaded (local)");
-        };
-        r.readAsDataURL(file);
-      };
-
-      el("resolveBtn").onclick = function(){
-        const ntt = row["NTT Number"];
-        const a = getAssignment(ntt);
-        setDone(ntt, true);
-        if(a && a.team) incProductivity(a.team, ntt);
-        applyFilters();
-        showToast("NTT marked as Done");
-        closeNttDetail();
-      };
-
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-    }
-    function closeNttDetail(){
-      const modal = document.getElementById("nttDetailModal");
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-    }
-    document.getElementById("nttDetailClose").addEventListener("click", closeNttDetail);
-
-    /* ===== Assign Modal logic ===== */
-    function openAssignModal(team){
-      const modal=document.getElementById('assignModal');
-      const title=document.getElementById('assignTeamTitle');
-      const listEl=document.getElementById('assignList');
-      const searchEl=document.getElementById('assignSearch');
-      const showDoneEl=document.getElementById('showDone');
-      const countEl=document.getElementById('assignCount');
-      title.textContent=team;
-
-      function render(){
-        const asgMap = readAssignments();
-        const q = (searchEl.value || '').toLowerCase();
-        const showDone = showDoneEl.checked;
-
-        const rows = (currentFilteredData.length ? currentFilteredData : fullData).filter(function(r){
-          const a = asgMap[r['NTT Number']];
-          if (!a || a.team !== team) return false;
-          if (!showDone && a.status === 'done') return false;
-          if (!q) return true;
-          return [r['NTT Number'], r['Network ID'], r['Symptom']]
-            .some(function(v){ return (v || '').toString().toLowerCase().includes(q); });
-        });
-
-        countEl.textContent = rows.length;
-
-        listEl.innerHTML = rows.map(function(r){
-          const aging = (r['Aging Category'] || '').trim();
-          const cls = aging.indexOf('48H')!==-1 ? 'bg-red-500' : (aging.indexOf('24H')!==-1 ? 'bg-orange-400' : 'bg-green-500');
-          const desc = (r['Description'] || '').toString().replace(/"/g, '&quot;');
-          return (
-            '<div class="grid grid-cols-12 items-center px-3 py-2 text-sm">'
-              +'<div class="col-span-6">'
-                +'<button class="open-ntt-detail text-indigo-700 underline font-medium" data-ntt="'+r['NTT Number']+'" title="'+desc+'">'+r['NTT Number']+'</button>'
-                +'<div class="text-xs text-gray-500">'+(r['Domain'] || '')+'</div>'
-              +'</div>'
-              +'<div class="col-span-4 truncate">'+(r['Network ID'] || '')+'</div>'
-              +'<div class="col-span-2 text-right">'
-                +'<span class="text-white text-[11px] px-2 py-0.5 rounded '+cls+'">'+(aging || '-')+'</span>'
-              +'</div>'
-            +'</div>'
-          );
-        }).join('');
-
-        listEl.querySelectorAll('.open-ntt-detail').forEach(function(btn){
-          btn.addEventListener('click', function(){ openNttDetail(btn.getAttribute('data-ntt')); });
-        });
-      }
-
-      render();
-      searchEl.oninput=render; showDoneEl.onchange=render;
-      modal.classList.remove('hidden'); modal.classList.add('flex');
-      document.getElementById('assignModalClose').onclick=function(){
-        modal.classList.add('hidden'); modal.classList.remove('flex');
-      };
-    }
   </script>
 </body>
 </html>
