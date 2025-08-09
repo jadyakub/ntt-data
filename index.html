@@ -17,57 +17,24 @@
       th, td { padding: 4px 8px !important; }
     }
 
-    /* ===== Updated: Mobile portrait & landscape kekal satu kolum ===== */
+    /* Mobile kekal satu kolum */
     @media (hover: none) and (pointer: coarse), screen and (max-width: 640px) {
       :root { --m-pad: 12px; }
-
-      /* Lebar penuh & elak grid pecah */
-      main, header, .team-section, .grid, table, .overflow-x-auto {
-        width: 100% !important;
-        max-width: 100% !important;
-      }
+      main, header, .team-section, .grid, table, .overflow-x-auto { width: 100% !important; max-width: 100% !important; }
       body { overflow-x: hidden; }
-
-      /* Header susun menegak */
-      header {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: .5rem !important;
-        padding: var(--m-pad) !important;
-      }
+      header { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: .5rem !important; padding: var(--m-pad) !important; }
       nav { display: flex !important; flex-direction: row; gap: 1rem; margin-top: 0.5rem; }
-
-      /* Filters blok pertama dalam <main>: paksa 1 kolum */
-      main > .grid:first-of-type {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: .5rem !important;
-      }
-      main > .grid:first-of-type .grid {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: .5rem !important;
-      }
-
-      /* Kad ringkasan/team dashboard: satu kolum */
-      #summaryDashboard {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: .75rem !important;
-      }
-
-      /* Jadual – boleh scroll sisi tanpa mengecilkan font */
+      main > .grid:first-of-type { display: flex !important; flex-direction: column !important; gap: .5rem !important; }
+      main > .grid:first-of-type .grid { display: flex !important; flex-direction: column !important; gap: .5rem !important; }
+      #summaryDashboard { display: flex !important; flex-direction: column !important; gap: .75rem !important; }
       .overflow-x-auto { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
       #logTable { min-width: 720px; }
       #logTable th, #logTable td { white-space: nowrap; text-align: center; }
-
-      /* Modal assignment – muat penuh & tidak terpotong */
       #assignModal { align-items: flex-start !important; padding-top: var(--m-pad) !important; }
       #assignModal > div { width: 100% !important; max-width: none !important; border-radius: .75rem !important; }
     }
 
-    /* Center table text + sticky header */
+    /* Table */
     #logTable th, #logTable td { text-align: center; }
     #logTable thead th { position: sticky; top: 0; z-index: 1; }
 
@@ -110,14 +77,9 @@
       </div>
     </div>
 
-    <!-- Search Bar -->
+    <!-- Search -->
     <div class="mb-4">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="🔍 Search keyword (e.g., dp faulty)"
-        class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      />
+      <input id="searchInput" type="text" placeholder="🔍 Search keyword (e.g., dp faulty)" class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
     </div>
 
     <!-- NTT Summary -->
@@ -126,7 +88,7 @@
       <div id="nttSummaryContainer" class="flex flex-wrap gap-4 justify-start sm:justify-between"></div>
     </div>
 
-    <!-- Mini Dashboard: Zone Summary -->
+    <!-- Zone Summary -->
     <div class="mb-6">
       <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
       <div id="zoneDashboard" class="space-y-2"></div>
@@ -156,7 +118,7 @@
     </div>
   </main>
 
-  <!-- Description Modal -->
+  <!-- Description Modal (asal) -->
   <div id="descriptionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-2xl shadow-xl">
       <h2 class="text-lg font-semibold mb-2">Description</h2>
@@ -165,7 +127,7 @@
     </div>
   </div>
 
-  <!-- Team Assign Modal -->
+  <!-- Assign Modal (3 kolum) -->
   <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
     <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
       <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -182,11 +144,54 @@
         </div>
         <div class="border rounded overflow-hidden">
           <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
-  <div class="col-span-6">NTT</div>
-  <div class="col-span-4">NETWORK ID</div>
-  <div class="col-span-2">AGING</div>
-</div>
-<div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
+            <div class="col-span-6">NTT</div>
+            <div class="col-span-4">NETWORK ID</div>
+            <div class="col-span-2">AGING</div>
+          </div>
+          <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NTT Detail Modal (baru) -->
+  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
+    <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
+      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">🗂️ NTT Log Detail</div>
+        <button id="nttDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+
+      <div class="p-4 space-y-4 text-sm">
+        <div class="rounded-lg border border-indigo-200 p-3 bg-indigo-50/40">
+          <div class="font-semibold mb-1">📍 Location for: <span id="detailLocationFor" class="font-mono"></span></div>
+          <div class="grid grid-cols-1 gap-1">
+            <div>Street: <span id="detailStreet" class="font-medium"></span></div>
+            <div>Section: <span id="detailSection" class="font-medium"></span></div>
+            <div>Coordinates: <a id="detailCoordsLink" href="#" target="_blank" class="text-indigo-600 underline">-</a></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="font-semibold mb-1">Description</div>
+          <pre id="detailDescription" class="text-xs whitespace-pre-wrap max-h-80 overflow-y-auto bg-gray-100 p-3 rounded border"></pre>
+        </div>
+
+        <div class="text-xs text-gray-600">
+          <div>NTT: <b id="detailNttNo"></b></div>
+          <div>Assigned: <b id="detailAssignedTo">Unassigned</b></div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="font-semibold">Upload Evidence:</div>
+          <input id="evidenceInput" type="file" class="block w-full text-xs border rounded px-2 py-1">
+          <button id="uploadEvidenceBtn" class="w-full sm:w-auto px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">Upload Evidence</button>
+          <div id="evidenceStatus" class="text-xs text-gray-600"></div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
+          <div class="text-xs text-gray-500">Resolving will mark this NTT as <b>Done</b> and increase team productivity (once per NTT).</div>
         </div>
       </div>
     </div>
@@ -209,7 +214,7 @@
     const descriptionContent = document.getElementById("descriptionContent");
     const toast = document.getElementById("toast");
 
-    /* ========== Assignment Store (localStorage) ========== */
+    /* ===== Assign Store ===== */
     const ASSIGN_KEY = "nttAssignments";
     const ASSIGN_VER_KEY = "nttAssignmentsVersion";
     function readAssignments(){ try{ return JSON.parse(localStorage.getItem(ASSIGN_KEY)||"{}"); }catch{ return {}; } }
@@ -218,10 +223,51 @@
     function setDone(nttNumber, done=true){ const d=readAssignments(); if(!d[nttNumber]) return; d[nttNumber].status=done?"done":"assigned"; d[nttNumber].doneAt=done?new Date().toISOString():null; writeAssignments(d); }
     function unassign(nttNumber){ const d=readAssignments(); delete d[nttNumber]; writeAssignments(d); }
     function getAssignment(nttNumber){ return readAssignments()[nttNumber] || null; }
-    // auto refresh between tabs
     window.addEventListener("storage", (e)=>{ if(e.key===ASSIGN_KEY||e.key===ASSIGN_VER_KEY) applyFilters(); });
 
-    /* ========== Data setup ========== */
+    /* ===== Productivity & Evidence ===== */
+    const PRODUCTIVITY_KEY = "nttProductivity";  // {counts:{TEAM:n}, items:{NTT:true}}
+    function readProd(){ try{ return JSON.parse(localStorage.getItem(PRODUCTIVITY_KEY)||'{"counts":{},"items":{}}'); }catch{ return {counts:{},items:{}}; } }
+    function writeProd(p){ localStorage.setItem(PRODUCTIVITY_KEY, JSON.stringify(p)); }
+    function incProductivity(team, ntt){ const p=readProd(); if(p.items[ntt]) return; p.items[ntt]=true; p.counts[team]=(p.counts[team]||0)+1; writeProd(p); }
+    function productivityCount(team){ const p=readProd(); return p.counts[team]||0; }
+
+    function evidenceKey(ntt){ return 'evidence:'+ntt; }
+    function saveEvidence(ntt, base64, name){ localStorage.setItem(evidenceKey(ntt), JSON.stringify({base64,name,at:new Date().toISOString()})); }
+    function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evidenceKey(ntt))||"null"); }catch{return null;} }
+
+    /* ===== Network ID Location ===== */
+    const LOCATION_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/network_id_location.csv";
+    let locationIndex = null;
+    async function loadLocationIndex(force=false){
+      if(locationIndex && !force) return locationIndex;
+      try{
+        const cached = JSON.parse(localStorage.getItem("nttLocationIndex")||"null");
+        if(cached && Array.isArray(cached.rows)){ locationIndex=cached.rows; return locationIndex; }
+      }catch{}
+      const resp = await fetch(LOCATION_RAW_URL+"?nocache="+Date.now(), {cache:"no-store"});
+      if(!resp.ok) throw new Error("Location CSV HTTP "+resp.status);
+      const text = await resp.text();
+      const parsed = Papa.parse(text, {header:true, skipEmptyLines:true});
+      locationIndex = (parsed.data||[]).map(function(r){
+        return {
+          networkId: (r["Network ID"]||"").trim(),
+          locationFor: (r["Network ID"]||"").trim(),
+          street: r["Street Name"] || "",
+          section: r["Section"] || "",
+          lat: (r["Latitude"]||"").toString().trim(),
+          lng: (r["Longitude"]||"").toString().trim()
+        };
+      });
+      localStorage.setItem("nttLocationIndex", JSON.stringify({rows:locationIndex, at:Date.now()}));
+      return locationIndex;
+    }
+    function findLocationByNetworkId(nid){
+      if(!locationIndex) return null;
+      return locationIndex.find(function(r){ return r.networkId === (nid||"").trim(); }) || null;
+    }
+
+    /* ===== Data setup ===== */
     let fullData = [];
     let currentFilteredData = [];
     const allowedNodes = ["KGU", "TBN", "SOO", "NBN", "TNM"];
@@ -229,7 +275,7 @@
     const AUTO_REFRESH_SECONDS = 30;
 
     const nowStr = () => new Date().toLocaleString();
-    const cloudUrl = () => `${REPO_RAW_URL}?nocache=${Date.now()}`;
+    const cloudUrl = () => REPO_RAW_URL+"?nocache="+Date.now();
 
     function showToast(msg){ if(!toast) return; toast.textContent = msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"), 1800); }
 
@@ -250,24 +296,26 @@
         if(!resp.ok) throw new Error("HTTP "+resp.status);
         const csvText = await resp.text();
         const parsed = Papa.parse(csvText, { header:true, skipEmptyLines:true });
-        const data = (parsed.data||[]).map(row=>({
-          "NTT Create Date": row["NTT Create Date"],
-          "NTT Number": row["NTT Number"],
-          "TM Node": (row["TM Node"]||"").trim().toUpperCase(),
-          "Symptom": row["Symptom"],
-          "Domain": (row["Domain"]||"").trim(),
-          "Network ID": row["Network ID"],
-          "CTTs Linked": row["CTTs Linked"],
-          "Aging Category": (row["Aging Category"]||"").trim(),
-          "Zone": (row["Zone"]||"").trim().toUpperCase(),
-          "Description": row["Description"]
-        })).filter(r=> allowedNodes.includes(r["TM Node"]));
+        const data = (parsed.data||[]).map(function(row){
+          return {
+            "NTT Create Date": row["NTT Create Date"],
+            "NTT Number": row["NTT Number"],
+            "TM Node": (row["TM Node"]||"").trim().toUpperCase(),
+            "Symptom": row["Symptom"],
+            "Domain": (row["Domain"]||"").trim(),
+            "Network ID": row["Network ID"],
+            "CTTs Linked": row["CTTs Linked"],
+            "Aging Category": (row["Aging Category"]||"").trim(),
+            "Zone": (row["Zone"]||"").trim().toUpperCase(),
+            "Description": row["Description"]
+          };
+        }).filter(function(r){ return allowedNodes.indexOf(r["TM Node"]) !== -1; });
 
         fullData = data;
         localStorage.setItem("nttData", JSON.stringify(fullData));
         populateFilters(fullData);
         applyFilters();
-        lastUpdatedEl.textContent = `Last updated from GitHub: ${nowStr()}`;
+        lastUpdatedEl.textContent = "Last updated from GitHub: "+nowStr();
         lastUpdatedEl.className = "text-sm text-green-100";
         if(!firstLoad) showToast("Data refreshed");
       }catch(e){
@@ -275,11 +323,11 @@
         if(cached){
           fullData = JSON.parse(cached);
           populateFilters(fullData); applyFilters();
-          lastUpdatedEl.textContent = `Using cache (GitHub not reachable): ${nowStr()}`;
-        lastUpdatedEl.className = "text-sm text-yellow-200";
+          lastUpdatedEl.textContent = "Using cache (GitHub not reachable): "+nowStr();
+          lastUpdatedEl.className = "text-sm text-yellow-200";
           showToast("Using cache");
         }else{
-          lastUpdatedEl.textContent = `Failed to load from GitHub: ${e.message}`;
+          lastUpdatedEl.textContent = "Failed to load from GitHub: "+e.message;
           lastUpdatedEl.className = "text-sm text-red-200";
           showToast("Failed to load data");
         }
@@ -294,42 +342,46 @@
     }
 
     function populateTable(data){
-      let rows = "";
-      for(const row of data){
-        const ageCat = row["Aging Category"] || "";
-        const agingClass = ageCat.includes("48H")?"bg-red-500": ageCat.includes("24H")?"bg-orange-400":"bg-green-500";
-        const daysCount = getDayDifference(row["NTT Create Date"]);
-        const asg = getAssignment(row["NTT Number"]);
-        const badge = asg ? `<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">${asg.team}${asg.status==="done"?" • done":""}</span>` : "";
-        rows += `
-          <tr class="border-b hover:bg-gray-50">
-            <td class="px-4 py-2">${row["NTT Create Date"] || ""}</td>
-            <td class="px-4 py-2">
-              <button class="text-indigo-600 underline" data-desc="${(row["Description"]||"").toString().replace(/"/g,"&quot;")}">${row["NTT Number"] || ""} ${badge}</button>
-            </td>
-            <td class="px-4 py-2">${row["TM Node"] || ""}</td>
-            <td class="px-4 py-2">${row["Symptom"] || ""}</td>
-            <td class="px-4 py-2">${row["Domain"] || ""}</td>
-            <td class="px-4 py-2">${row["Network ID"] || ""}</td>
-            <td class="px-4 py-2">${row["CTTs Linked"] || ""}</td>
-            <td class="px-4 py-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat}</span></td>
-            <td class="px-4 py-2">${Number.isFinite(daysCount)?daysCount:"-"}</td>
-          </tr>`;
+      var out = [];
+      for(var i=0;i<data.length;i++){
+        var row = data[i];
+        var ageCat = row["Aging Category"] || "";
+        var agingClass = ageCat.indexOf("48H")!==-1?"bg-red-500":(ageCat.indexOf("24H")!==-1?"bg-orange-400":"bg-green-500");
+        var daysCount = getDayDifference(row["NTT Create Date"]);
+        var asg = getAssignment(row["NTT Number"]);
+        var badge = asg ? ('<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">'+asg.team+(asg.status==="done"?" • done":"")+'</span>') : "";
+        out.push(
+          '<tr class="border-b hover:bg-gray-50">'
+          +'<td class="px-4 py-2">'+(row["NTT Create Date"]||"")+'</td>'
+          +'<td class="px-4 py-2">'
+            +'<button class="text-indigo-600 underline" data-desc="'+String(row["Description"]||"").replace(/\"/g,'&quot;')+'">'+(row["NTT Number"]||"")+' '+badge+'</button>'
+          +'</td>'
+          +'<td class="px-4 py-2">'+(row["TM Node"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["Symptom"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["Domain"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["Network ID"]||"")+'</td>'
+          +'<td class="px-4 py-2">'+(row["CTTs Linked"]||"")+'</td>'
+          +'<td class="px-4 py-2"><span class="px-2 py-1 rounded text-white '+agingClass+'">'+ageCat+'</span></td>'
+          +'<td class="px-4 py-2">'+(isFinite(daysCount)?daysCount:"-")+'</td>'
+          +'</tr>'
+        );
       }
-      logTableBody.innerHTML = rows;
-      logTableBody.querySelectorAll('button[data-desc]').forEach(btn => btn.addEventListener('click', ()=>{
-        descriptionContent.textContent=(btn.getAttribute('data-desc')||"");
-        descriptionModal.classList.remove('hidden');
-      }));
+      logTableBody.innerHTML = out.join("");
+      logTableBody.querySelectorAll('button[data-desc]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          descriptionContent.textContent=(btn.getAttribute('data-desc')||"");
+          descriptionModal.classList.remove('hidden');
+        });
+      });
     }
 
     function populateFilters(data){
-      const domainSet = new Set(data.map(d => (d["Domain"]||"").trim()).filter(Boolean));
-      domainSet.add("LTE 4G"); // always present
+      const domainSet = new Set(data.map(function(d){ return (d["Domain"]||"").trim(); }).filter(Boolean));
+      domainSet.add("LTE 4G");
       const domains = Array.from(domainSet).sort();
-      const agings = Array.from(new Set(data.map(d => (d["Aging Category"]||"").trim()).filter(Boolean))).sort();
-      filterDomain.innerHTML = '<option value="">Filter by Domain</option>' + domains.map(d => `<option value="${d}">${d}</option>`).join('');
-      filterAging.innerHTML  = '<option value="">Filter by Aging</option>'  + agings.map(a => `<option value="${a}">${a}</option>`).join('');
+      const agings = Array.from(new Set(data.map(function(d){ return (d["Aging Category"]||"").trim(); }).filter(Boolean))).sort();
+      filterDomain.innerHTML = '<option value="">Filter by Domain</option>' + domains.map(function(d){ return '<option value="'+d+'">'+d+'</option>'; }).join('');
+      filterAging.innerHTML  = '<option value="">Filter by Aging</option>'  + agings.map(function(a){ return '<option value="'+a+'">'+a+'</option>'; }).join('');
     }
 
     function applyFilters(){
@@ -338,11 +390,11 @@
       const aging = filterAging.value;
       const keyword = (searchInput.value||"").toLowerCase();
 
-      const filtered = fullData.filter(row=>{
+      const filtered = fullData.filter(function(row){
         const okNode   = !node   || (row["TM Node"]||"")===node;
         const okDomain = !domain || (row["Domain"]||"")===domain;
         const okAging  = !aging  || (row["Aging Category"]||"")===aging;
-        const okSearch = !keyword || Object.values(row).some(v => (String(v||"")).toLowerCase().includes(keyword));
+        const okSearch = !keyword || Object.values(row).some(function(v){ return String(v||"").toLowerCase().includes(keyword); });
         return okNode && okDomain && okAging && okSearch;
       });
 
@@ -358,7 +410,6 @@
       if(section) section.classList.toggle("hidden");
     }
 
-    // optional helper if you ever add aliases
     const TEAM_ALIASES = {
       "TEAM FAISON": ["TEAM FAISON"],
       "TEAM FAUZIE": ["TEAM FAUZIE"],
@@ -367,11 +418,10 @@
     };
     function teamsMatch(entryTeam, cardTeam){
       const aliases = TEAM_ALIASES[cardTeam] || [cardTeam];
-      return aliases.includes(entryTeam);
+      return aliases.indexOf(entryTeam) !== -1;
     }
 
     function populateDashboard(data){
-      // Individual team cards – Faison and Fauzie split
       const teams = {
         "TEAM FAISON": ["KGU","TBN"],
         "TEAM FAUZIE": ["KGU","TBN"],
@@ -384,51 +434,56 @@
       summaryDashboard.innerHTML="";
       const assignments = readAssignments();
 
-      for(const [team, nodes] of Object.entries(teams)){
+      Object.entries(teams).forEach(function(pair){
+        const team = pair[0];
+        const nodes = pair[1];
         const teamId = team.replace(/\s+/g, "_");
-        let summaryHTML = `<div class="border border-green-600 rounded p-2">
-          <div class="flex justify-between items-center mb-2">
-            <h2 class="text-center font-bold text-green-700">${team}</h2>
-            <button onclick="toggleTeam('${teamId}')" class="text-xs bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded">Hide</button>
-          </div>
-          <div id="${teamId}" class="team-section">`;
+        let summaryHTML = '<div class="border border-green-600 rounded p-2">'
+          +'<div class="flex justify-between items-center mb-2">'
+            +'<h2 class="text-center font-bold text-green-700">'+team+'</h2>'
+            +'<button onclick="toggleTeam(\''+teamId+'\')" class="text-xs bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded">Hide</button>'
+          +'</div>'
+          +'<div id="'+teamId+'" class="team-section">';
 
-        nodes.forEach(node=>{
+        nodes.forEach(function(node){
           summaryHTML += '<div class="grid grid-cols-5 gap-2 text-xs mb-2">';
-          agingLabels.forEach((aging,idx)=>{
-            const count = data.filter(d=> d["TM Node"]===node && d["Aging Category"]===aging).length;
-            const color = aging.includes("48H")?"bg-red-500 text-white": aging.includes("24H")?"bg-orange-400 text-white":"bg-gray-100";
-            summaryHTML += `<div class='px-2 py-1 rounded ${color}'>${icons[idx]} ${node} ${aging}: ${count}</div>`;
+          agingLabels.forEach(function(aging,idx){
+            const count = data.filter(function(d){ return d["TM Node"]===node && d["Aging Category"]===aging; }).length;
+            const color = aging.indexOf("48H")!==-1?"bg-red-500 text-white":(aging.indexOf("24H")!==-1?"bg-orange-400 text-white":"bg-gray-100");
+            summaryHTML += '<div class="px-2 py-1 rounded '+color+'">'+icons[idx]+' '+node+' '+aging+': '+count+'</div>';
           });
-          const total = data.filter(d=> d["TM Node"]===node).length;
-          summaryHTML += `<div class='col-span-5 text-center text-blue-700 mt-1'>📘 Total ${node}: ${total}</div></div>`;
+          const total = data.filter(function(d){ return d["TM Node"]===node; }).length;
+          summaryHTML += '<div class="col-span-5 text-center text-blue-700 mt-1">📘 Total '+node+': '+total+'</div></div>';
         });
 
-        const assignedForTeam = data.filter(d=>{
+        const assignedForTeam = data.filter(function(d){
           const a=assignments[d["NTT Number"]];
           return a && teamsMatch(a.team, team) && a.status!=="done";
         }).length;
 
-        const doneForTeam = data.filter(d=>{
+        const doneForTeam = data.filter(function(d){
           const a=assignments[d["NTT Number"]];
           return a && teamsMatch(a.team, team) && a.status==="done";
         }).length;
 
-        summaryHTML += `</div>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="text-xs">
-              <span class="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-700 font-semibold">🗂️ Assigned: ${assignedForTeam}</span>
-              <span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 text-emerald-700 font-semibold ml-2">✅ Done: ${doneForTeam}</span>
-            </div>
-            <button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button>
-          </div>
-        </div>`;
+        const prod = productivityCount(team);
+
+        summaryHTML += '</div>'
+          +'<div class="mt-2 flex items-center justify-between">'
+            +'<div class="text-xs space-x-2">'
+              +'<span class="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-700 font-semibold">🗂️ Assigned: '+assignedForTeam+'</span>'
+              +'<span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 text-emerald-700 font-semibold">✅ Done: '+doneForTeam+'</span>'
+              +'<span class="inline-flex items-center px-2 py-1 rounded bg-sky-100 text-sky-700 font-semibold">📈 Productivity: '+prod+'</span>'
+            +'</div>'
+            +'<button data-team="'+team+'" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button>'
+          +'</div>'
+        +'</div>';
 
         summaryDashboard.innerHTML += summaryHTML;
-      }
+      });
 
-      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{
-        btn.addEventListener('click', ()=> openAssignModal(btn.getAttribute('data-team')));
+      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(function(btn){
+        btn.addEventListener('click', function(){ openAssignModal(btn.getAttribute('data-team')); });
       });
     }
 
@@ -443,11 +498,14 @@
       const container=document.getElementById("nttSummaryContainer");
       container.innerHTML="";
       const frag=document.createDocumentFragment();
-      config.forEach(cat=>{
-        const count=data.filter(d=>(d["Aging Category"]||"")===cat.label).length;
-        const overdue=cat.label==="> 48H"? data.filter(d=>(d["Aging Category"]||"")===cat.label && getDayDifference(d["NTT Create Date"])>2).length:0;
-        const w=document.createElement('div'); w.className='flex flex-col items-center';
-        w.innerHTML=`<div class="w-14 h-14 rounded-full ring-4 ${cat.ring} flex items-center justify-center text-lg font-bold text-gray-800">${count}</div><span class="text-xs mt-1 ${cat.text}">${cat.label}${overdue?` • overdue: ${overdue}`:""}</span>`;
+      config.forEach(function(cat){
+        const count=data.filter(function(d){ return (d["Aging Category"]||"")===cat.label; }).length;
+        const overdue = cat.label==="> 48H" ? data.filter(function(d){ return (d["Aging Category"]||"")===cat.label && getDayDifference(d["NTT Create Date"])>2; }).length : 0;
+        const extra = overdue ? (' • overdue: '+overdue) : "";
+        const w=document.createElement('div');
+        w.className='flex flex-col items-center';
+        w.innerHTML='<div class="w-14 h-14 rounded-full ring-4 '+cat.ring+' flex items-center justify-center text-lg font-bold text-gray-800">'+count+'</div>'
+                   +'<span class="text-xs mt-1 '+cat.text+'">'+cat.label+extra+'</span>';
         frag.appendChild(w);
       });
       container.appendChild(frag);
@@ -457,36 +515,98 @@
       const targetZone="PBP SELATAN";
       const targetDomain="PASSIVE ELEMENT NOVA";
       const nodes=["KGU","TBN","SOO","NBN","TNM"];
-      const filtered=data.filter(d=> (
-        (d["Zone"]||"").trim().toUpperCase()===targetZone) &&
-        ((d["Domain"]||"").trim().toUpperCase()===targetDomain) &&
-        nodes.includes((d["TM Node"]||"").trim().toUpperCase())
-      );
+      const filtered=data.filter(function(d){
+        return (String(d["Zone"]||"").trim().toUpperCase()===targetZone)
+          && (String(d["Domain"]||"").trim().toUpperCase()===targetDomain)
+          && (nodes.indexOf(String(d["TM Node"]||"").trim().toUpperCase())!==-1);
+      });
       const zoneDashboard=document.getElementById("zoneDashboard");
       if(filtered.length===0){
-        zoneDashboard.innerHTML=`<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>`;
+        zoneDashboard.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>';
         return;
       }
-      const counts=Object.fromEntries(nodes.map(n=>[n,0]));
-      filtered.forEach(r=>{
-        const node=(r["TM Node"]||"").trim().toUpperCase();
-        if(node in counts) counts[node]++;
+      const counts={}; nodes.forEach(function(n){ counts[n]=0; });
+      filtered.forEach(function(r){
+        const node=String(r["TM Node"]||"").trim().toUpperCase();
+        if(counts.hasOwnProperty(node)) counts[node]++;
       });
-      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-      const maxCount=Math.max(...sorted.map(([,c])=>c),1);
-      zoneDashboard.innerHTML=sorted.map(([node,count])=>`
-        <div class="flex items-center justify-between gap-2">
-          <div class="text-sm font-medium w-16">${node}</div>
-          <div class="w-full bg-gray-200 rounded h-4 relative">
-            <div class="bg-red-500 h-4 rounded transition-all duration-500" style="width: ${(count/maxCount)*100}%"></div>
-            <span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${count}</span>
-          </div>
-        </div>`).join("");
-      const grandTotal=sorted.reduce((s,[,c])=>s+c,0);
-      zoneDashboard.innerHTML+=`<div class="flex justify-between mt-4 pt-2 border-t text-sm font-semibold text-gray-700"><div>Grand Total</div><div>${grandTotal}</div></div>`;
+      const sorted=Object.entries(counts).sort(function(a,b){ return b[1]-a[1]; });
+      const maxCount=Math.max.apply(null, sorted.map(function(x){return x[1];}).concat([1]));
+      zoneDashboard.innerHTML=sorted.map(function(pair){
+        var node=pair[0], count=pair[1];
+        return '<div class="flex items-center justify-between gap-2">'
+          +'<div class="text-sm font-medium w-16">'+node+'</div>'
+          +'<div class="w-full bg-gray-200 rounded h-4 relative">'
+            +'<div class="bg-red-500 h-4 rounded transition-all duration-500" style="width: '+(count/maxCount*100)+'%"></div>'
+            +'<span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">'+count+'</span>'
+          +'</div>'
+        +'</div>';
+      }).join("");
+      const grandTotal=sorted.reduce(function(s,p){return s+p[1];},0);
+      zoneDashboard.innerHTML+='<div class="flex justify-between mt-4 pt-2 border-t text-sm font-semibold text-gray-700"><div>Grand Total</div><div>'+grandTotal+'</div></div>';
     }
 
-    /* ========== Modal logic ========== */
+    /* ===== NTT Detail ===== */
+    async function openNttDetail(nttNumber){
+      const row = (currentFilteredData.length? currentFilteredData: fullData)
+                    .find(function(r){ return String(r["NTT Number"]) === String(nttNumber); });
+      if(!row){ showToast("NTT not found"); return; }
+
+      const modal = document.getElementById("nttDetailModal");
+      const el = function(id){ return document.getElementById(id); };
+      el("detailNttNo").textContent = row["NTT Number"];
+      const asg = getAssignment(row["NTT Number"]);
+      el("detailAssignedTo").textContent = asg ? (asg.team + (asg.status==="done"?" • done":"")) : "Unassigned";
+
+      try { await loadLocationIndex(); } catch(_) {}
+      const loc = findLocationByNetworkId(row["Network ID"]);
+      el("detailLocationFor").textContent = (loc && loc.locationFor) ? loc.locationFor : (row["Network ID"] || "-");
+      el("detailStreet").textContent = (loc && loc.street) ? loc.street : "-";
+      el("detailSection").textContent = (loc && loc.section) ? loc.section : "-";
+      const lat = loc && loc.lat, lng = loc && loc.lng;
+      const gm = (lat && lng) ? ('https://www.google.com/maps?q='+lat+','+lng) : "#";
+      el("detailCoordsLink").textContent = (lat && lng) ? (lat+', '+lng) : "-";
+      el("detailCoordsLink").href = gm;
+
+      el("detailDescription").textContent = row["Description"] || "-";
+
+      const ev = readEvidence(row["NTT Number"]);
+      el("evidenceStatus").textContent = ev ? ('Uploaded: '+ev.name+' @ '+new Date(ev.at).toLocaleString()) : "No evidence yet.";
+
+      el("uploadEvidenceBtn").onclick = function(){
+        const inp = el("evidenceInput");
+        if(!inp.files || !inp.files[0]){ showToast("Choose a file first"); return; }
+        const file = inp.files[0];
+        const r = new FileReader();
+        r.onload = function(){
+          saveEvidence(row["NTT Number"], r.result, file.name);
+          el("evidenceStatus").textContent = 'Uploaded: '+file.name+' @ '+new Date().toLocaleString();
+          showToast("Evidence uploaded (local)");
+        };
+        r.readAsDataURL(file);
+      };
+
+      el("resolveBtn").onclick = function(){
+        const ntt = row["NTT Number"];
+        const a = getAssignment(ntt);
+        setDone(ntt, true);
+        if(a && a.team) incProductivity(a.team, ntt);
+        applyFilters();
+        showToast("NTT marked as Done");
+        closeNttDetail();
+      };
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+    function closeNttDetail(){
+      const modal = document.getElementById("nttDetailModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+    document.getElementById("nttDetailClose").addEventListener("click", closeNttDetail);
+
+    /* ===== Assign Modal logic ===== */
     function openAssignModal(team){
       const modal=document.getElementById('assignModal');
       const title=document.getElementById('assignTeamTitle');
@@ -496,53 +616,49 @@
       const countEl=document.getElementById('assignCount');
       title.textContent=team;
 
-     function render(){
-  const asgMap = readAssignments();
-  const q = (searchEl.value || '').toLowerCase();
-  const showDone = showDoneEl.checked;
+      function render(){
+        const asgMap = readAssignments();
+        const q = (searchEl.value || '').toLowerCase();
+        const showDone = showDoneEl.checked;
 
-  const rows = (currentFilteredData.length ? currentFilteredData : fullData).filter(r => {
-    const a = asgMap[r['NTT Number']];
-    if (!a || a.team !== team) return false;           // hanya item assigned kepada team ini
-    if (!showDone && a.status === 'done') return false; // sembunyi 'done' jika Show Done off
-    if (!q) return true;
-    return [r['NTT Number'], r['Network ID'], r['Symptom']]
-      .some(v => (v || '').toString().toLowerCase().includes(q));
-  });
+        const rows = (currentFilteredData.length ? currentFilteredData : fullData).filter(function(r){
+          const a = asgMap[r['NTT Number']];
+          if (!a || a.team !== team) return false;
+          if (!showDone && a.status === 'done') return false;
+          if (!q) return true;
+          return [r['NTT Number'], r['Network ID'], r['Symptom']]
+            .some(function(v){ return (v || '').toString().toLowerCase().includes(q); });
+        });
 
-  countEl.textContent = rows.length;
-        listEl.innerHTML = rows.map(r => {
-    const aging = (r['Aging Category'] || '').trim();
-    const cls = aging.includes('48H') ? 'bg-red-500'
-            : aging.includes('24H') ? 'bg-orange-400'
-            : 'bg-green-500';
-    const desc = (r['Description'] || '').toString().replace(/"/g, '&quot;');
-    return `
-      <div class="grid grid-cols-12 items-center px-3 py-2 text-sm">
-        <div class="col-span-6">
-          <div class="font-medium text-indigo-700 underline cursor-pointer" title="${desc}">${r['NTT Number']}</div>
-          <div class="text-xs text-gray-500">${r['Domain'] || ''}</div>
-        </div>
-        <div class="col-span-4 truncate">${r['Network ID'] || ''}</div>
-        <div class="col-span-2 text-right">
-          <span class="text-white text-[11px] px-2 py-0.5 rounded ${cls}">${aging || '-'}</span>
-        </div>
-      </div>`;
-  }).join('');
-        listEl.querySelectorAll('.doneToggle').forEach(cb=>{
-          cb.addEventListener('change', ()=>{
-            const ntt=cb.getAttribute('data-ntt');
-            setDone(ntt, cb.checked);
-            applyFilters();
-            render();
-          });
+        countEl.textContent = rows.length;
+
+        listEl.innerHTML = rows.map(function(r){
+          const aging = (r['Aging Category'] || '').trim();
+          const cls = aging.indexOf('48H')!==-1 ? 'bg-red-500' : (aging.indexOf('24H')!==-1 ? 'bg-orange-400' : 'bg-green-500');
+          const desc = (r['Description'] || '').toString().replace(/"/g, '&quot;');
+          return (
+            '<div class="grid grid-cols-12 items-center px-3 py-2 text-sm">'
+              +'<div class="col-span-6">'
+                +'<button class="open-ntt-detail text-indigo-700 underline font-medium" data-ntt="'+r['NTT Number']+'" title="'+desc+'">'+r['NTT Number']+'</button>'
+                +'<div class="text-xs text-gray-500">'+(r['Domain'] || '')+'</div>'
+              +'</div>'
+              +'<div class="col-span-4 truncate">'+(r['Network ID'] || '')+'</div>'
+              +'<div class="col-span-2 text-right">'
+                +'<span class="text-white text-[11px] px-2 py-0.5 rounded '+cls+'">'+(aging || '-')+'</span>'
+              +'</div>'
+            +'</div>'
+          );
+        }).join('');
+
+        listEl.querySelectorAll('.open-ntt-detail').forEach(function(btn){
+          btn.addEventListener('click', function(){ openNttDetail(btn.getAttribute('data-ntt')); });
         });
       }
 
       render();
       searchEl.oninput=render; showDoneEl.onchange=render;
       modal.classList.remove('hidden'); modal.classList.add('flex');
-      document.getElementById('assignModalClose').onclick=()=>{
+      document.getElementById('assignModalClose').onclick=function(){
         modal.classList.add('hidden'); modal.classList.remove('flex');
       };
     }
