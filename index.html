@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- iOS friendly -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>NTT Log Viewer</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -89,7 +88,7 @@
     }
     .ios-clip-fix{ -webkit-mask-image: -webkit-radial-gradient(white, black); }
 
-    /* small ring cards (NTT/CTT Summary) */
+    /* ring cards (NTT/CTT Summary) */
     .ring-card { width:5.25rem; height:5.25rem; border-radius:0.75rem; background:#fff; display:flex; align-items:center; justify-content:center; font-size:1.25rem; font-weight:700; color:#1f2937; box-shadow:0 1px 2px rgba(0,0,0,.05); }
   </style>
 </head>
@@ -189,7 +188,7 @@
     <!-- SUMMARY GRID -->
     <div id="summaryGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
       <div class="lg:col-span-8 space-y-4">
-        <!-- NTT Summary (kekal) -->
+        <!-- NTT Summary -->
         <div id="nttSummary" class="card-soft p-4">
           <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
           <div id="nttSummaryContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
@@ -204,7 +203,7 @@
           <div id="cttSummaryContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
         </div>
 
-        <!-- Zone Summary (kekal) -->
+        <!-- Zone Summary -->
         <div id="zoneCard" class="card-soft p-4">
           <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
           <div id="zoneDashboard" class="space-y-3"></div>
@@ -317,7 +316,7 @@
     </div>
   </div>
 
-  <!-- CTT Early Analysis Modal (baru) -->
+  <!-- CTT Early Analysis Modal -->
   <div id="cttModal" class="hidden fixed inset-0 z-[65] bg-black/50 items-start sm:items-center justify-center p-3">
     <div class="bg-white v-modal-panel shadow-2xl">
       <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -333,7 +332,7 @@
         <div class="border rounded overflow-hidden">
           <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
             <div class="col-span-4">DP / FDP / CTT ID</div>
-            <div class="col-span-4">Status</div>
+            <div class="col-span-4">Status (Session)</div>
             <div class="col-span-4">Matching Network IDs</div>
           </div>
           <div id="cttList" class="max-h-[60vh] overflow-y-auto divide-y"></div>
@@ -384,7 +383,6 @@
     const toast = document.getElementById("toast");
     const activeChips = document.getElementById('activeChips');
 
-    /* viewport var untuk modal fit mobile */
     function setViewportVar(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
     setViewportVar(); window.addEventListener('resize', setViewportVar);
 
@@ -443,7 +441,7 @@
     function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evidenceKey(ntt))||"null"); }catch{return null;} }
     function removeEvidence(ntt){ localStorage.removeItem(evidenceKey(ntt)); }
 
-    /* ===== Location Index (kekal) ===== */
+    /* ===== Location Index ===== */
     const LOCATION_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/network_id_location.csv";
     let locationIndex=null;
     async function loadLocationIndex(force=false){
@@ -458,12 +456,12 @@
     }
     function findLocationByNetworkId(nid){ if(!locationIndex) return null; return locationIndex.find(r=>r.networkId===(nid||"").trim())||null; }
 
-    /* ====== CTT Summary (baru) ====== */
+    /* ====== CTT Summary (OFFLINE berdasarkan Session) ====== */
     const CTT_REPO_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ctt_logs.csv";
     let cttData = []; // normalized CTT rows (offline-only, allowed nodes)
 
     function pick(row, keys){ for(const k of keys){ if(row[k]!==undefined && row[k]!==null) return row[k]; } return ""; }
-    function isOffline(val){ const s=String(val||"").toLowerCase(); return s.includes("offline") || s.includes("down") || s.includes("fail"); }
+    function isOfflineSession(val){ return String(val || '').toUpperCase().includes('OFFLINE'); }
 
     async function refreshCTTFromGitHub(){
       try{
@@ -473,17 +471,18 @@
         const parsed = Papa.parse(text, { header:true, skipEmptyLines:true });
 
         const rows = (parsed.data||[]).map(x=>{
-          const node = (pick(x, ["TM Node","Node","TMNode"])||"").toString().trim().toUpperCase();
-          const status = (pick(x, ["Status","CTT Status"])||"").toString().trim();
-          const dp = (pick(x, ["DP ID","FDP ID","DP/FDP ID","CTT ID"])||"").toString().trim().toUpperCase();
-          const nid = (pick(x, ["Network ID","NID","FDP/DP Network ID"])||"").toString().trim().toUpperCase();
-          const date = (pick(x, ["CTT Create Date","Create Date","Date"])||"").toString().trim();
-          const desc = (pick(x, ["Description","Remarks","Symptom"])||"").toString();
-          return { node, status, dp, networkId:nid, date, desc, raw:x };
+          const node    = (pick(x, ["TM Node","Node","TMNode"])||"").toString().trim().toUpperCase();
+          const session = (pick(x, ["Session","SESSION"])||"").toString().trim().toUpperCase(); // <-- guna kolum Session
+          const status  = (pick(x, ["Status","CTT Status"])||"").toString().trim();
+          const dp      = (pick(x, ["DP ID","FDP ID","DP/FDP ID","CTT ID"])||"").toString().trim().toUpperCase();
+          const nid     = (pick(x, ["Network ID","NID","FDP/DP Network ID"])||"").toString().trim().toUpperCase();
+          const date    = (pick(x, ["CTT Create Date","Create Date","Date"])||"").toString().trim();
+          const desc    = (pick(x, ["Description","Remarks","Symptom"])||"").toString();
+          return { node, session, status, dp, networkId:nid, date, desc, raw:x };
         });
 
-        // OFFLINE only & allowed nodes
-        cttData = rows.filter(r => allowedNodes.includes(r.node) && isOffline(r.status));
+        // OFFLINE only & allowed nodes — ikut kolum Session
+        cttData = rows.filter(r => allowedNodes.includes(r.node) && isOfflineSession(r.session));
         renderCTTSummary();
       }catch(e){
         console.error("CTT load failed:", e);
@@ -508,7 +507,7 @@
           </button>`;
       }).join('');
 
-      // click handler → buka Analisa
+      // click → buka Analisa
       wrap.querySelectorAll('button[data-node]').forEach(btn=>{
         btn.addEventListener('click', async ()=>{
           const node = btn.getAttribute('data-node');
@@ -551,7 +550,7 @@
       function renderList(term=""){
         const t = term.trim().toUpperCase();
         const data = matches.filter(m=>{
-          const blob = `${m.dp} ${m.networkId} ${m.status} ${m.desc}`.toUpperCase();
+          const blob = `${m.dp} ${m.networkId} ${m.session} ${m.status} ${m.desc}`.toUpperCase();
           return !t || blob.includes(t);
         });
 
@@ -562,6 +561,12 @@
             return `<a href="${mapHref}" target="_blank" class="text-indigo-600 underline">${id}</a>`;
           }).join(', ') || '<span class="text-gray-400">—</span>';
 
+          const statusHtml = `
+            <span class="inline-flex items-center px-2 py-0.5 rounded ${m.session==='OFFLINE'?'bg-rose-100 text-rose-700':'bg-gray-100 text-gray-700'}">
+              ${m.session || '-'}
+            </span>
+            ${m.status ? `<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-gray-100 text-gray-700">${m.status}</span>` : ''}`;
+
           return `
             <div class="grid grid-cols-12 px-3 py-2 hover:bg-gray-50">
               <div class="col-span-4">
@@ -569,7 +574,7 @@
                 <div class="text-[12px] text-gray-600">${m.date || ''}</div>
               </div>
               <div class="col-span-4">
-                <span class="inline-flex items-center px-2 py-0.5 rounded bg-rose-100 text-rose-700">${m.status||'-'}</span>
+                ${statusHtml}
                 ${m.desc ? `<div class="text-[12px] text-gray-600 mt-1 line-clamp-2">${m.desc}</div>`:''}
               </div>
               <div class="col-span-4">${networkLinks}</div>
@@ -582,7 +587,6 @@
       filtEl.value = '';
       filtEl.oninput = (e)=>renderList(e.target.value);
 
-      // buka modal
       modal.classList.remove('hidden'); modal.classList.add('flex');
     }
 
@@ -593,7 +597,7 @@
       document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getElementById('cttModal').classList.add('hidden'); });
     });
 
-    /* ===== Data & UI util (kekal) ===== */
+    /* ===== Data & UI util (NTT) ===== */
     let fullData=[]; let currentFilteredData=[]; let currentDetailRecord=null;
     const allowedNodes=["KGU","TBN","SOO","NBN","TNM"];
     const REPO_RAW_URL="https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
@@ -831,7 +835,7 @@
       wrap.classList.remove('hidden');
       nameEl.textContent = ev.name || 'evidence';
 
-      let src = ev.base64; // (akan ditukar ke ev.url bila guna cloud)
+      let src = ev.base64; // (boleh tukar ke ev.url bila guna cloud)
       viewA.href = src; dlA.href = src; dlA.download = ev.name || 'evidence';
 
       if(src && (src.startsWith('data:image/') || /\.(png|jpe?g|webp|gif|bmp|svg)(\?|#|$)/i.test(src))){
