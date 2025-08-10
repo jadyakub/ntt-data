@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -121,7 +121,7 @@
     </div>
   </main>
 
-  <!-- Description Modal (kept for compatibility; tidak lagi dipanggil dari table) -->
+  <!-- Description Modal (kept for compatibility) -->
   <div id="descriptionModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-2xl shadow-xl">
       <h2 class="text-lg font-semibold mb-2">Description</h2>
@@ -130,7 +130,7 @@
     </div>
   </div>
 
-  <!-- Team Assign Modal (unchanged) -->
+  <!-- Team Assign Modal -->
   <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
     <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
       <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -158,7 +158,7 @@
     </div>
   </div>
 
-  <!-- NTT Detail Modal (dipakai untuk Resolve + Telegram) -->
+  <!-- NTT Detail Modal -->
   <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
     <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
       <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -301,7 +301,7 @@
 
     /* ===== Data ===== */
     let fullData=[]; let currentFilteredData=[];
-    let currentDetailRecord=null; // <- rekod aktif untuk modal detail
+    let currentDetailRecord=null; // rekod aktif (modal detail)
     const allowedNodes=["KGU","TBN","SOO","NBN","TNM"];
     const REPO_RAW_URL="https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
     const AUTO_REFRESH_SECONDS=30;
@@ -309,7 +309,10 @@
     const cloudUrl=()=>REPO_RAW_URL+"?nocache="+Date.now();
     function showToast(msg){ if(!toast) return; toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1800); }
 
-    /* ===== Telegram Notify Helper ===== */
+    /* ===== Telegram Notify Helper (client posts payload only) ===== */
+    function alreadyNotified(ntt){ return localStorage.getItem("notified:"+ntt)==="1"; }
+    function markNotified(ntt){ localStorage.setItem("notified:"+ntt, "1"); }
+
     async function sendTelegramResolved(record){
       if(!record) return;
       const payload = {
@@ -318,13 +321,13 @@
         node: record["TM Node"],
         networkId: record["Network ID"],
         aging: record["Aging Category"] || "-",
-        viewUrl: `https://app.domain/ntt/${(record["NTT Number"]||"").replaceAll(/[^A-Za-z0-9]/g,"")}`
+        viewUrl: location.origin + "/ntt/" + (record["NTT Number"]||"").replaceAll(/[^A-Za-z0-9]/g,"")
       };
-      // cuba /api/ terlebih dahulu, fallback ke /.netlify/functions/
+
       let res = await fetch("/api/notify-telegram", {
         method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
-      });
-      if(!res.ok){
+      }).catch(()=>null);
+      if(!res || !res.ok){
         res = await fetch("/.netlify/functions/notify-telegram", {
           method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
         });
@@ -337,7 +340,7 @@
       }
     }
 
-    /* ===== Tabs show/hide ===== */
+    /* ===== Tabs ===== */
     function setupTabs() {
       const buttons = Array.from(document.querySelectorAll('#dashTabs .tabbtn'));
       const sections = {
@@ -368,7 +371,7 @@
         buttons.forEach(b => b.classList.toggle('active', b.dataset.show===which));
       }
 
-      showOnly('summary'); // default
+      showOnly('summary');
       buttons.forEach(btn => btn.addEventListener('click', () => showOnly(btn.dataset.show)));
     }
 
@@ -379,31 +382,36 @@
       await readAssignments();
       setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*1000);
       [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
-      setupTabs(); // tabs statik
+      setupTabs();
 
-      // Wire modal detail close
+      // Modal detail close
       document.getElementById("nttDetailClose").addEventListener("click", ()=> {
         document.getElementById("nttDetailModal").classList.add("hidden");
       });
 
-      // Wire resolve button (fungsi utama)
+      // Resolve button + confirmation
       document.getElementById("resolveBtn").addEventListener("click", async ()=>{
         if(!currentDetailRecord) return;
         const ntt = currentDetailRecord["NTT Number"];
         const a = getAssignment(ntt);
 
-        // 1) set status done pada assignments
-        await setDoneRemote(ntt, true);
+        if(!confirm(`Confirm resolve NTT ${ntt}?`)) return;
 
-        // 2) productivity
+        await setDoneRemote(ntt, true);
         if(a && a.team) incProductivity(a.team, ntt);
 
-        // 3) hantar Telegram
-        await sendTelegramResolved(currentDetailRecord);
+        if(!alreadyNotified(ntt)){
+          await sendTelegramResolved(currentDetailRecord);
+          markNotified(ntt);
+        }
 
-        // 4) tutup modal & refresh UI
         document.getElementById("nttDetailModal").classList.add("hidden");
         applyFilters();
+      });
+
+      // Assign modal close
+      document.getElementById("assignModalClose").addEventListener("click", ()=>{
+        document.getElementById("assignModal").classList.add("hidden");
       });
     });
 
@@ -494,17 +502,12 @@
 
         const inlineBadge = asg && asg.team ? `<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">${asg.team}${stat==="done"?" • done":""}</span>` : "";
 
-        // NTT Number button → buka detail modal (untuk Resolve)
         out.push(`
           <tr class="border-b hover:bg-gray-50">
             <td class="px-4 py-2">${row["NTT Create Date"]||""}</td>
             <td class="px-4 py-2">
               <button class="text-indigo-600 underline open-detail"
-                      data-ntt="${row["NTT Number"]||""}"
-                      data-network="${row["Network ID"]||""}"
-                      data-node="${row["TM Node"]||""}"
-                      data-aging="${row["Aging Category"]||""}"
-                      data-desc="${String(row["Description"]||"").replace(/\"/g,'&quot;')}">
+                      data-ntt="${row["NTT Number"]||""}">
                 ${row["NTT Number"]||""}
               </button>
               ${inlineBadge}
@@ -547,12 +550,20 @@
         });
       });
 
-      // Status change (juga trigger Telegram jika RESOLVED dari drop-down)
+      // Status change (confirm + telegram jika RESOLVED)
       logTableBody.querySelectorAll('.statusSelect').forEach(sel=>{
         sel.addEventListener('change', async ()=>{
           const ntt = sel.getAttribute('data-ntt');
           const desired = sel.value;
           let a = getAssignment(ntt);
+
+          if(desired === 'RESOLVED'){
+            if(!confirm(`Confirm resolve NTT ${ntt}?`)){
+              // revert pilihan jika batal
+              sel.value = (a?.status?.toUpperCase() || 'ASSIGNED');
+              return;
+            }
+          }
 
           if(!a && desired !== 'UNASSIGNED'){
             await saveAssignment(ntt, ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"][0], "");
@@ -562,8 +573,11 @@
           if(desired === 'RESOLVED'){
             await setDoneRemote(ntt, true);
             if(a && a.team) incProductivity(a.team, ntt);
-            const rec = (fullData||[]).find(r=>r["NTT Number"]===ntt);
-            if(rec) await sendTelegramResolved(rec); // <- hantar Telegram bila resolve via dropdown
+            if(!alreadyNotified(ntt)){
+              const rec = (fullData||[]).find(r=>r["NTT Number"]===ntt);
+              if(rec) await sendTelegramResolved(rec);
+              markNotified(ntt);
+            }
           } else if(desired === 'UNASSIGNED'){
             await upsertAssignmentRemote({ nttNumber: ntt, team: "", status: "unassigned", note: (a && a.note) || "" });
           } else {
@@ -615,6 +629,7 @@
 
     const TEAM_ALIASES={"TEAM FAISON":["TEAM FAISON"],"TEAM FAUZIE":["TEAM FAUZIE"],"TEAM RUDI":["TEAM RUDI"],"TEAM ROSDEE":["TEAM ROSDEE"]};
     const TEAM_LIST = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"];
+    const TEAM_NODES = {"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
 
     function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
 
@@ -766,14 +781,9 @@
       grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
     }
 
-    /* Team Quick Panel (KGU + TBN untuk Faison/Fauzie) */
+    /* Team Quick Panel */
     function renderTeamQuickPanel(data){
-      const teams = {
-        "TEAM FAISON": ["KGU","TBN"],
-        "TEAM FAUZIE": ["KGU","TBN"],
-        "TEAM RUDI":   ["SOO","NBN"],
-        "TEAM ROSDEE": ["TNM"]
-      };
+      const teams = TEAM_NODES;
       const colorByNode = { KGU:'bg-amber-400', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600', TNM:'bg-rose-500' };
       const el = document.getElementById('teamQuickPanel');
       el.innerHTML = '';
@@ -808,8 +818,89 @@
       });
     }
 
-    /* Placeholder (you already have actual implementation somewhere) */
-    function openAssignModal(teamName){ /* open your assignment modal here if needed */ }
+    /* ====== TASK ASSIGN MODAL (fixed) ====== */
+    function openAssignModal(teamName){
+      const modal = document.getElementById('assignModal');
+      const listEl = document.getElementById('assignList');
+      const titleEl = document.getElementById('assignTeamTitle');
+      const countEl = document.getElementById('assignCount');
+      const searchEl = document.getElementById('assignSearch');
+      const showPoolEl = document.getElementById('showPool');
+      const showDoneEl = document.getElementById('showDone');
+
+      titleEl.textContent = teamName;
+      searchEl.value = ""; showPoolEl.checked = false; showDoneEl.checked = false;
+
+      function render(){
+        const q = searchEl.value.toLowerCase();
+        const nodes = TEAM_NODES[teamName] || [];
+        const assignments = readAssignmentsCache();
+
+        const rows = (fullData||[]).filter(r=>{
+          if(nodes.length && !nodes.includes(r["TM Node"])) return false; // hanya node milik team
+          if(q){
+            const blob = Object.values(r).join(" ").toLowerCase();
+            if(!blob.includes(q)) return false;
+          }
+          const a = assignments[r["NTT Number"]];
+          if(!showDoneEl.checked && a && a.status==="done") return false;        // sembunyi done
+          if(!showPoolEl.checked && (!a || !a.team)) return false;               // sembunyi pool bila unchecked
+          return true;
+        });
+
+        let assignedCounter = 0;
+        listEl.innerHTML = rows.map(r=>{
+          const a = assignments[r["NTT Number"]] || {};
+          const isMine = a.team === teamName;
+          const isDone = a.status==="done";
+          if(isMine && !isDone) assignedCounter++;
+
+          return `
+            <div class="grid grid-cols-12 items-center px-3 py-2 ${isDone?'opacity-60':''}">
+              <div class="col-span-6">
+                <div class="font-medium">${r["NTT Number"]}</div>
+                <div class="text-xs text-gray-500">${r["Symptom"]||'-'}</div>
+              </div>
+              <div class="col-span-4">
+                <div class="font-mono text-xs">${r["Network ID"]||'-'}</div>
+              </div>
+              <div class="col-span-2 flex items-center justify-end gap-2">
+                <span class="text-xs px-2 py-0.5 rounded bg-gray-100">${r["Aging Category"]||'-'}</span>
+                ${isMine?`
+                  <button class="unassignBtn text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded" data-ntt="${r["NTT Number"]}">Unassign</button>
+                `:`
+                  <button class="assignBtn text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded" data-ntt="${r["NTT Number"]}">Assign</button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        countEl.textContent = String(assignedCounter);
+
+        // wire buttons
+        listEl.querySelectorAll('.assignBtn').forEach(b=>{
+          b.addEventListener('click', async ()=>{
+            const ntt = b.getAttribute('data-ntt');
+            if(!confirm(`Assign ${ntt} to ${teamName}?`)) return;
+            await saveAssignment(ntt, teamName, "");
+            render(); applyFilters(); showToast('Assigned');
+          });
+        });
+        listEl.querySelectorAll('.unassignBtn').forEach(b=>{
+          b.addEventListener('click', async ()=>{
+            const ntt = b.getAttribute('data-ntt');
+            if(!confirm(`Remove assignment for ${ntt}?`)) return;
+            await upsertAssignmentRemote({ nttNumber: ntt, team: "", status:"unassigned", note:"" });
+            render(); applyFilters(); showToast('Unassigned');
+          });
+        });
+      }
+
+      [searchEl, showPoolEl, showDoneEl].forEach(el=>el.oninput = render);
+      render();
+      modal.classList.remove('hidden');
+    }
   </script>
 </body>
 </html>
