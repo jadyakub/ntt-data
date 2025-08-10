@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -25,7 +25,8 @@
       .overflow-x-auto{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
       #logTable{min-width:720px}
       #logTable th,#logTable td{text-align:center;white-space:nowrap}
-      #assignModal{align-items:flex-start!important;padding-top:var(--m-pad)!important}
+      /* kekalkan modal assign berada di tengah pada mobile juga */
+      #assignModal{align-items:center!important;padding-top:var(--m-pad)!important}
       #assignModal>div{width:100%!important;max-width:none!important;border-radius:.75rem!important}
     }
     #logTable th,#logTable td{text-align:center}
@@ -121,7 +122,7 @@
     </div>
   </main>
 
-  <!-- Description Modal (kept for compatibility) -->
+  <!-- Description Modal (compat) -->
   <div id="descriptionModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-2xl shadow-xl">
       <h2 class="text-lg font-semibold mb-2">Description</h2>
@@ -142,7 +143,7 @@
           <input id="assignSearch" type="text" placeholder="Search NTT / Network ID / Symptom" class="flex-1 border rounded px-3 py-2">
           <div class="text-sm flex items-center gap-4">
             <span>Assigned: <b id="assignCount">0</b></span>
-            <label class="flex items-center gap-1"><input id="showPool" type="checkbox" class="h-4 w-4"><span>Show Pool</span></label>
+            <label class="flex items-center gap-1"><input id="showPool" type="checkbox" class="h-4 w-4" checked><span>Show Pool</span></label>
             <label class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><span>Show Done</span></label>
           </div>
         </div>
@@ -159,7 +160,7 @@
   </div>
 
   <!-- NTT Detail Modal -->
-  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
+  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-center justify-center p-3">
     <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
       <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
         <div class="font-semibold">🗂️ NTT Log Detail</div>
@@ -301,7 +302,8 @@
 
     /* ===== Data ===== */
     let fullData=[]; let currentFilteredData=[];
-    let currentDetailRecord=null; // rekod aktif (modal detail)
+    let currentDetailRecord=null;
+    let currentAssignTeam=null;
     const allowedNodes=["KGU","TBN","SOO","NBN","TNM"];
     const REPO_RAW_URL="https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
     const AUTO_REFRESH_SECONDS=30;
@@ -309,10 +311,7 @@
     const cloudUrl=()=>REPO_RAW_URL+"?nocache="+Date.now();
     function showToast(msg){ if(!toast) return; toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1800); }
 
-    /* ===== Telegram Notify Helper (client posts payload only) ===== */
-    function alreadyNotified(ntt){ return localStorage.getItem("notified:"+ntt)==="1"; }
-    function markNotified(ntt){ localStorage.setItem("notified:"+ntt, "1"); }
-
+    /* ===== Telegram Notify Helper (tanpa viewUrl) ===== */
     async function sendTelegramResolved(record){
       if(!record) return;
       const payload = {
@@ -320,14 +319,12 @@
         team: (getAssignment(record["NTT Number"])||{}).team || "UNKNOWN",
         node: record["TM Node"],
         networkId: record["Network ID"],
-        aging: record["Aging Category"] || "-",
-        viewUrl: location.origin + "/ntt/" + (record["NTT Number"]||"").replaceAll(/[^A-Za-z0-9]/g,"")
+        aging: record["Aging Category"] || "-"
       };
-
       let res = await fetch("/api/notify-telegram", {
         method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
-      }).catch(()=>null);
-      if(!res || !res.ok){
+      });
+      if(!res.ok){
         res = await fetch("/.netlify/functions/notify-telegram", {
           method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
         });
@@ -340,7 +337,7 @@
       }
     }
 
-    /* ===== Tabs ===== */
+    /* ===== Tabs show/hide ===== */
     function setupTabs() {
       const buttons = Array.from(document.querySelectorAll('#dashTabs .tabbtn'));
       const sections = {
@@ -371,7 +368,7 @@
         buttons.forEach(b => b.classList.toggle('active', b.dataset.show===which));
       }
 
-      showOnly('summary');
+      showOnly('summary'); // default
       buttons.forEach(btn => btn.addEventListener('click', () => showOnly(btn.dataset.show)));
     }
 
@@ -384,35 +381,38 @@
       [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
       setupTabs();
 
-      // Modal detail close
-      document.getElementById("nttDetailClose").addEventListener("click", ()=> {
-        document.getElementById("nttDetailModal").classList.add("hidden");
+      // Detail modal close
+      document.getElementById("nttDetailClose").addEventListener("click", ()=>{
+        const m=document.getElementById("nttDetailModal");
+        m.classList.add("hidden"); m.classList.remove("flex");
       });
 
-      // Resolve button + confirmation
+      // Resolve (confirmation)
       document.getElementById("resolveBtn").addEventListener("click", async ()=>{
         if(!currentDetailRecord) return;
-        const ntt = currentDetailRecord["NTT Number"];
-        const a = getAssignment(ntt);
+        const ntt=currentDetailRecord["NTT Number"];
+        if(!confirm(`Confirm resolve ${ntt}?`)) return;
 
-        if(!confirm(`Confirm resolve NTT ${ntt}?`)) return;
-
-        await setDoneRemote(ntt, true);
+        const a=getAssignment(ntt);
+        await setDoneRemote(ntt,true);
         if(a && a.team) incProductivity(a.team, ntt);
+        await sendTelegramResolved(currentDetailRecord);
 
-        if(!alreadyNotified(ntt)){
-          await sendTelegramResolved(currentDetailRecord);
-          markNotified(ntt);
-        }
-
-        document.getElementById("nttDetailModal").classList.add("hidden");
+        const m=document.getElementById("nttDetailModal");
+        m.classList.add("hidden"); m.classList.remove("flex");
         applyFilters();
       });
 
       // Assign modal close
       document.getElementById("assignModalClose").addEventListener("click", ()=>{
-        document.getElementById("assignModal").classList.add("hidden");
+        const m=document.getElementById("assignModal");
+        m.classList.add("hidden"); m.classList.remove("flex");
       });
+
+      // live controls in assign modal
+      document.getElementById("assignSearch").addEventListener("input", ()=>renderAssignList());
+      document.getElementById("showPool").addEventListener("change", ()=>renderAssignList());
+      document.getElementById("showDone").addEventListener("change", ()=>renderAssignList());
     });
 
     function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); }
@@ -444,12 +444,10 @@
 
     function getDayDifference(dateStr){ const t=new Date(), d=new Date(dateStr); if(isNaN(d.getTime())) return NaN; return Math.floor((t-d)/(1000*60*60*24)); }
 
-    // Buka modal detail & populate
     async function openDetail(record){
       currentDetailRecord = record;
       await loadLocationIndex();
 
-      const detailModal = document.getElementById("nttDetailModal");
       const loc = findLocationByNetworkId(record["Network ID"]);
       document.getElementById("detailLocationFor").textContent = record["Network ID"] || "-";
       document.getElementById("detailStreet").textContent = (loc && loc.street) || "-";
@@ -467,7 +465,16 @@
       const a = getAssignment(record["NTT Number"]);
       document.getElementById("detailAssignedTo").textContent = (a && a.team) ? a.team : "Unassigned";
 
-      detailModal.classList.remove("hidden");
+      const m=document.getElementById("nttDetailModal");
+      m.classList.remove("hidden"); m.classList.add("flex");
+    }
+
+    function agingBadge(cat){
+      let c="bg-green-500";
+      if((cat||"").includes("24H - 48H")) c="bg-red-500";
+      else if((cat||"").includes("12H - 24H")) c="bg-orange-500";
+      else if((cat||"").includes("8H - 12H")) c="bg-yellow-500";
+      return `<span class="inline-block text-[10px] px-2 py-0.5 rounded text-white ${c}">${cat||"-"}</span>`;
     }
 
     function populateTable(data){
@@ -550,7 +557,7 @@
         });
       });
 
-      // Status change (confirm + telegram jika RESOLVED)
+      // Status change + confirm
       logTableBody.querySelectorAll('.statusSelect').forEach(sel=>{
         sel.addEventListener('change', async ()=>{
           const ntt = sel.getAttribute('data-ntt');
@@ -558,11 +565,7 @@
           let a = getAssignment(ntt);
 
           if(desired === 'RESOLVED'){
-            if(!confirm(`Confirm resolve NTT ${ntt}?`)){
-              // revert pilihan jika batal
-              sel.value = (a?.status?.toUpperCase() || 'ASSIGNED');
-              return;
-            }
+            if(!confirm(`Confirm resolve ${ntt}?`)){ sel.value='ASSIGNED'; return; }
           }
 
           if(!a && desired !== 'UNASSIGNED'){
@@ -573,11 +576,8 @@
           if(desired === 'RESOLVED'){
             await setDoneRemote(ntt, true);
             if(a && a.team) incProductivity(a.team, ntt);
-            if(!alreadyNotified(ntt)){
-              const rec = (fullData||[]).find(r=>r["NTT Number"]===ntt);
-              if(rec) await sendTelegramResolved(rec);
-              markNotified(ntt);
-            }
+            const rec = (fullData||[]).find(r=>r["NTT Number"]===ntt);
+            if(rec) await sendTelegramResolved(rec);
           } else if(desired === 'UNASSIGNED'){
             await upsertAssignmentRemote({ nttNumber: ntt, team: "", status: "unassigned", note: (a && a.note) || "" });
           } else {
@@ -634,7 +634,7 @@
     function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
 
     function populateDashboard(data){
-      const teams={"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
+      const teams=TEAM_NODES;
       summaryDashboard.innerHTML="";
       const assignments=readAssignmentsCache();
 
@@ -818,88 +818,93 @@
       });
     }
 
-    /* ====== TASK ASSIGN MODAL (fixed) ====== */
+    /* ===== Assignment Modal ===== */
     function openAssignModal(teamName){
-      const modal = document.getElementById('assignModal');
-      const listEl = document.getElementById('assignList');
-      const titleEl = document.getElementById('assignTeamTitle');
-      const countEl = document.getElementById('assignCount');
-      const searchEl = document.getElementById('assignSearch');
-      const showPoolEl = document.getElementById('showPool');
-      const showDoneEl = document.getElementById('showDone');
+      currentAssignTeam = teamName;
+      document.getElementById("assignTeamTitle").textContent = teamName;
+      document.getElementById("assignSearch").value = "";
+      document.getElementById("showPool").checked = true;
+      document.getElementById("showDone").checked = false;
+      renderAssignList();
 
-      titleEl.textContent = teamName;
-      searchEl.value = ""; showPoolEl.checked = false; showDoneEl.checked = false;
+      const m=document.getElementById("assignModal");
+      m.classList.remove("hidden"); m.classList.add("flex");
+    }
 
-      function render(){
-        const q = searchEl.value.toLowerCase();
-        const nodes = TEAM_NODES[teamName] || [];
-        const assignments = readAssignmentsCache();
+    function renderAssignList(){
+      const team = currentAssignTeam;
+      if(!team) return;
 
-        const rows = (fullData||[]).filter(r=>{
-          if(nodes.length && !nodes.includes(r["TM Node"])) return false; // hanya node milik team
-          if(q){
-            const blob = Object.values(r).join(" ").toLowerCase();
-            if(!blob.includes(q)) return false;
-          }
-          const a = assignments[r["NTT Number"]];
-          if(!showDoneEl.checked && a && a.status==="done") return false;        // sembunyi done
-          if(!showPoolEl.checked && (!a || !a.team)) return false;               // sembunyi pool bila unchecked
-          return true;
-        });
+      const nodes = TEAM_NODES[team]||[];
+      const assignments = readAssignmentsCache();
+      const search = (document.getElementById("assignSearch").value||"").toLowerCase();
+      const showPool = document.getElementById("showPool").checked;
+      const showDone = document.getElementById("showDone").checked;
 
-        let assignedCounter = 0;
-        listEl.innerHTML = rows.map(r=>{
-          const a = assignments[r["NTT Number"]] || {};
-          const isMine = a.team === teamName;
-          const isDone = a.status==="done";
-          if(isMine && !isDone) assignedCounter++;
+      const source = fullData.filter(r=>nodes.includes(r["TM Node"]));
+      const list = source.filter(r=>{
+        const a = assignments[r["NTT Number"]];
+        const isUnassigned = !a || a.status==="unassigned" || !a.team;
+        const isDone = a && a.status==="done";
+        if(!showPool && isUnassigned) return false;
+        if(!showDone && isDone) return false;
+        if(!search) return true;
+        return [r["NTT Number"], r["Network ID"], r["Symptom"]].some(v=>String(v||"").toLowerCase().includes(search));
+      });
 
-          return `
-            <div class="grid grid-cols-12 items-center px-3 py-2 ${isDone?'opacity-60':''}">
-              <div class="col-span-6">
-                <div class="font-medium">${r["NTT Number"]}</div>
-                <div class="text-xs text-gray-500">${r["Symptom"]||'-'}</div>
-              </div>
-              <div class="col-span-4">
-                <div class="font-mono text-xs">${r["Network ID"]||'-'}</div>
-              </div>
-              <div class="col-span-2 flex items-center justify-end gap-2">
-                <span class="text-xs px-2 py-0.5 rounded bg-gray-100">${r["Aging Category"]||'-'}</span>
-                ${isMine?`
-                  <button class="unassignBtn text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded" data-ntt="${r["NTT Number"]}">Unassign</button>
-                `:`
-                  <button class="assignBtn text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded" data-ntt="${r["NTT Number"]}">Assign</button>
-                `}
-              </div>
+      // count current team active
+      const assignedCount = source.filter(r=>{
+        const a=assignments[r["NTT Number"]];
+        return a && teamsMatch(a.team,team) && a.status!=="done" && a.status!=="unassigned";
+      }).length;
+      document.getElementById("assignCount").textContent = assignedCount;
+
+      const wrap = document.getElementById("assignList");
+      wrap.innerHTML = list.map(r=>{
+        const a = assignments[r["NTT Number"]];
+        const isMine = a && teamsMatch(a.team,team) && a.status!=="done" && a.status!=="unassigned";
+        const isUnassigned = !a || a.status==="unassigned" || !a.team;
+        const isDone = a && a.status==="done";
+        const rowBg = isDone ? "bg-gray-50" : (isMine ? "bg-yellow-50" : "bg-white");
+
+        return `
+          <div class="grid grid-cols-12 items-center px-3 py-2 cursor-pointer hover:bg-indigo-50 ${rowBg}"
+               data-ntt="${r["NTT Number"]}">
+            <div class="col-span-6">
+              <a href="#" class="openInDetail text-indigo-600 underline">${r["NTT Number"]}</a>
+              <div class="text-[11px] text-gray-500">${(r["Symptom"]||"").slice(0,80)}</div>
             </div>
-          `;
-        }).join('');
+            <div class="col-span-4 font-mono">${r["Network ID"]||"-"}</div>
+            <div class="col-span-2 text-right">${agingBadge(r["Aging Category"])}</div>
+          </div>
+        `;
+      }).join("");
 
-        countEl.textContent = String(assignedCounter);
-
-        // wire buttons
-        listEl.querySelectorAll('.assignBtn').forEach(b=>{
-          b.addEventListener('click', async ()=>{
-            const ntt = b.getAttribute('data-ntt');
-            if(!confirm(`Assign ${ntt} to ${teamName}?`)) return;
-            await saveAssignment(ntt, teamName, "");
-            render(); applyFilters(); showToast('Assigned');
-          });
+      // click a row toggles assign/unassign; clicking link opens detail (stopPropagation)
+      wrap.querySelectorAll('.openInDetail').forEach(a=>{
+        a.addEventListener('click', (ev)=>{
+          ev.preventDefault();
+          ev.stopPropagation();
+          const ntt = a.closest('[data-ntt]').getAttribute('data-ntt');
+          const rec = fullData.find(x=>x["NTT Number"]===ntt);
+          if(rec) openDetail(rec);
         });
-        listEl.querySelectorAll('.unassignBtn').forEach(b=>{
-          b.addEventListener('click', async ()=>{
-            const ntt = b.getAttribute('data-ntt');
-            if(!confirm(`Remove assignment for ${ntt}?`)) return;
-            await upsertAssignmentRemote({ nttNumber: ntt, team: "", status:"unassigned", note:"" });
-            render(); applyFilters(); showToast('Unassigned');
-          });
-        });
-      }
+      });
 
-      [searchEl, showPoolEl, showDoneEl].forEach(el=>el.oninput = render);
-      render();
-      modal.classList.remove('hidden');
+      wrap.querySelectorAll('[data-ntt]').forEach(row=>{
+        row.addEventListener('click', async ()=>{
+          const ntt=row.getAttribute('data-ntt');
+          const current = getAssignment(ntt);
+          const isMine = current && teamsMatch(current.team,team) && current.status!=="done" && current.status!=="unassigned";
+          if(isMine){
+            await upsertAssignmentRemote({ nttNumber: ntt, team: "", status: "unassigned", note: (current && current.note)||"" });
+          } else {
+            await upsertAssignmentRemote({ nttNumber: ntt, team: team, status: "assigned", note: (current && current.note)||"" });
+          }
+          renderAssignList();
+          applyFilters();
+        });
+      });
     }
   </script>
 </body>
