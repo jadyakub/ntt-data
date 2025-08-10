@@ -29,16 +29,24 @@
       #assignModal>div{width:100%!important;max-width:none!important;border-radius:.75rem!important}
     }
     #logTable th,#logTable td{text-align:center}
-    #logTable thead th{position:sticky;top:0;z-index:1}
+    #logTable thead th{position:sticky;top:0;z-index:5;background:#e5e7eb}
     #toast{position:fixed;bottom:16px;right:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 10px 20px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s;font-size:12px}
     #toast.show{opacity:1;transform:translateY(0)}
-    /* Tabs */
+    /* Tabs (STATIK – tidak sticky) */
     .tabbtn.active { background:#e0e7ff; border-color:#6366f1; color:#1f2937; font-weight:600; }
+    #dashTabs{
+      position: static;   /* <- statik */
+      top: auto;
+      z-index: auto;
+      background: transparent;
+      padding: 0 0 .5rem;
+      box-shadow: none;
+      border-bottom: 0;
+    }
+    #dashTabs.stuck{ box-shadow:none; border-bottom:0; } /* no-op */
     /* Soft cards & pills */
     .card-soft { border-radius:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); }
     .pill { display:inline-flex; align-items:center; gap:.5rem; padding:.25rem .6rem; border-radius:9999px; font-weight:600; font-size:12px; }
-    /* Sticky tabs under header */
-    #dashTabs{ position:sticky; top:64px; z-index:30; background:#fff; padding:.25rem 0 .5rem; }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -69,17 +77,11 @@
       <input id="searchInput" type="text" placeholder="🔍 Search keyword (e.g., dp faulty)" class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
     </div>
 
-    <!-- DASHBOARD TABS -->
+    <!-- DASHBOARD TABS (STATIK) -->
     <div id="dashTabs" class="mb-4 flex flex-wrap gap-2">
-      <button data-show="summary" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">
-        Summary
-      </button>
-      <button data-show="zoneOnly" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">
-        Zone View
-      </button>
-      <button data-show="summaryDashboard" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">
-        Team View
-      </button>
+      <button data-show="summary" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Summary</button>
+      <button data-show="zoneOnly" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Zone View</button>
+      <button data-show="summaryDashboard" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Team View</button>
     </div>
 
     <!-- SUMMARY GRID (KPI + ZONE LEFT, TEAM QUICK RIGHT) -->
@@ -138,7 +140,7 @@
     </div>
   </div>
 
-  <!-- Team Assign Modal (3 kolum + Show Pool) -->
+  <!-- Team Assign Modal -->
   <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
     <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
       <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -208,15 +210,12 @@
 
   <script>
     const lastUpdatedEl = document.getElementById("lastUpdated");
-    const refreshBtn = document.getElementById("refreshBtn");
     const logTableBody = document.getElementById("logTableBody");
     const filterNode = document.getElementById("filterNode");
     const filterDomain = document.getElementById("filterDomain");
     const filterAging = document.getElementById("filterAging");
     const searchInput = document.getElementById("searchInput");
     const summaryDashboard = document.getElementById("summaryDashboard");
-    const descriptionModal = document.getElementById("descriptionModal");
-    const descriptionContent = document.getElementById("descriptionContent");
     const toast = document.getElementById("toast");
 
     /* ===== Centralized Assignments (GitHub CSV) ===== */
@@ -240,7 +239,7 @@
           if (!ntt) return;
           map[ntt] = {
             team:(r["Team"]||"").trim(),
-            status:(r["Status"]||"assigned").trim().toLowerCase(), // assigned | in progress | unassigned | done
+            status:(r["Status"]||"assigned").trim().toLowerCase(),
             note:r["Note"]||"",
             at:r["UpdatedAt"]||null
           };
@@ -253,7 +252,6 @@
     }
 
     async function upsertAssignmentRemote({ nttNumber, team, status="assigned", note="" }) {
-      // Optimistic local update first (UI terus kemas kini)
       const optimistic = { team: (team||"").trim(), status: (status||"assigned").toLowerCase(), note: note||"", at: new Date().toISOString() };
       const preCache = readAssignmentsCache();
       preCache[nttNumber] = optimistic;
@@ -272,7 +270,6 @@
         cacheAssignments(cache);
         return row;
       } catch (e) {
-        // Kekal dengan cache optimistik; akan sync semula bila endpoint sedia
         showToast("Saved locally (will sync when online)");
         return { Team: optimistic.team, Status: optimistic.status, Note: optimistic.note, UpdatedAt: optimistic.at };
       }
@@ -287,7 +284,7 @@
     }
     window.addEventListener("storage",(e)=>{ if(e.key===ASSIGN_VER_KEY) applyFilters(); });
 
-    /* ===== Productivity & Evidence (local) ===== */
+    /* ===== Productivity & Evidence ===== */
     const PRODUCTIVITY_KEY="nttProductivity";
     function readProd(){ try{ return JSON.parse(localStorage.getItem(PRODUCTIVITY_KEY)||'{"counts":{},"items":{}}'); }catch{ return {counts:{},items:{}}; } }
     function writeProd(p){ localStorage.setItem(PRODUCTIVITY_KEY, JSON.stringify(p)); }
@@ -321,7 +318,7 @@
     const cloudUrl=()=>REPO_RAW_URL+"?nocache="+Date.now();
     function showToast(msg){ if(!toast) return; toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1800); }
 
-    /* ===== Tabs (show/hide like mockup) ===== */
+    /* ===== Tabs show/hide ===== */
     function setupTabs() {
       const buttons = Array.from(document.querySelectorAll('#dashTabs .tabbtn'));
       const sections = {
@@ -352,23 +349,18 @@
         buttons.forEach(b => b.classList.toggle('active', b.dataset.show===which));
       }
 
-      // default: Summary
-      showOnly('summary');
-
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => showOnly(btn.dataset.show));
-      });
+      showOnly('summary'); // default
+      buttons.forEach(btn => btn.addEventListener('click', () => showOnly(btn.dataset.show)));
     }
 
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshFromGitHub(); });
 
     window.addEventListener("DOMContentLoaded", async ()=>{
       await refreshFromGitHub(true);
-      await readAssignments(); // load centralized assignments
+      await readAssignments();
       setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*1000);
       [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
-      if(refreshBtn) refreshBtn.addEventListener("click",()=>syncNow());
-      setupTabs(); // init tabs
+      setupTabs(); // tabs statik
     });
 
     function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); }
@@ -401,88 +393,69 @@
     function getDayDifference(dateStr){ const t=new Date(), d=new Date(dateStr); if(isNaN(d.getTime())) return NaN; return Math.floor((t-d)/(1000*60*60*24)); }
 
     function populateTable(data){
-      var out = [];
-      for(var i=0;i<data.length;i++){
-        var row = data[i];
-        var ageCat = row["Aging Category"] || "";
-        var agingClass = ageCat.indexOf("48H")!==-1?"bg-red-500":(ageCat.indexOf("24H")!==-1?"bg-orange-400":"bg-green-500");
-        var daysCount = getDayDifference(row["NTT Create Date"]);
-        var asg = getAssignment(row["NTT Number"]); // may be null
+      const TEAM_LIST_LOCAL = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"];
+      let out = [];
+      for(const row of data){
+        const ageCat = row["Aging Category"] || "";
+        const agingClass = ageCat.includes("48H")?"bg-red-500":(ageCat.includes("24H")?"bg-orange-400":"bg-green-500");
+        const daysCount = getDayDifference(row["NTT Create Date"]);
+        const asg = getAssignment(row["NTT Number"]);
 
-        // ---- STATUS BADGE (desktop column)
-        var stat = asg && asg.status ? asg.status : "assigned"; // assigned | in progress | unassigned | done
-        var statusLabel = (stat === "done") ? "RESOLVED" : (stat === "in progress" ? "IN PROGRESS" : (stat === "unassigned" ? "UNASSIGNED" : "ASSIGNED"));
-        var badgeClass =
-          (stat === "done")        ? "bg-emerald-100 text-emerald-700" :
-          (stat === "in progress") ? "bg-amber-100 text-amber-700"     :
-          (stat === "unassigned")  ? "bg-gray-100 text-gray-600"       :
-                                      "bg-indigo-100 text-indigo-700";
-        var statusBadge = '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold '+badgeClass+'">'+statusLabel+'</span>';
+        const stat = asg && asg.status ? asg.status : "assigned";
+        const statusLabel = (stat==="done")?"RESOLVED":(stat==="in progress"?"IN PROGRESS":(stat==="unassigned"?"UNASSIGNED":"ASSIGNED"));
+        const badgeClass =
+          (stat==="done")?"bg-emerald-100 text-emerald-700":
+          (stat==="in progress")?"bg-amber-100 text-amber-700":
+          (stat==="unassigned")?"bg-gray-100 text-gray-600":"bg-indigo-100 text-indigo-700";
+        const statusBadge = `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${badgeClass}">${statusLabel}</span>`;
 
-        // ---- ASSIGNEE BADGE (desktop column)
-        var assigneeBadge = '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold '
-                          + (asg && asg.team? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600')
-                          + '">'
-                          + ((asg && asg.team) ? asg.team : 'UNASSIGNED')
-                          + '</span>';
+        const assigneeBadge = `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${asg&&asg.team?'bg-purple-100 text-purple-700':'bg-gray-100 text-gray-600'}">${asg&&asg.team?asg.team:'UNASSIGNED'}</span>`;
 
-        // Team select (Actions)
-        var TEAM_LIST_LOCAL = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"];
-        var teamSelect = '<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="'+(row["NTT Number"]||'')+'">'
-                       + TEAM_LIST_LOCAL.map(function(t){
-                           var sel = (asg && asg.team===t) ? ' selected' : '';
-                           var label = 'Team ' + t.split(' ')[1].charAt(0) + t.split(' ')[1].slice(1).toLowerCase();
-                           return '<option value="'+t+'"'+sel+'">'+label+'</option>';
-                         }).join('')
-                       + '</select>';
+        const teamSelect = `<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="${row["NTT Number"]||''}">
+          ${TEAM_LIST_LOCAL.map(t=>`<option value="${t}" ${(asg&&asg.team===t)?'selected':''}>${'Team '+t.split(' ')[1].slice(0,1)+t.split(' ')[1].slice(1).toLowerCase()}</option>`).join('')}
+        </select>`;
 
-        // Status select (Actions)
-        var statusSelect = '<select class="statusSelect border rounded px-2 py-1 text-sm ml-2" data-ntt="'+(row["NTT Number"]||'')+'">'
-                         + '<option value="UNASSIGNED"'+(stat==='unassigned' ? ' selected':'')+'>UNASSIGNED</option>'
-                         + '<option value="ASSIGNED"'+(stat==='assigned' || !asg ? ' selected':'')+'>ASSIGNED</option>'
-                         + '<option value="IN PROGRESS"'+(stat==='in progress' ? ' selected':'')+'>IN PROGRESS</option>'
-                         + '<option value="RESOLVED"'+(stat==='done' ? ' selected':'')+'>RESOLVED</option>'
-                         + '</select>';
+        const statusSelect = `<select class="statusSelect border rounded px-2 py-1 text-sm ml-2" data-ntt="${row["NTT Number"]||''}">
+          <option value="UNASSIGNED" ${stat==='unassigned'?'selected':''}>UNASSIGNED</option>
+          <option value="ASSIGNED" ${stat==='assigned' || !asg?'selected':''}>ASSIGNED</option>
+          <option value="IN PROGRESS" ${stat==='in progress'?'selected':''}>IN PROGRESS</option>
+          <option value="RESOLVED" ${stat==='done'?'selected':''}>RESOLVED</option>
+        </select>`;
 
-        // inline badge in NTT column
-        var inlineBadge = asg && asg.team ? ('<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">'
-                          + asg.team + (stat==="done"?" • done":"") + '</span>') : "";
+        const inlineBadge = asg && asg.team ? `<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">${asg.team}${stat==="done"?" • done":""}</span>` : "";
 
-        out.push(
-          '<tr class="border-b hover:bg-gray-50">'
-            +'<td class="px-4 py-2">'+(row["NTT Create Date"]||"")+'</td>'
-            +'<td class="px-4 py-2">'
-              +'<button class="text-indigo-600 underline" data-desc="'+String(row["Description"]||"").replace(/\"/g,'&quot;')+'">'+(row["NTT Number"]||"")+'</button>'
-              + inlineBadge
-            +'</td>'
-            +'<td class="px-4 py-2">'+(row["TM Node"]||"")+'</td>'
-            +'<td class="px-4 py-2">'+(row["Symptom"]||"")+'</td>'
-            +'<td class="px-4 py-2">'+(row["Domain"]||"")+'</td>'
-            +'<td class="px-4 py-2">'+(row["Network ID"]||"")+'</td>'
-            +'<td class="px-4 py-2">'+(row["CTTs Linked"]||"")+'</td>'
-            +'<td class="px-4 py-2"><span class="px-2 py-1 rounded text-white '+agingClass+'">'+ageCat+'</span></td>'
-            +'<td class="px-4 py-2">'+(isFinite(daysCount)?daysCount:"-")+'</td>'
-            +'<td class="px-4 py-2 hidden sm:table-cell">'+ assigneeBadge +'</td>'
-            +'<td class="px-4 py-2 hidden sm:table-cell">'+ statusBadge +'</td>'
-            +'<td class="px-4 py-2 hidden sm:table-cell">'+ teamSelect + statusSelect +'</td>'
-          +'</tr>'
-        );
+        out.push(`
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2">${row["NTT Create Date"]||""}</td>
+            <td class="px-4 py-2"><button class="text-indigo-600 underline" data-desc="${String(row["Description"]||"").replace(/\"/g,'&quot;')}">${row["NTT Number"]||""}</button>${inlineBadge}</td>
+            <td class="px-4 py-2">${row["TM Node"]||""}</td>
+            <td class="px-4 py-2">${row["Symptom"]||""}</td>
+            <td class="px-4 py-2">${row["Domain"]||""}</td>
+            <td class="px-4 py-2">${row["Network ID"]||""}</td>
+            <td class="px-4 py-2">${row["CTTs Linked"]||""}</td>
+            <td class="px-4 py-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat}</span></td>
+            <td class="px-4 py-2">${isFinite(daysCount)?daysCount:"-"}</td>
+            <td class="px-4 py-2 hidden sm:table-cell">${assigneeBadge}</td>
+            <td class="px-4 py-2 hidden sm:table-cell">${statusBadge}</td>
+            <td class="px-4 py-2 hidden sm:table-cell">${teamSelect}${statusSelect}</td>
+          </tr>
+        `);
       }
-
       logTableBody.innerHTML = out.join("");
 
       // open description modal
-      logTableBody.querySelectorAll('button[data-desc]').forEach(function(btn){
-        btn.addEventListener('click', function(){
+      const descriptionModal=document.getElementById("descriptionModal");
+      const descriptionContent=document.getElementById("descriptionContent");
+      logTableBody.querySelectorAll('button[data-desc]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
           descriptionContent.textContent=(btn.getAttribute('data-desc')||"");
           descriptionModal.classList.remove('hidden');
         });
       });
 
-      // --- Actions handlers
       // Team change
-      logTableBody.querySelectorAll('.assigneeSelect').forEach(function(sel){
-        sel.addEventListener('change', async function(){
+      logTableBody.querySelectorAll('.assigneeSelect').forEach(sel=>{
+        sel.addEventListener('change', async ()=>{
           const ntt = sel.getAttribute('data-ntt');
           const team = sel.value;
           const current = getAssignment(ntt);
@@ -495,10 +468,10 @@
       });
 
       // Status change
-      logTableBody.querySelectorAll('.statusSelect').forEach(function(sel){
-        sel.addEventListener('change', async function(){
+      logTableBody.querySelectorAll('.statusSelect').forEach(sel=>{
+        sel.addEventListener('change', async ()=>{
           const ntt = sel.getAttribute('data-ntt');
-          const desired = sel.value; // UNASSIGNED | ASSIGNED | IN PROGRESS | RESOLVED
+          const desired = sel.value;
           let a = getAssignment(ntt);
 
           if(!a && desired !== 'UNASSIGNED'){
@@ -546,7 +519,7 @@
       populateDashboard(filtered);
       updateNTTSummary(filtered);
       populateZoneDashboard(filtered);
-      renderTeamQuickPanel(filtered);   // NEW: panel kanan
+      renderTeamQuickPanel(filtered);
     }
 
     function toggleTeam(teamId){
@@ -559,11 +532,10 @@
     }
 
     const TEAM_ALIASES={"TEAM FAISON":["TEAM FAISON"],"TEAM FAUZIE":["TEAM FAUZIE"],"TEAM RUDI":["TEAM RUDI"],"TEAM ROSDEE":["TEAM ROSDEE"]};
-    const TEAM_LIST = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"]; // for select
+    const TEAM_LIST = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"];
 
     function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
 
-    /* ----- Team View (compact + collapsible) ----- */
     function populateDashboard(data){
       const teams={"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
       summaryDashboard.innerHTML="";
@@ -641,13 +613,11 @@
         summaryDashboard.insertAdjacentHTML('beforeend', html);
       });
 
-      // Hook butang Assign (kekal logic asal)
       summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{
         btn.addEventListener('click',()=>openAssignModal(btn.getAttribute('data-team')));
       });
     }
 
-    /* ----- KPI Summary (clickable) ----- */
     function updateNTTSummary(data){
       const cfg=[
         {label:"< 8H", ring:"ring-green-400", text:"text-green-600"},
@@ -663,8 +633,7 @@
       cfg.forEach(cat=>{
         const list=data.filter(d=>(d["Aging Category"]||"")===cat.label);
         const count=list.length;
-        const overdue=(cat.label==="> 48H")
-          ? list.filter(d=>getDayDifference(d["NTT Create Date"])>2).length : 0;
+        const overdue=(cat.label==="> 48H") ? list.filter(d=>getDayDifference(d["NTT Create Date"])>2).length : 0;
 
         const w=document.createElement('button');
         w.type="button";
@@ -673,7 +642,6 @@
           <div class="w-20 h-20 rounded-xl ring-4 ${cat.ring} flex items-center justify-center text-xl font-bold text-gray-800 bg-white">${count}</div>
           <span class="text-xs mt-2 ${cat.text}">${cat.label}${overdue?` • overdue: ${overdue}`:""}</span>
         `;
-        // Klik KPI => set filter aging + ke Team View + scroll
         w.addEventListener('click', ()=>{
           filterAging.value = cat.label;
           applyFilters();
@@ -686,7 +654,6 @@
       c.appendChild(frag);
     }
 
-    /* ----- Zone Summary (card + grand total) ----- */
     function populateZoneDashboard(data){
       const targetZone="PBP SELATAN", targetDomain="PASSIVE ELEMENT NOVA", nodes=["KGU","TBN","SOO","NBN","TNM"];
       const filtered=data.filter(d=>String(d["Zone"]||"").trim().toUpperCase()===targetZone && String(d["Domain"]||"").trim().toUpperCase()===targetDomain && nodes.includes(String(d["TM Node"]||"").trim().toUpperCase()));
@@ -717,29 +684,31 @@
       grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
     }
 
-    /* ----- Team Quick Panel (right) ----- */
+    /* Team Quick Panel (KGU + TBN untuk Faison/Fauzie) */
     function renderTeamQuickPanel(data){
-      const teams = {"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
-      const colorByNode = {KGU:'bg-amber-400', TNM:'bg-rose-500', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600'};
+      const teams = {
+        "TEAM FAISON": ["KGU","TBN"],
+        "TEAM FAUZIE": ["KGU","TBN"],
+        "TEAM RUDI":   ["SOO","NBN"],
+        "TEAM ROSDEE": ["TNM"]
+      };
+      const colorByNode = { KGU:'bg-amber-400', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600', TNM:'bg-rose-500' };
       const el = document.getElementById('teamQuickPanel');
-      const asgMap = readAssignmentsCache();
       el.innerHTML = '';
 
       Object.entries(teams).forEach(([team, nodes])=>{
-        // node paling sibuk
-        let topNode = nodes[0], topCount = 0;
-        nodes.forEach(n=>{
-          const c = data.filter(d=>d['TM Node']===n).length;
-          if(c>topCount){ topCount=c; topNode=n; }
-        });
+        const chips = nodes.map(n=>{
+          const cnt = data.filter(d=>d['TM Node']===n).length;
+          const col = colorByNode[n] || 'bg-gray-400';
+          return `<span class="pill text-white ${col}">${n} ${cnt}</span>`;
+        }).join(' ');
 
-        const badgeColor = colorByNode[topNode] || 'bg-gray-400';
         const card = document.createElement('div');
         card.className = 'card-soft p-4';
         card.innerHTML = `
           <div class="text-base font-semibold text-gray-800 mb-3">${team}</div>
           <div class="flex items-center justify-between">
-            <span class="pill text-white ${badgeColor}">${topNode} ${topCount}</span>
+            <div class="flex flex-wrap gap-2">${chips}</div>
             <button class="expandBtn text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded">Expand</button>
           </div>
         `;
@@ -748,113 +717,13 @@
           setTimeout(()=>{
             const teamId = team.replace(/\s+/g,'_');
             const sec = document.getElementById(teamId);
-            if(sec && sec.classList.contains('hidden')){ sec.classList.remove('hidden'); }
+            if(sec && sec.classList.contains('hidden')) sec.classList.remove('hidden');
             document.getElementById('summaryDashboard')?.scrollIntoView({behavior:'smooth'});
           }, 50);
         });
+
         el.appendChild(card);
       });
-    }
-
-    /* ===== NTT Detail ===== */
-    async function openNttDetail(ntt){
-      const row=(currentFilteredData.length?currentFilteredData:fullData).find(r=>String(r["NTT Number"])===String(ntt));
-      if(!row){ showToast("NTT not found"); return; }
-      const modal=document.getElementById("nttDetailModal");
-      const el=id=>document.getElementById(id);
-      el("detailNttNo").textContent=row["NTT Number"];
-      const asg=getAssignment(row["NTT Number"]); el("detailAssignedTo").textContent=(asg && asg.team)?(asg.team+(asg.status==="done"?" • done":"")):"Unassigned";
-      try{ await loadLocationIndex(); }catch{}
-      const loc=findLocationByNetworkId(row["Network ID"]);
-      el("detailLocationFor").textContent=loc?.locationFor || row["Network ID"] || "-";
-      el("detailStreet").textContent=loc?.street || "-";
-      el("detailSection").textContent=loc?.section || "-";
-      const lat=loc?.lat,lng=loc?.lng, gm=(lat&&lng)?`https://www.google.com/maps?q=${lat},${lng}`:"#";
-      el("detailCoordsLink").textContent=(lat&&lng)?`${lat}, ${lng}`:"-"; el("detailCoordsLink").href=gm;
-      el("detailDescription").textContent=row["Description"]||"-";
-      const ev=readEvidence(row["NTT Number"]); el("evidenceStatus").textContent=ev?`Uploaded: ${ev.name} @ ${new Date(ev.at).toLocaleString()}`:"No evidence yet.";
-      el("uploadEvidenceBtn").onclick=()=>{ const inp=el("evidenceInput"); if(!inp.files||!inp.files[0]){showToast("Choose a file first");return;} const f=inp.files[0]; const r=new FileReader(); r.onload=()=>{ saveEvidence(row["NTT Number"], r.result, f.name); el("evidenceStatus").textContent=`Uploaded: ${f.name} @ ${new Date().toLocaleString()}`; showToast("Evidence uploaded (local)"); }; r.readAsDataURL(f); };
-      el("resolveBtn").onclick=async()=>{ const n=row["NTT Number"]; const a=getAssignment(n); await setDoneRemote(n,true); if(a?.team) incProductivity(a.team,n); applyFilters(); showToast("NTT marked as Done"); closeNttDetail(); };
-      modal.classList.remove("hidden"); modal.classList.add("flex");
-    }
-    function closeNttDetail(){ const m=document.getElementById("nttDetailModal"); m.classList.add("hidden"); m.classList.remove("flex"); }
-    document.getElementById("nttDetailClose").addEventListener("click", closeNttDetail);
-
-    /* ===== Assign Modal (with Show Pool) ===== */
-    function openAssignModal(team){
-      const modal=document.getElementById('assignModal');
-      const title=document.getElementById('assignTeamTitle');
-      const listEl=document.getElementById('assignList');
-      const searchEl=document.getElementById('assignSearch');
-      const showDoneEl=document.getElementById('showDone');
-      const showPoolEl=document.getElementById('showPool');
-      const countEl=document.getElementById('assignCount');
-      title.textContent=team;
-
-      async function handleAssign(ntt){
-        await saveAssignment(ntt, team);
-        applyFilters();
-        render();
-        showToast(`Assigned ${ntt} → ${team}`);
-      }
-
-      function render(){
-        const asgMap=readAssignmentsCache();
-        const q=(searchEl.value||'').toLowerCase();
-        const showDone=showDoneEl.checked;
-        const showPool=showPoolEl.checked;
-
-        const base=(currentFilteredData.length?currentFilteredData:fullData).filter(r=>{
-          const a=asgMap[r['NTT Number']];
-          if(!showPool){
-            if(!a || a.team!==team) return false;
-            if(a.status==='done' || a.status==='unassigned') return false;
-          }
-          if(!q) return true;
-          return [r['NTT Number'], r['Network ID'], r['Symptom']].some(v => (v||'').toString().toLowerCase().includes(q));
-        });
-
-        countEl.textContent = base.filter(r => {
-          const a = asgMap[r['NTT Number']];
-          return a?.team===team && a?.status!=='done' && a?.status!=='unassigned';
-        }).length;
-
-        listEl.innerHTML = base.map(r=>{
-          const aging=(r['Aging Category']||'').trim();
-          const cls=aging.includes('48H')?'bg-red-500':(aging.includes('24H')?'bg-orange-400':'bg-green-500');
-          const a=asgMap[r['NTT Number']];
-          const isThisTeam=a?.team===team;
-          const rowCls = showPool ? (isThisTeam ? 'bg-white' : 'bg-yellow-50 hover:bg-yellow-100') : 'bg-white';
-          const hint = showPool ? (isThisTeam ? 'Open detail' : 'Click to assign to '+team) : 'Open detail';
-          return `<div class="grid grid-cols-12 items-center px-3 py-2 text-sm ${rowCls}">
-            <div class="col-span-6">
-              <button class="rowAction text-indigo-700 underline font-medium" data-ntt="${r['NTT Number']}" title="${hint}">
-                ${r['NTT Number']}
-              </button>
-              <div class="text-xs text-gray-500">${r['Domain']||''}${a?` • ${a.team}${a.status==='done'?' • done':''}`:''}</div>
-            </div>
-            <div class="col-span-4 truncate">${r['Network ID']||''}</div>
-            <div class="col-span-2 text-right"><span class="text-white text-[11px] px-2 py-0.5 rounded ${cls}">${aging||'-'}</span></div>
-          </div>`;
-        }).join('');
-
-        listEl.querySelectorAll('.rowAction').forEach(btn=>{
-          btn.addEventListener('click', async ()=>{
-            const ntt=btn.getAttribute('data-ntt');
-            const a=readAssignmentsCache()[ntt];
-            if(showPool && (!a || a.team!==team)){
-              await handleAssign(ntt);
-            } else {
-              openNttDetail(ntt);
-            }
-          });
-        });
-      }
-
-      render();
-      searchEl.oninput=render; showDoneEl.onchange=render; showPoolEl.onchange=render;
-      modal.classList.remove('hidden'); modal.classList.add('flex');
-      document.getElementById('assignModalClose').onclick=()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); };
     }
   </script>
 </body>
