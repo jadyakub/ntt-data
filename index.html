@@ -338,7 +338,7 @@
           </div>
           <div id="cttList" class="max-h-[60vh] overflow-y-auto divide-y"></div>
         </div>
-        <div class="text-xs text-gray-500">* “Matching Network IDs” dipadan dari <b>network_id_location</b> berdasarkan DP/FDP ID terkandung dalam <i>Network ID</i>.</div>
+        <div class="text-xs text-gray-500">* “Matching Network IDs” dipadan dari <b>ntt_logs</b> — memapar <b>NTT Number</b> apabila DP/FDP/CTT ID wujud dalam medan <i>Network ID</i> (node yang sama). Jika tiada padanan, ditanda <b>Potential NTT risk</b>.</div>
       </div>
     </div>
   </div>
@@ -546,8 +546,7 @@
         wrap.addEventListener('click', async (e) => {
           const el = e.target.closest('[data-node]');
           if (!el) return;
-          try { await loadLocationIndex(); }
-          catch(err){ console.warn('loadLocationIndex failed on click:', err); }
+          try { await loadLocationIndex(); } catch(err){ console.warn('loadLocationIndex failed on click:', err); }
           openCTTAnalysis(el.dataset.node);
         });
         wrap.addEventListener('keydown', async (e) => {
@@ -555,14 +554,14 @@
           const el = e.target.closest('[data-node]');
           if (!el) return;
           e.preventDefault();
-          try { await loadLocationIndex(); }
-          catch(err){ console.warn('loadLocationIndex failed on keydown:', err); }
+          try { await loadLocationIndex(); } catch(err){ console.warn('loadLocationIndex failed on keydown:', err); }
           openCTTAnalysis(el.dataset.node);
         });
         wrap.dataset.bound = '1';
       }
     }
 
+    /* ========= UPDATED: CTT ↔ NTT matching uses NTT logs (fullData) ========= */
     function openCTTAnalysis(node){
       const modal = document.getElementById('cttModal');
       document.getElementById('cttModalNode').textContent = node;
@@ -570,67 +569,52 @@
       const sumEl  = document.getElementById('cttSummaryLine');
       const filtEl = document.getElementById('cttFilterInput');
 
-      const rows = cttData.filter(r=>r.node===node);
+      const rows = cttData.filter(r => r.node === node);
 
-      // Padanan pintar CTT ↔ location
-      const matches = rows.map(r=>{
-        const nNode = (r.node||'').toUpperCase();
-        const nDp   = normId(r.dp);
-        const nNid  = normId(r.networkId);
-        const dpCode= extractDpCode(r.dp || r.networkId);
+      // Build match list against NTT logs: same node, DP/FDP/CTT ID appears inside NTT Network ID
+      const matches = rows.map(r => {
+        const dpStr = (r.dp || '').toUpperCase();
+        const nidStr = (r.networkId || '').toUpperCase();
+        const dpCode = extractDpCode(dpStr) || extractDpCode(nidStr);
+        const nttNums = [];
 
-        const candidates = (locationIndex||[]).filter(k=>{
-          if(nNode){
-            if(k.tmnode) return k.tmnode===nNode;
-            return k.networkId && k.networkId.toUpperCase().startsWith(nNode + "_");
+        for (const n of fullData) {
+          if ((n["TM Node"]||"").toUpperCase() !== node) continue;
+          const netU = (n["Network ID"]||"").toUpperCase();
+          if (!netU) continue;
+          if ((dpStr && netU.includes(dpStr)) || (nidStr && netU.includes(nidStr)) || (dpCode && netU.includes(dpCode))) {
+            const num = n["NTT Number"];
+            if (num && !nttNums.includes(num)) nttNums.push(num);
           }
-          return true;
-        });
-
-        let hits = candidates.filter(k =>
-          (nDp && (k.nNetwork.includes(nDp) || (k.nDp && k.nDp.includes(nDp))))
-        );
-
-        if(hits.length===0 && nNid){
-          hits = candidates.filter(k => k.nNetwork === nNid);
         }
-
-        if(hits.length===0 && dpCode){
-          const nCode = dpCode;
-          hits = candidates.filter(k => k.nNetwork.includes(nCode) || (k.nDp && k.nDp.includes(nCode)));
-        }
-
-        const matchIds = hits.slice(0,5).map(k=>k.networkId);
-        return { ...r, matchIds };
+        return { ...r, nttNums };
       });
 
-      const withMatch = matches.filter(m=>m.matchIds.length>0).length;
+      const withMatch = matches.filter(m => m.nttNums.length > 0).length;
       sumEl.innerHTML = `
         <div class="flex flex-wrap items-center gap-2">
           <span class="px-2 py-0.5 rounded bg-gray-100 text-gray-700">Total Offline CTT: <b>${rows.length}</b></span>
-          <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">With Network ID match: <b>${withMatch}</b></span>
-          <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-700">Potential NTT risk</span>
+          <span class="px-2 py-0.5 rounded bg-green-100 text-green-800">With Network ID match: <b>${withMatch}</b></span>
+          <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">Potential NTT risk: <b>${Math.max(rows.length-withMatch,0)}</b></span>
         </div>`;
 
-      function renderList(term=""){
+      function renderList(term = '') {
         const t = term.trim().toUpperCase();
-        const data = matches.filter(m=>{
+        const data = matches.filter(m => {
           const blob = `${m.dp} ${m.networkId} ${m.session} ${m.status} ${m.desc}`.toUpperCase();
           return !t || blob.includes(t);
         });
 
-        listEl.innerHTML = data.map(m=>{
-          const networkLinks = (m.matchIds||[]).map(id=>{
-            const loc = findLocationByNetworkId(id);
-            const mapHref = (loc && loc.lat && loc.lng) ? `https://maps.google.com/?q=${loc.lat},${loc.lng}` : `https://www.google.com/maps/search/${encodeURIComponent(id)}`;
-            return `<a href="${mapHref}" target="_blank" class="text-indigo-600 underline">${id}</a>`;
-          }).join(', ') || '<span class="text-gray-400">—</span>';
-
+        listEl.innerHTML = data.map(m => {
           const statusHtml = `
             <span class="inline-flex items-center px-2 py-0.5 rounded ${m.session==='OFFLINE'?'bg-rose-100 text-rose-700':'bg-gray-100 text-gray-700'}">
               ${m.session || '-'}
             </span>
             ${m.status ? `<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-gray-100 text-gray-700">${m.status}</span>` : ''}`;
+
+          const matchCol = (m.nttNums && m.nttNums.length)
+            ? m.nttNums.map(x=>`<span class="inline-flex px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold mr-1">${x}</span>`).join('')
+            : `<span class="inline-flex px-2 py-0.5 rounded bg-amber-100 text-amber-800">Potential NTT risk</span>`;
 
           return `
             <div class="grid grid-cols-12 px-3 py-2 hover:bg-gray-50">
@@ -642,17 +626,19 @@
                 ${statusHtml}
                 ${m.desc ? `<div class="text-[12px] text-gray-600 mt-1 line-clamp-2">${m.desc}</div>`:''}
               </div>
-              <div class="col-span-4">${networkLinks}</div>
+              <div class="col-span-4">${matchCol}</div>
             </div>`;
         }).join('') || '<div class="px-3 py-3 text-sm text-gray-500">No items.</div>';
       }
 
       renderList();
       filtEl.value = '';
-      filtEl.oninput = (e)=>renderList(e.target.value);
+      filtEl.oninput = (e) => renderList(e.target.value);
 
-      modal.classList.remove('hidden'); modal.classList.add('flex');
+      modal.classList.remove('hidden'); 
+      modal.classList.add('flex');
     }
+    // =========================================================================
 
     // Tutup CTT modal
     document.addEventListener('DOMContentLoaded', ()=>{
