@@ -6,78 +6,154 @@
   <title>NTT Log Viewer</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <!-- Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:wght@300;400;600&display=swap" rel="stylesheet">
+
   <style>
     body { font-family: 'Inter','Segoe UI',Tahoma,Geneva,Verdana,sans-serif; font-size:13px; }
+    .mi { font-family: 'Material Symbols Rounded'; font-weight: normal; font-style: normal; font-size: 18px; display: inline-block; line-height: 1; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
     @media print {
       header,.shadow,.rounded-xl,input,select,button,#searchInput,#descriptionModal,#summaryDashboard,#assignModal,script{display:none!important}
       main{padding:0;background:#fff;box-shadow:none}
       table{font-size:12px} th,td{padding:4px 8px!important}
     }
+
     @media (hover:none) and (pointer:coarse), screen and (max-width:640px){
       :root{--m-pad:12px}
       main,header,.team-section,.grid,table,.overflow-x-auto{width:100%!important;max-width:100%!important}
       body{overflow-x:hidden}
-      header{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:.5rem!important;padding:var(--m-pad)!important}
-      nav{display:flex!important;flex-direction:row;gap:1rem;margin-top:.5rem}
+      header{display:flex!important;flex-direction:column!important;gap:.5rem!important;padding:var(--m-pad)!important}
       main>.grid:first-of-type{display:flex!important;flex-direction:column!important;gap:.5rem!important}
-      main>.grid:first-of-type .grid{display:flex!important;flex-direction:column!important;gap:.5rem!important}
       #summaryDashboard{display:flex!important;flex-direction:column!important;gap:.75rem!important}
       .overflow-x-auto{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
       #logTable{min-width:720px}
       #logTable th,#logTable td{text-align:center;white-space:nowrap}
-      /* kekalkan modal assign berada di tengah pada mobile juga */
-      #assignModal{align-items:center!important;padding-top:var(--m-pad)!important}
+      #assignModal{align-items:flex-start!important;padding-top:var(--m-pad)!important}
       #assignModal>div{width:100%!important;max-width:none!important;border-radius:.75rem!important}
     }
+
     #logTable th,#logTable td{text-align:center}
     #logTable thead th{position:sticky;top:0;z-index:5;background:#e5e7eb}
+
     #toast{position:fixed;bottom:16px;right:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 10px 20px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s;font-size:12px}
     #toast.show{opacity:1;transform:translateY(0)}
+
     .tabbtn.active { background:#e0e7ff; border-color:#6366f1; color:#1f2937; font-weight:600; }
-    #dashTabs{ position: static; top: auto; z-index: auto; background: transparent; padding: 0 0 .5rem; box-shadow: none; border-bottom: 0; }
-    #dashTabs.stuck{ box-shadow:none; border-bottom:0; }
     .card-soft { border-radius:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); }
     .pill { display:inline-flex; align-items:center; gap:.5rem; padding:.25rem .6rem; border-radius:9999px; font-weight:600; font-size:12px; }
+    .locator-item:hover{ background:#f3f4f6; }
+
+    /* ===== Modal fit-to-viewport tweaks (baru) ===== */
+    :root { --vh: 100vh; } /* akan dikemas kini oleh JS untuk mobile */
+    .v-modal-panel{
+      width:100%;
+      max-width:min(48rem, 96vw);        /* sm:max-w-2xl */
+      max-height:calc(var(--vh) - 32px); /* sentiasa muat skrin */
+      display:flex; flex-direction:column; border-radius:1rem; overflow:hidden;
+    }
+    .v-modal-head{ position:sticky; top:0; z-index:1; }
+    .v-modal-body{ overflow:auto; /* kandungan scroll di dalam */ }
+    #detailMap{ height:clamp(180px, 28vh, 320px); } /* peta responsif */
+    #detailDescription{ max-height:clamp(180px, 38vh, 420px); } /* teks responsif */
+    @media (max-width:640px){
+      .v-modal-panel{ max-width:96vw; }
+      #detailDescription{ font-size:11px; }
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
+  <!-- Header -->
   <header class="bg-indigo-700 text-white px-6 py-4 shadow flex flex-wrap gap-3 items-center justify-between">
     <h1 class="text-xl font-bold tracking-wide">📊 NTT Log Viewer</h1>
-    <div class="flex items-center gap-3">
-      <div id="lastUpdated" class="text-sm text-gray-100"></div>
-    </div>
+    <div id="lastUpdated" class="text-sm text-gray-100"></div>
   </header>
 
   <main class="w-full min-h-screen px-2 sm:px-6 lg:px-8 py-6 bg-white shadow rounded-xl">
 
-    <!-- Filters -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <select id="filterNode" class="border border-gray-300 rounded px-2 py-2 shadow-sm">
-          <option value="">Filter by TM Node</option>
-          <option value="KGU">KGU</option><option value="TBN">TBN</option>
-          <option value="SOO">SOO</option><option value="NBN">NBN</option><option value="TNM">TNM</option>
-        </select>
-        <select id="filterDomain" class="border border-gray-300 rounded px-2 py-2 shadow-sm"><option value="">Filter by Domain</option></select>
-        <select id="filterAging" class="border border-gray-300 rounded px-2 py-2 shadow-sm"><option value="">Filter by Aging</option></select>
+    <!-- Quick Filters -->
+    <section class="card-soft p-4 sm:p-5 mb-5">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <span class="mi">filter_list</span>
+          <span class="font-semibold">Quick Filters</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="resetFilters" class="text-xs px-2.5 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 flex items-center gap-1">
+            <span class="mi">refresh</span> Reset
+          </button>
+
+          <!-- Import CSV -->
+          <button type="button" id="importCsv" class="text-xs px-2.5 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 flex items-center gap-1">
+            <span class="mi">upload_file</span> Import
+          </button>
+          <input id="csvFileInput" type="file" accept=".csv" class="hidden" />
+
+          <button type="button" onclick="syncNow()" class="text-xs px-2.5 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1">
+            <span class="mi">sync</span> Sync
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="mb-4">
-      <input id="searchInput" type="text" placeholder="🔍 Search keyword (e.g., dp faulty)" class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
-    </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="relative">
+          <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">apartment</span>
+          <select id="filterNode" class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+            <option value="">Filter by TM Node</option>
+            <option value="KGU">KGU</option><option value="TBN">TBN</option>
+            <option value="SOO">SOO</option><option value="NBN">NBN</option><option value="TNM">TNM</option>
+          </select>
+        </div>
+        <div class="relative">
+          <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">dns</span>
+          <select id="filterDomain" class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-indigo-400">
+            <option value="">Filter by Domain</option>
+          </select>
+        </div>
+        <div class="relative">
+          <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">schedule</span>
+          <select id="filterAging" class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-indigo-400">
+            <option value="">Filter by Aging</option>
+          </select>
+        </div>
+      </div>
 
-    <!-- DASHBOARD TABS (STATIK) -->
+      <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="relative">
+          <label for="searchInput" class="block text-[11px] font-semibold text-gray-600 mb-1 flex items-center gap-1">
+            <span class="mi">manage_search</span> Global Search
+          </label>
+          <span class="mi absolute left-3 top-[38px] md:top-1/2 md:-translate-y-1/2 text-gray-400">search</span>
+          <input id="searchInput" type="text" placeholder="Search keyword (e.g., dp faulty)"
+                 class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+        </div>
+
+        <div class="relative">
+          <label for="fdcFdpSearch" class="block text-[11px] font-semibold text-gray-600 mb-1 flex items-center gap-1">
+            <span class="mi">location_on</span> FDC / FDP Location
+          </label>
+          <span class="mi absolute left-3 top-[38px] md:top-1/2 md:-translate-y-1/2 text-gray-400">pin_drop</span>
+          <input id="fdcFdpSearch" type="text" placeholder="Search Network ID / Street / Section"
+                 class="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+          <div id="fdcFdpResults" class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto hidden z-30"></div>
+        </div>
+      </div>
+
+      <div id="activeChips" class="mt-3 flex flex-wrap gap-2"></div>
+    </section>
+
+    <!-- Tabs -->
     <div id="dashTabs" class="mb-4 flex flex-wrap gap-2">
       <button data-show="summary" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Summary</button>
       <button data-show="zoneOnly" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Zone View</button>
       <button data-show="summaryDashboard" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Team View</button>
     </div>
 
-    <!-- SUMMARY GRID (KPI + ZONE LEFT, TEAM QUICK RIGHT) -->
+    <!-- SUMMARY GRID -->
     <div id="summaryGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
-      <!-- LEFT: KPI + ZONE -->
       <div class="lg:col-span-8 space-y-4">
         <div id="nttSummary" class="card-soft p-4">
           <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
@@ -91,12 +167,16 @@
         </div>
       </div>
 
-      <!-- RIGHT: TEAM QUICK PANEL -->
       <aside id="teamQuickPanel" class="lg:col-span-4 space-y-3"></aside>
     </div>
 
-    <!-- TEAM VIEW CARDS (compact) -->
+    <!-- TEAM VIEW CARDS -->
     <div id="summaryDashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-sm"></div>
+
+    <!-- Loading indicator -->
+    <div id="loadingState" class="hidden text-sm text-gray-500 px-3 py-2">
+      <span class="mi align-middle mr-1 animate-pulse">hourglass_top</span> Loading data…
+    </div>
 
     <!-- TABLE -->
     <div class="overflow-x-auto text-sm">
@@ -122,16 +202,81 @@
     </div>
   </main>
 
-  <!-- Description Modal (compat) -->
-  <div id="descriptionModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-2xl shadow-xl">
-      <h2 class="text-lg font-semibold mb-2">Description</h2>
-      <pre id="descriptionContent" class="text-sm whitespace-pre-wrap max-h-96 overflow-y-auto bg-gray-100 p-3 rounded"></pre>
-      <button onclick="document.getElementById('descriptionModal').classList.add('hidden')" class="w-full sm:w-auto px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">Close</button>
+  <!-- NTT Detail Modal (fit-to-viewport) -->
+  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
+    <div class="bg-white v-modal-panel shadow-2xl">
+      <!-- Sticky header -->
+      <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">🗂️ NTT Log Detail</div>
+        <button id="nttDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+
+      <!-- Scrollable body -->
+      <div class="v-modal-body p-4 space-y-4 text-sm">
+        <!-- Location + Map Preview -->
+        <div class="rounded-lg border border-indigo-200 p-3 bg-indigo-50/40">
+          <div class="font-semibold mb-1">📍 Location for: <span id="detailLocationFor" class="font-mono"></span></div>
+          <div class="grid grid-cols-1 gap-1">
+            <div>Street: <span id="detailStreet" class="font-medium"></span></div>
+            <div>Section: <span id="detailSection" class="font-medium"></span></div>
+            <div>Coordinates: <a id="detailCoordsLink" href="#" target="_blank" class="text-indigo-600 underline">-</a></div>
+          </div>
+          <div id="mapPreviewWrap" class="mt-3 hidden">
+            <div class="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+              <span class="mi">map</span> Map Preview
+            </div>
+            <div class="rounded-lg overflow-hidden border">
+              <iframe id="detailMap" class="w-full" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="font-semibold mb-1">Description</div>
+          <pre id="detailDescription" class="text-xs whitespace-pre-wrap bg-gray-100 p-3 rounded border"></pre>
+        </div>
+
+        <div class="text-xs text-gray-600">
+          <div>NTT: <b id="detailNttNo"></b></div>
+          <div>Assigned: <b id="detailAssignedTo">Unassigned</b></div>
+        </div>
+
+        <!-- Evidence -->
+        <div class="space-y-2">
+          <div class="font-semibold">Upload Evidence:</div>
+          <input id="evidenceInput" type="file" class="block w-full text-xs border rounded px-2 py-1">
+          <div class="flex items-center gap-2">
+            <button id="uploadEvidenceBtn" class="px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">Upload Evidence</button>
+            <button id="removeEvidenceBtn" class="px-3 py-2 text-sm bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Remove</button>
+          </div>
+          <div id="evidenceStatus" class="text-xs text-gray-600"></div>
+
+          <div id="evidencePreview" class="mt-2 hidden">
+            <div class="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+              <span class="mi">image</span> Evidence Preview
+            </div>
+            <div class="rounded border bg-gray-50 p-2 flex items-start gap-3">
+              <img id="evidenceThumb" alt="evidence" class="max-h-40 rounded hidden"/>
+              <div class="text-xs text-gray-600">
+                <div id="evidenceName" class="font-semibold"></div>
+                <div class="mt-2 flex items-center gap-2">
+                  <a id="viewEvidenceBtn" target="_blank" class="px-2 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-700">View</a>
+                  <a id="downloadEvidenceBtn" download class="px-2 py-1 rounded bg-indigo-600 text-white text-xs hover:bg-indigo-700">Download</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
+          <div class="text-xs text-gray-500">Mark as <b>Done</b>.</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Team Assign Modal -->
+  <!-- Assign Modal (kekal) -->
   <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
     <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
       <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -143,7 +288,7 @@
           <input id="assignSearch" type="text" placeholder="Search NTT / Network ID / Symptom" class="flex-1 border rounded px-3 py-2">
           <div class="text-sm flex items-center gap-4">
             <span>Assigned: <b id="assignCount">0</b></span>
-            <label class="flex items-center gap-1"><input id="showPool" type="checkbox" class="h-4 w-4" checked><span>Show Pool</span></label>
+            <label class="flex items-center gap-1"><input id="showPool" type="checkbox" class="h-4 w-4"><span>Show Pool</span></label>
             <label class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><span>Show Done</span></label>
           </div>
         </div>
@@ -154,44 +299,6 @@
             <div class="col-span-2">AGING</div>
           </div>
           <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NTT Detail Modal -->
-  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-center justify-center p-3">
-    <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
-      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
-        <div class="font-semibold">🗂️ NTT Log Detail</div>
-        <button id="nttDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
-      </div>
-      <div class="p-4 space-y-4 text-sm">
-        <div class="rounded-lg border border-indigo-200 p-3 bg-indigo-50/40">
-          <div class="font-semibold mb-1">📍 Location for: <span id="detailLocationFor" class="font-mono"></span></div>
-          <div class="grid grid-cols-1 gap-1">
-            <div>Street: <span id="detailStreet" class="font-medium"></span></div>
-            <div>Section: <span id="detailSection" class="font-medium"></span></div>
-            <div>Coordinates: <a id="detailCoordsLink" href="#" target="_blank" class="text-indigo-600 underline">-</a></div>
-          </div>
-        </div>
-        <div>
-          <div class="font-semibold mb-1">Description</div>
-          <pre id="detailDescription" class="text-xs whitespace-pre-wrap max-h-80 overflow-y-auto bg-gray-100 p-3 rounded border"></pre>
-        </div>
-        <div class="text-xs text-gray-600">
-          <div>NTT: <b id="detailNttNo"></b></div>
-          <div>Assigned: <b id="detailAssignedTo">Unassigned</b></div>
-        </div>
-        <div class="space-y-2">
-          <div class="font-semibold">Upload Evidence:</div>
-          <input id="evidenceInput" type="file" class="block w-full text-xs border rounded px-2 py-1">
-          <button id="uploadEvidenceBtn" class="w-full sm:w-auto px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">Upload Evidence</button>
-          <div id="evidenceStatus" class="text-xs text-gray-600"></div>
-        </div>
-        <div class="flex items-center justify-between pt-2">
-          <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
-          <div class="text-xs text-gray-500">Mark as <b>Done</b>.</div>
         </div>
       </div>
     </div>
@@ -208,16 +315,21 @@
     const searchInput = document.getElementById("searchInput");
     const summaryDashboard = document.getElementById("summaryDashboard");
     const toast = document.getElementById("toast");
+    const activeChips = document.getElementById('activeChips');
 
-    /* ===== Centralized Assignments (GitHub CSV) ===== */
+    /* ===== helper fit-viewport (baru) ===== */
+    function setViewportVar(){
+      document.documentElement.style.setProperty('--vh', window.innerHeight + 'px');
+    }
+    setViewportVar(); window.addEventListener('resize', setViewportVar);
+
+    /* ===== Assignments (kekal) ===== */
     const ASSIGN_REMOTE_RAW = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_assignments.csv";
     const ASSIGN_SAVE_ENDPOINT = "/.netlify/functions/assignments";
     const ASSIGN_KEY = "nttAssignments";
     const ASSIGN_VER_KEY = "nttAssignmentsVersion";
-
     function cacheAssignments(map){ localStorage.setItem(ASSIGN_KEY, JSON.stringify(map)); localStorage.setItem(ASSIGN_VER_KEY, String(Date.now())); }
     function readAssignmentsCache(){ try{ return JSON.parse(localStorage.getItem(ASSIGN_KEY)||"{}"); }catch{ return {}; } }
-
     async function loadAssignmentsRemote() {
       try {
         const res = await fetch(ASSIGN_REMOTE_RAW + "?nocache=" + Date.now(), { cache: "no-store" });
@@ -228,54 +340,34 @@
         (parsed.data || []).forEach(r => {
           const ntt = (r["NTT Number"]||"").trim();
           if (!ntt) return;
-          map[ntt] = {
-            team:(r["Team"]||"").trim(),
-            status:(r["Status"]||"assigned").trim().toLowerCase(),
-            note:r["Note"]||"",
-            at:r["UpdatedAt"]||null
-          };
+          map[ntt] = { team:(r["Team"]||"").trim(), status:(r["Status"]||"assigned").trim().toLowerCase(), note:r["Note"]||"", at:r["UpdatedAt"]||null };
         });
         cacheAssignments(map);
         return map;
-      } catch(e) {
-        return readAssignmentsCache();
-      }
+      } catch(e) { return readAssignmentsCache(); }
     }
-
     async function upsertAssignmentRemote({ nttNumber, team, status="assigned", note="" }) {
       const optimistic = { team: (team||"").trim(), status: (status||"assigned").toLowerCase(), note: note||"", at: new Date().toISOString() };
-      const preCache = readAssignmentsCache();
-      preCache[nttNumber] = optimistic;
-      cacheAssignments(preCache);
-
+      const preCache = readAssignmentsCache(); preCache[nttNumber] = optimistic; cacheAssignments(preCache);
       try {
-        const res = await fetch(ASSIGN_SAVE_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nttNumber, team: optimistic.team, status: optimistic.status, note: optimistic.note })
-        });
+        const res = await fetch(ASSIGN_SAVE_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nttNumber, team: optimistic.team, status: optimistic.status, note: optimistic.note }) });
         if (!res.ok) throw new Error(await res.text());
         const { row } = await res.json();
         const cache = readAssignmentsCache();
         cache[nttNumber] = { team: row.Team, status: row.Status.toLowerCase(), note: row.Note, at: row.UpdatedAt };
-        cacheAssignments(cache);
-        return row;
+        cacheAssignments(cache); return row;
       } catch (e) {
         showToast("Saved locally (will sync when online)");
         return { Team: optimistic.team, Status: optimistic.status, Note: optimistic.note, UpdatedAt: optimistic.at };
       }
     }
-
     async function readAssignments(){ return await loadAssignmentsRemote(); }
     function getAssignment(ntt){ return readAssignmentsCache()[ntt] || null; }
     async function saveAssignment(ntt, team, note=""){ await upsertAssignmentRemote({ nttNumber: ntt, team, note, status:"assigned" }); }
-    async function setDoneRemote(ntt, done=true){
-      const current = getAssignment(ntt) || {};
-      await upsertAssignmentRemote({ nttNumber: ntt, team: current.team || "", status: done ? "done" : "assigned" });
-    }
+    async function setDoneRemote(ntt, done=true){ const current = getAssignment(ntt) || {}; await upsertAssignmentRemote({ nttNumber: ntt, team: current.team || "", status: done ? "done" : "assigned" }); }
     window.addEventListener("storage",(e)=>{ if(e.key===ASSIGN_VER_KEY) applyFilters(); });
 
-    /* ===== Productivity & Evidence ===== */
+    /* ===== Productivity & Evidence (kekal) ===== */
     const PRODUCTIVITY_KEY="nttProductivity";
     function readProd(){ try{ return JSON.parse(localStorage.getItem(PRODUCTIVITY_KEY)||'{"counts":{},"items":{}}'); }catch{ return {counts:{},items:{}}; } }
     function writeProd(p){ localStorage.setItem(PRODUCTIVITY_KEY, JSON.stringify(p)); }
@@ -284,8 +376,9 @@
     function evidenceKey(ntt){ return `evidence:${ntt}`; }
     function saveEvidence(ntt, base64, name){ localStorage.setItem(evidenceKey(ntt), JSON.stringify({base64,name,at:new Date().toISOString()})); }
     function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evidenceKey(ntt))||"null"); }catch{return null;} }
+    function removeEvidence(ntt){ localStorage.removeItem(evidenceKey(ntt)); }
 
-    /* ===== Network ID Location ===== */
+    /* ===== Location Index (kekal) ===== */
     const LOCATION_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/network_id_location.csv";
     let locationIndex=null;
     async function loadLocationIndex(force=false){
@@ -294,130 +387,199 @@
       const resp=await fetch(LOCATION_RAW_URL+"?nocache="+Date.now(),{cache:"no-store"});
       const text=await resp.text();
       const parsed=Papa.parse(text,{header:true,skipEmptyLines:true});
-      locationIndex=(parsed.data||[]).map(r=>({networkId:(r["Network ID"]||"").trim(),locationFor:(r["Network ID"]||"").trim(),street:r["Street Name"]||"",section:r["Section"]||"",lat:(r["Latitude"]||"").toString().trim(),lng:(r["Longitude"]||"").toString().trim()}));
+      locationIndex=(parsed.data||[]).map(r=>({networkId:(r["Network ID"]||"").trim(),street:r["Street Name"]||"",section:r["Section"]||"",lat:(r["Latitude"]||"").toString().trim(),lng:(r["Longitude"]||"").toString().trim()}));
       localStorage.setItem("nttLocationIndex", JSON.stringify({rows:locationIndex, at:Date.now()}));
       return locationIndex;
     }
     function findLocationByNetworkId(nid){ if(!locationIndex) return null; return locationIndex.find(r=>r.networkId===(nid||"").trim())||null; }
 
-    /* ===== Data ===== */
-    let fullData=[]; let currentFilteredData=[];
-    let currentDetailRecord=null;
-    let currentAssignTeam=null;
+    /* ===== Locator UI (kekal) ===== */
+    const locator = { input:null, box:null };
+    function debounce(fn, delay=200){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), delay); }; }
+    function norm(s){ return String(s||"").toLowerCase(); }
+    function searchLocator(q){
+      const term = norm(q);
+      if(!term || term.length<2 || !locationIndex) return [];
+      const rows = locationIndex.filter(r=> norm(r.networkId).includes(term) || norm(r.street).includes(term) || norm(r.section).includes(term) );
+      rows.sort((a,b)=>{ const aStarts = norm(a.networkId).startsWith(term) ? 0 : 1; const bStarts = norm(b.networkId).startsWith(term) ? 0 : 1; if(aStarts!==bStarts) return aStarts-bStarts; return norm(a.networkId).localeCompare(norm(b.networkId)); });
+      return rows.slice(0,10);
+    }
+    function renderLocatorResults(rows){
+      if(!locator.box) return;
+      if(!rows || !rows.length){
+        locator.box.innerHTML = `<div class="px-3 py-2 text-sm text-gray-500">No matches.</div>`;
+        locator.box.classList.remove('hidden'); return;
+      }
+      locator.box.innerHTML = rows.map(r=>{
+        const coords = (r.lat && r.lng) ? `${r.lat}, ${r.lng}` : '';
+        return `
+          <button class="locator-item w-full text-left px-3 py-2 text-sm" data-nid="${r.networkId}" data-lat="${r.lat||''}" data-lng="${r.lng||''}">
+            <div class="font-semibold text-gray-800">${r.networkId}</div>
+            <div class="text-[12px] text-gray-600">${r.street||'-'} • ${r.section||'-'} ${coords?`• <span class="text-gray-500">${coords}</span>`:''}</div>
+          </button>`;
+      }).join('');
+      locator.box.classList.remove('hidden');
+      locator.box.querySelectorAll('.locator-item').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const nid = btn.getAttribute('data-nid');
+          const lat = btn.getAttribute('data-lat'); const lng = btn.getAttribute('data-lng');
+          if(lat && lng){ window.open(`https://maps.google.com/?q=${lat},${lng}`,'_blank'); }
+          else { window.open(`https://www.google.com/maps/search/${encodeURIComponent(nid)}`,'_blank'); }
+          locator.box.classList.add('hidden'); locator.input?.blur(); showToast(`Opening map for ${nid}`);
+        });
+      });
+    }
+    const handleLocatorInput = debounce(async ()=>{
+      if(!locator.input) return;
+      const q = locator.input.value.trim();
+      if(!locationIndex){ await loadLocationIndex(); }
+      if(!q){ locator.box.classList.add('hidden'); return; }
+      renderLocatorResults(searchLocator(q));
+    },200);
+    document.addEventListener('click',(e)=>{ if(!locator.box) return; const within = locator.box.contains(e.target) || locator.input?.contains(e.target); if(!within) locator.box.classList.add('hidden'); });
+
+    /* ===== Data & UI util (kekal) ===== */
+    let fullData=[]; let currentFilteredData=[]; let currentDetailRecord=null;
     const allowedNodes=["KGU","TBN","SOO","NBN","TNM"];
     const REPO_RAW_URL="https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
     const AUTO_REFRESH_SECONDS=30;
     const nowStr=()=>new Date().toLocaleString();
     const cloudUrl=()=>REPO_RAW_URL+"?nocache="+Date.now();
-    function showToast(msg){ if(!toast) return; toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1800); }
+    function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
 
-    /* ===== Telegram Notify Helper (tanpa viewUrl) ===== */
-    async function sendTelegramResolved(record){
-      if(!record) return;
-      const payload = {
-        nttNumber: record["NTT Number"],
-        team: (getAssignment(record["NTT Number"])||{}).team || "UNKNOWN",
-        node: record["TM Node"],
-        networkId: record["Network ID"],
-        aging: record["Aging Category"] || "-"
-      };
-      let res = await fetch("/api/notify-telegram", {
-        method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
-      });
-      if(!res.ok){
-        res = await fetch("/.netlify/functions/notify-telegram", {
-          method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
-        });
-      }
-      if(!res.ok){
-        console.error("Telegram notify failed:", await res.text());
-        showToast("Failed to notify Telegram");
-      } else {
-        showToast("Resolved & notified to Telegram");
-      }
+    function setLoading(on=true){
+      const el = document.getElementById('loadingState');
+      if(!el) return;
+      el.classList.toggle('hidden', !on);
     }
 
-    /* ===== Tabs show/hide ===== */
+    async function sendTelegramResolved(record){
+      if(!record) return;
+      const payload = { nttNumber: record["NTT Number"], team: (getAssignment(record["NTT Number"])||{}).team || "UNKNOWN", node: record["TM Node"], networkId: record["Network ID"], aging: record["Aging Category"] || "-", viewUrl: "" };
+      let res = await fetch("/api/notify-telegram", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      if(!res.ok){ res = await fetch("/.netlify/functions/notify-telegram", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) }); }
+      if(!res.ok){ console.error("Telegram notify failed:", await res.text()); showToast("Failed to notify Telegram"); } else { showToast("Resolved & notified to Telegram"); }
+    }
+
     function setupTabs() {
       const buttons = Array.from(document.querySelectorAll('#dashTabs .tabbtn'));
-      const sections = {
-        summaryGrid: document.getElementById('summaryGrid'),
-        nttSummary: document.getElementById('nttSummary'),
-        zoneCard: document.getElementById('zoneCard'),
-        teamQuick: document.getElementById('teamQuickPanel'),
-        summaryDashboard: document.getElementById('summaryDashboard')
-      };
-
+      const sections = { summaryGrid: document.getElementById('summaryGrid'), nttSummary: document.getElementById('nttSummary'), zoneCard: document.getElementById('zoneCard'), teamQuick: document.getElementById('teamQuickPanel'), summaryDashboard: document.getElementById('summaryDashboard') };
       function showOnly(which) {
-        if (which === 'summary') {
-          sections.summaryGrid.classList.remove('hidden');
-          sections.nttSummary.classList.remove('hidden');
-          sections.zoneCard.classList.remove('hidden');
-          sections.teamQuick.classList.remove('hidden');
-          sections.summaryDashboard.classList.add('hidden');
-        } else if (which === 'zoneOnly') {
-          sections.summaryGrid.classList.remove('hidden');
-          sections.nttSummary.classList.add('hidden');
-          sections.teamQuick.classList.add('hidden');
-          sections.zoneCard.classList.remove('hidden');
-          sections.summaryDashboard.classList.add('hidden');
-        } else if (which === 'summaryDashboard') {
-          sections.summaryGrid.classList.add('hidden');
-          sections.summaryDashboard.classList.remove('hidden');
-        }
+        if (which === 'summary') { sections.summaryGrid.classList.remove('hidden'); sections.nttSummary.classList.remove('hidden'); sections.zoneCard.classList.remove('hidden'); sections.teamQuick.classList.remove('hidden'); sections.summaryDashboard.classList.add('hidden'); }
+        else if (which === 'zoneOnly') { sections.summaryGrid.classList.remove('hidden'); sections.nttSummary.classList.add('hidden'); sections.teamQuick.classList.add('hidden'); sections.zoneCard.classList.remove('hidden'); sections.summaryDashboard.classList.add('hidden'); }
+        else if (which === 'summaryDashboard') { sections.summaryGrid.classList.add('hidden'); sections.summaryDashboard.classList.remove('hidden'); }
         buttons.forEach(b => b.classList.toggle('active', b.dataset.show===which));
       }
-
-      showOnly('summary'); // default
-      buttons.forEach(btn => btn.addEventListener('click', () => showOnly(btn.dataset.show)));
+      showOnly('summary'); buttons.forEach(btn => btn.addEventListener('click', () => showOnly(btn.dataset.show)));
     }
 
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshFromGitHub(); });
 
+    /* ===== init ===== */
     window.addEventListener("DOMContentLoaded", async ()=>{
       await refreshFromGitHub(true);
       await readAssignments();
       setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*1000);
       [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
+      document.getElementById('resetFilters').addEventListener('click', ()=>{ filterNode.value=""; filterDomain.value=""; filterAging.value=""; searchInput.value=""; applyFilters(); });
       setupTabs();
 
       // Detail modal close
-      document.getElementById("nttDetailClose").addEventListener("click", ()=>{
-        const m=document.getElementById("nttDetailModal");
-        m.classList.add("hidden"); m.classList.remove("flex");
-      });
+      const closeDetail = ()=> document.getElementById("nttDetailModal").classList.add("hidden");
+      document.getElementById("nttDetailClose").addEventListener("click", closeDetail);
+      document.getElementById("nttDetailModal").addEventListener("click", (e)=>{ if(e.target.id==="nttDetailModal") closeDetail(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDetail(); });
 
-      // Resolve (confirmation)
+      // Assign modal close/backdrop
+      document.getElementById('assignModalClose').addEventListener('click', closeAssignModal);
+      document.getElementById('assignModal').addEventListener('click', (e)=>{ if(e.target.id==='assignModal') closeAssignModal(); });
+
+      // Resolve button
       document.getElementById("resolveBtn").addEventListener("click", async ()=>{
         if(!currentDetailRecord) return;
-        const ntt=currentDetailRecord["NTT Number"];
-        if(!confirm(`Confirm resolve ${ntt}?`)) return;
-
-        const a=getAssignment(ntt);
-        await setDoneRemote(ntt,true);
+        const ntt = currentDetailRecord["NTT Number"];
+        const a = getAssignment(ntt);
+        await setDoneRemote(ntt, true);
         if(a && a.team) incProductivity(a.team, ntt);
         await sendTelegramResolved(currentDetailRecord);
-
-        const m=document.getElementById("nttDetailModal");
-        m.classList.add("hidden"); m.classList.remove("flex");
+        closeDetail();
         applyFilters();
       });
 
-      // Assign modal close
-      document.getElementById("assignModalClose").addEventListener("click", ()=>{
-        const m=document.getElementById("assignModal");
-        m.classList.add("hidden"); m.classList.remove("flex");
+      // Evidence actions
+      document.getElementById('uploadEvidenceBtn').addEventListener('click', async ()=>{
+        const inp = document.getElementById('evidenceInput');
+        const file = inp.files && inp.files[0];
+        if(!file || !currentDetailRecord){ document.getElementById('evidenceStatus').textContent = 'No file selected.'; return; }
+        const fr = new FileReader();
+        fr.onload = () => {
+          saveEvidence(currentDetailRecord["NTT Number"], fr.result, file.name);
+          document.getElementById('evidenceStatus').textContent = 'Evidence saved locally.';
+          renderEvidencePreview(currentDetailRecord["NTT Number"]);
+        };
+        fr.readAsDataURL(file);
+      });
+      document.getElementById('removeEvidenceBtn').addEventListener('click', ()=>{
+        if(!currentDetailRecord) return;
+        removeEvidence(currentDetailRecord["NTT Number"]);
+        renderEvidencePreview(currentDetailRecord["NTT Number"]);
+        document.getElementById('evidenceStatus').textContent = 'Evidence removed.';
       });
 
-      // live controls in assign modal
-      document.getElementById("assignSearch").addEventListener("input", ()=>renderAssignList());
-      document.getElementById("showPool").addEventListener("change", ()=>renderAssignList());
-      document.getElementById("showDone").addEventListener("change", ()=>renderAssignList());
+      // Locator wiring
+      locator.input = document.getElementById('fdcFdpSearch');
+      locator.box   = document.getElementById('fdcFdpResults');
+      if(locator.input){
+        locator.input.addEventListener('input', handleLocatorInput);
+        locator.input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ handleLocatorInput(); } });
+      }
+
+      // Import CSV
+      const csvInputEl = document.getElementById('csvFileInput');
+      const importBtn  = document.getElementById('importCsv');
+      if(importBtn && csvInputEl){
+        importBtn.addEventListener('click', ()=> csvInputEl.click());
+        csvInputEl.addEventListener('change', (e)=>{
+          const file = e.target.files?.[0];
+          if(!file) return;
+          setLoading(true);
+          Papa.parse(file, {
+            header: true, skipEmptyLines: true,
+            complete: (res)=>{
+              const rows = (res.data||[]).map(row=>({
+                "NTT Create Date":row["NTT Create Date"],
+                "NTT Number":row["NTT Number"],
+                "TM Node":(row["TM Node"]||"").trim().toUpperCase(),
+                "Symptom":row["Symptom"],
+                "Domain":(row["Domain"]||"").trim(),
+                "Network ID":row["Network ID"],
+                "CTTs Linked":row["CTTs Linked"],
+                "Aging Category":(row["Aging Category"]||"").trim(),
+                "Zone":(row["Zone"]||"").trim().toUpperCase(),
+                "Description":row["Description"]
+              }));
+              fullData = rows;
+              localStorage.setItem("nttData", JSON.stringify(fullData));
+              populateFilters(fullData);
+              applyFilters();
+              lastUpdatedEl.textContent = "Loaded via Import: " + new Date().toLocaleString();
+              lastUpdatedEl.className = "text-sm text-sky-100";
+              setLoading(false);
+              showToast("CSV imported");
+            },
+            error: ()=>{
+              setLoading(false);
+              showToast("Import failed");
+            }
+          });
+        });
+      }
     });
 
     function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); }
 
     async function refreshFromGitHub(firstLoad=false){
+      setLoading(true);
       try{
         const resp=await fetch(cloudUrl(),{cache:"no-store"});
         if(!resp.ok) throw new Error("HTTP "+resp.status);
@@ -433,12 +595,38 @@
         fullData=data; localStorage.setItem("nttData",JSON.stringify(fullData));
         populateFilters(fullData); applyFilters();
         lastUpdatedEl.textContent="Last updated: "+nowStr();
-        lastUpdatedEl.className="text-sm text-green-100"; if(!firstLoad) showToast("Data refreshed");
+        lastUpdatedEl.className="text-sm text-green-100";
+        if(!firstLoad) showToast("Data refreshed");
       }catch(e){
         const cached=localStorage.getItem("nttData");
-        if(cached){ fullData=JSON.parse(cached); populateFilters(fullData); applyFilters();
-          lastUpdatedEl.textContent="Using cache (GitHub not reachable): "+nowStr(); lastUpdatedEl.className="text-sm text-yellow-200"; showToast("Using cache");
-        } else { lastUpdatedEl.textContent="Failed to load from GitHub: "+e.message; lastUpdatedEl.className="text-sm text-red-200"; showToast("Failed to load data"); }
+        if(cached){
+          fullData=JSON.parse(cached);
+          populateFilters(fullData); applyFilters();
+          lastUpdatedEl.textContent="Using cache: "+nowStr();
+          lastUpdatedEl.className="text-sm text-yellow-200";
+          showToast("Using cache");
+        } else {
+          fullData = [
+            {
+              "NTT Create Date":"2025-08-08 15:42:01",
+              "NTT Number":"NTT-20250808-38216",
+              "TM Node":"KGU",
+              "Symptom":"FDP Down",
+              "Domain":"PASSIVE ELEMENT NOVA",
+              "Network ID":"KGU_C018_DP0036",
+              "CTTs Linked":"",
+              "Aging Category":"12H - 24H",
+              "Zone":"PBP SELATAN",
+              "Description":"Check for optical cable cut/connection malfunction between FDC to FDP"
+            }
+          ];
+          populateFilters(fullData); applyFilters();
+          lastUpdatedEl.textContent="No network — showing sample data";
+          lastUpdatedEl.className="text-sm text-rose-100";
+          showToast("Loaded sample data");
+        }
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -452,29 +640,49 @@
       document.getElementById("detailLocationFor").textContent = record["Network ID"] || "-";
       document.getElementById("detailStreet").textContent = (loc && loc.street) || "-";
       document.getElementById("detailSection").textContent = (loc && loc.section) || "-";
+
       const link = document.getElementById("detailCoordsLink");
+      const mapWrap = document.getElementById("mapPreviewWrap");
+      const mapFrame = document.getElementById("detailMap");
       if(loc && loc.lat && loc.lng){
         link.textContent = `${loc.lat}, ${loc.lng}`;
         link.href = `https://maps.google.com/?q=${loc.lat},${loc.lng}`;
+        const lat = parseFloat(loc.lat), lng = parseFloat(loc.lng);
+        const d = 0.005; const bbox = `${lng-d}%2C${lat-d}%2C${lng+d}%2C${lat+d}`;
+        mapFrame.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
+        mapWrap.classList.remove('hidden');
       } else {
-        link.textContent = "-";
-        link.href = "#";
+        link.textContent = "-"; link.href = "#"; mapFrame.src = ""; mapWrap.classList.add('hidden');
       }
+
       document.getElementById("detailDescription").textContent = record["Description"] || "-";
       document.getElementById("detailNttNo").textContent = record["NTT Number"] || "-";
       const a = getAssignment(record["NTT Number"]);
       document.getElementById("detailAssignedTo").textContent = (a && a.team) ? a.team : "Unassigned";
 
-      const m=document.getElementById("nttDetailModal");
-      m.classList.remove("hidden"); m.classList.add("flex");
+      renderEvidencePreview(record["NTT Number"]);
+
+      const modal = document.getElementById("nttDetailModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
     }
 
-    function agingBadge(cat){
-      let c="bg-green-500";
-      if((cat||"").includes("24H - 48H")) c="bg-red-500";
-      else if((cat||"").includes("12H - 24H")) c="bg-orange-500";
-      else if((cat||"").includes("8H - 12H")) c="bg-yellow-500";
-      return `<span class="inline-block text-[10px] px-2 py-0.5 rounded text-white ${c}">${cat||"-"}</span>`;
+    function renderEvidencePreview(ntt){
+      const wrap = document.getElementById('evidencePreview');
+      const nameEl = document.getElementById('evidenceName');
+      const imgEl  = document.getElementById('evidenceThumb');
+      const viewA  = document.getElementById('viewEvidenceBtn');
+      const dlA    = document.getElementById('downloadEvidenceBtn');
+
+      const ev = readEvidence(ntt);
+      if(!ev){ wrap.classList.add('hidden'); nameEl.textContent=''; imgEl.classList.add('hidden'); viewA.removeAttribute('href'); dlA.removeAttribute('href'); dlA.removeAttribute('download'); return; }
+
+      wrap.classList.remove('hidden');
+      nameEl.textContent = ev.name || 'evidence';
+      viewA.href = ev.base64; dlA.href = ev.base64; dlA.download = ev.name || 'evidence';
+
+      if(/^data:image\//.test(ev.base64)){ imgEl.src = ev.base64; imgEl.classList.remove('hidden'); }
+      else { imgEl.classList.add('hidden'); }
     }
 
     function populateTable(data){
@@ -497,7 +705,7 @@
         const assigneeBadge = `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${asg&&asg.team?'bg-purple-100 text-purple-700':'bg-gray-100 text-gray-600'}">${asg&&asg.team?asg.team:'UNASSIGNED'}</span>`;
 
         const teamSelect = `<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="${row["NTT Number"]||''}">
-          ${TEAM_LIST_LOCAL.map(t=>`<option value="${t}" ${(asg&&asg.team===t)?'selected':''}>${'Team '+t.split(' ')[1].slice(0,1)+t.split(' ')[1].slice(1).toLowerCase()}</option>`).join('')}
+          ${TEAM_LIST_LOCAL.map(t=>`<option value="${t}" ${(asg&&asg.team===t)?'selected':''}>${t}</option>`).join('')}
         </select>`;
 
         const statusSelect = `<select class="statusSelect border rounded px-2 py-1 text-sm ml-2" data-ntt="${row["NTT Number"]||''}">
@@ -513,8 +721,7 @@
           <tr class="border-b hover:bg-gray-50">
             <td class="px-4 py-2">${row["NTT Create Date"]||""}</td>
             <td class="px-4 py-2">
-              <button class="text-indigo-600 underline open-detail"
-                      data-ntt="${row["NTT Number"]||""}">
+              <button class="text-indigo-600 underline open-detail" data-ntt="${row["NTT Number"]||""}">
                 ${row["NTT Number"]||""}
               </button>
               ${inlineBadge}
@@ -534,7 +741,7 @@
       }
       logTableBody.innerHTML = out.join("");
 
-      // Buka NTT Detail Modal
+      // open detail
       logTableBody.querySelectorAll('.open-detail').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const ntt = btn.getAttribute('data-ntt');
@@ -552,27 +759,21 @@
           const nextStatus = (!current || current.status === "unassigned") ? "assigned" : (current.status || "assigned");
           await upsertAssignmentRemote({ nttNumber: ntt, team, status: nextStatus, note: (current && current.note) || "" });
           if(current && current.status === "done"){ await setDoneRemote(ntt, true); }
-          applyFilters();
-          showToast('Assignee updated');
+          applyFilters(); showToast('Assignee updated');
         });
       });
 
-      // Status change + confirm
+      // Status change
       logTableBody.querySelectorAll('.statusSelect').forEach(sel=>{
         sel.addEventListener('change', async ()=>{
           const ntt = sel.getAttribute('data-ntt');
           const desired = sel.value;
           let a = getAssignment(ntt);
 
-          if(desired === 'RESOLVED'){
-            if(!confirm(`Confirm resolve ${ntt}?`)){ sel.value='ASSIGNED'; return; }
-          }
-
           if(!a && desired !== 'UNASSIGNED'){
             await saveAssignment(ntt, ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"][0], "");
             a = getAssignment(ntt);
           }
-
           if(desired === 'RESOLVED'){
             await setDoneRemote(ntt, true);
             if(a && a.team) incProductivity(a.team, ntt);
@@ -585,9 +786,7 @@
             const statusVal = (desired === 'IN PROGRESS') ? 'in progress' : 'assigned';
             await upsertAssignmentRemote({ nttNumber: ntt, team: teamVal, status: statusVal, note: (a && a.note) || "" });
           }
-
-          applyFilters();
-          showToast('Status updated');
+          applyFilters(); showToast('Status updated');
         });
       });
     }
@@ -599,6 +798,30 @@
       const agings=[...new Set(data.map(d=>(d["Aging Category"]||"").trim()).filter(Boolean))].sort();
       filterDomain.innerHTML='<option value="">Filter by Domain</option>'+domains.map(d=>`<option value="${d}">${d}</option>`).join('');
       filterAging.innerHTML='<option value="">Filter by Aging</option>'+agings.map(a=>`<option value="${a}">${a}</option>`).join('');
+    }
+
+    function renderActiveChips(){
+      const chips = [];
+      const add = (label, value, clear) => {
+        if(!value) return; chips.push(`
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 text-xs border">
+            <span class="mi text-[16px]">label</span>
+            <b>${label}:</b> ${value}
+            <button type="button" class="ml-1" aria-label="clear ${label}" onclick="${clear}"><span class="mi text-[16px]">close</span></button>
+          </span>`);
+      };
+      add('Node', filterNode.value, `filterNode.value='';applyFilters();`);
+      add('Domain', filterDomain.value, `filterDomain.value='';applyFilters();`);
+      add('Aging', filterAging.value, `filterAging.value='';applyFilters();`);
+      if((searchInput.value||'').trim()){
+        chips.push(`
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs border border-indigo-200">
+            <span class="mi text-[16px]">search</span>
+            <b>Search:</b> ${searchInput.value.trim()}
+            <button type="button" class="ml-1" aria-label="clear search" onclick="document.getElementById('searchInput').value='';applyFilters();"><span class="mi text-[16px]">close</span></button>
+          </span>`);
+      }
+      activeChips.innerHTML = chips.join('');
     }
 
     function applyFilters(){
@@ -616,6 +839,7 @@
       updateNTTSummary(filtered);
       populateZoneDashboard(filtered);
       renderTeamQuickPanel(filtered);
+      renderActiveChips();
     }
 
     function toggleTeam(teamId){
@@ -628,32 +852,23 @@
     }
 
     const TEAM_ALIASES={"TEAM FAISON":["TEAM FAISON"],"TEAM FAUZIE":["TEAM FAUZIE"],"TEAM RUDI":["TEAM RUDI"],"TEAM ROSDEE":["TEAM ROSDEE"]};
-    const TEAM_LIST = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"];
-    const TEAM_NODES = {"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
-
     function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
 
     function populateDashboard(data){
-      const teams=TEAM_NODES;
+      const teams={"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
       summaryDashboard.innerHTML="";
       const assignments=readAssignmentsCache();
 
       Object.entries(teams).forEach(([team,nodes])=>{
         const teamId=team.replace(/\s+/g,"_");
 
-        const assignedOpen = data.filter(d=>{
-          const a=assignments[d["NTT Number"]];
-          return a && teamsMatch(a.team, team) && a.status!=="done" && a.status!=="unassigned";
-        }).length;
-        const done = data.filter(d=>{
-          const a=assignments[d["NTT Number"]];
-          return a && teamsMatch(a.team, team) && a.status==="done";
-        }).length;
+        const assignedOpen = data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status!=="done" && a.status!=="unassigned"; }).length;
+        const done = data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status==="done"; }).length;
         const totalTeam = assignedOpen + done;
         const prod=productivityCount(team);
         const pct = totalTeam ? Math.round((done/totalTeam)*100) : 0;
 
-        let html = `
+        const html = `
           <div class="rounded-lg border border-gray-200 p-3 bg-white shadow-sm">
             <div class="flex items-center justify-between">
               <div class="font-semibold text-gray-800">${team}</div>
@@ -661,9 +876,7 @@
             </div>
 
             <div class="mt-2">
-              <div class="h-2 bg-gray-200 rounded">
-                <div class="h-2 bg-emerald-500 rounded" style="width:${pct}%;"></div>
-              </div>
+              <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-emerald-500 rounded" style="width:${pct}%;"></div></div>
               <div class="mt-1 flex flex-wrap gap-2 text-xs">
                 <span class="inline-flex items-center px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">Assigned: ${assignedOpen}</span>
                 <span class="inline-flex items-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Done: ${done}</span>
@@ -672,13 +885,8 @@
             </div>
 
             <div class="mt-3 flex items-center justify-between">
-              <button class="text-xs px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center gap-1"
-                      onclick="toggleTeam('${teamId}')">
-                <span class="chev">▸</span> Details
-              </button>
-              <button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                Task Assign
-              </button>
+              <button class="text-xs px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center gap-1" onclick="toggleTeam('${teamId}')"><span class="chev">▸</span> Details</button>
+              <button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button>
             </div>
 
             <div id="${teamId}" class="team-section hidden mt-3">
@@ -689,7 +897,6 @@
                 const a48  = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="24H - 48H").length;
                 const a48p = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="> 48H").length;
                 const tot  = a8+a12+a24+a48+a48p;
-
                 return `
                   <div class="mb-2">
                     <div class="text-xs font-semibold text-gray-700 mb-1">${node} • Total ${tot}</div>
@@ -700,211 +907,130 @@
                       <div class="px-2 py-1 rounded bg-orange-400 text-white">24–48H: ${a48}</div>
                       <div class="px-2 py-1 rounded bg-red-500 text-white">&gt;48H: ${a48p}</div>
                     </div>
-                  </div>
-                `;
-              }).join('')}
+                  </div>`; }).join('')}
             </div>
-          </div>
-        `;
-
+          </div>`;
         summaryDashboard.insertAdjacentHTML('beforeend', html);
       });
 
-      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{
-        btn.addEventListener('click',()=>openAssignModal(btn.getAttribute('data-team')));
-      });
+      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{ btn.addEventListener('click',()=>openAssignModal(btn.getAttribute('data-team'))); });
+    }
+
+    function populateZoneDashboard(data){
+      const targetZone="PBP SELATAN", targetDomain="PASSIVE ELEMENT NOVA", nodes=["KGU","TBN","SOO","NBN","TNM"];
+      const filtered=data.filter(d=>String(d["Zone"]||"").toUpperCase()===targetZone && String(d["Domain"]||"").toUpperCase()===targetDomain && nodes.includes(String(d["TM Node"]||"").toUpperCase()));
+      const barWrap=document.getElementById("zoneDashboard"); const grand=document.getElementById("zoneGrand");
+
+      if(!filtered.length){ barWrap.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>'; grand.innerHTML=''; return; }
+
+      const counts=Object.fromEntries(nodes.map(n=>[n,0])); filtered.forEach(r=>{ const n=String(r["TM Node"]||"").toUpperCase(); if(n in counts) counts[n]++; });
+      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]); const max=Math.max(...sorted.map(([,c])=>c),1);
+      barWrap.innerHTML=sorted.map(([n,cnt])=>`<div class="flex items-center gap-3"><div class="w-14 text-sm font-medium">${n}</div><div class="flex-1 bg-gray-200 rounded h-4 relative overflow-hidden"><div class="bg-red-500 h-4" style="width:${cnt/max*100}%"></div><span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${cnt}</span></div></div>`).join("");
+      const total=sorted.reduce((s,[,c])=>s+c,0); grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
     }
 
     function updateNTTSummary(data){
-      const cfg=[
-        {label:"< 8H", ring:"ring-green-400", text:"text-green-600"},
-        {label:"8H - 12H", ring:"ring-yellow-400", text:"text-yellow-600"},
-        {label:"12H - 24H", ring:"ring-orange-400", text:"text-orange-500"},
-        {label:"24H - 48H", ring:"ring-red-400", text:"text-red-500"},
-        {label:"> 48H", ring:"ring-rose-400", text:"text-rose-600"}
-      ];
-      const c=document.getElementById("nttSummaryContainer");
-      c.innerHTML="";
-      const frag=document.createDocumentFragment();
-
+      const cfg=[{label:"< 8H", ring:"ring-green-400", text:"text-green-600"},
+                 {label:"8H - 12H", ring:"ring-yellow-400", text:"text-yellow-600"},
+                 {label:"12H - 24H", ring:"ring-orange-400", text:"text-orange-500"},
+                 {label:"24H - 48H", ring:"ring-red-400", text:"text-red-500"},
+                 {label:"> 48H", ring:"ring-rose-400", text:"text-rose-600"}];
+      const c=document.getElementById("nttSummaryContainer"); c.innerHTML=""; const frag=document.createDocumentFragment();
       cfg.forEach(cat=>{
-        const list=data.filter(d=>(d["Aging Category"]||"")===cat.label);
-        const count=list.length;
-        const overdue=(cat.label==="> 48H") ? list.filter(d=>getDayDifference(d["NTT Create Date"])>2).length : 0;
-
-        const w=document.createElement('button');
-        w.type="button";
-        w.className='flex flex-col items-center focus:outline-none';
-        w.innerHTML=`
-          <div class="w-20 h-20 rounded-xl ring-4 ${cat.ring} flex items-center justify-center text-xl font-bold text-gray-800 bg-white">${count}</div>
-          <span class="text-xs mt-2 ${cat.text}">${cat.label}${overdue?` • overdue: ${overdue}`:""}</span>
-        `;
-        w.addEventListener('click', ()=>{
-          filterAging.value = cat.label;
-          applyFilters();
-          const teamBtn = document.querySelector('#dashTabs [data-show="summaryDashboard"]');
-          if (teamBtn) teamBtn.click();
-          document.getElementById('summaryDashboard')?.scrollIntoView({ behavior:'smooth', block:'start' });
-        });
+        const count=data.filter(d=>(d["Aging Category"]||"")===cat.label).length;
+        const w=document.createElement('button'); w.type="button"; w.className='flex flex-col items-center focus:outline-none';
+        w.innerHTML=`<div class="w-20 h-20 rounded-xl ring-4 ${cat.ring} flex items-center justify-center text-xl font-bold text-gray-800 bg-white">${count}</div><span class="text-xs mt-2 ${cat.text}">${cat.label}</span>`;
+        w.addEventListener('click', ()=>{ filterAging.value = cat.label; applyFilters(); document.querySelector('#dashTabs [data-show="summaryDashboard"]')?.click(); document.getElementById('summaryDashboard')?.scrollIntoView({ behavior:'smooth', block:'start' }); });
         frag.appendChild(w);
       });
       c.appendChild(frag);
     }
 
-    function populateZoneDashboard(data){
-      const targetZone="PBP SELATAN", targetDomain="PASSIVE ELEMENT NOVA", nodes=["KGU","TBN","SOO","NBN","TNM"];
-      const filtered=data.filter(d=>String(d["Zone"]||"").trim().toUpperCase()===targetZone && String(d["Domain"]||"").trim().toUpperCase()===targetDomain && nodes.includes(String(d["TM Node"]||"").trim().toUpperCase()));
-      const barWrap=document.getElementById("zoneDashboard");
-      const grand=document.getElementById("zoneGrand");
-
-      if(!filtered.length){
-        barWrap.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>';
-        grand.innerHTML=''; return;
-      }
-
-      const counts=Object.fromEntries(nodes.map(n=>[n,0]));
-      filtered.forEach(r=>{ const n=String(r["TM Node"]||"").trim().toUpperCase(); if(n in counts) counts[n]++; });
-      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-      const max=Math.max(...sorted.map(([,c])=>c),1);
-
-      barWrap.innerHTML=sorted.map(([n,cnt])=>`
-        <div class="flex items-center gap-3">
-          <div class="w-14 text-sm font-medium">${n}</div>
-          <div class="flex-1 bg-gray-200 rounded h-4 relative overflow-hidden">
-            <div class="bg-red-500 h-4" style="width:${cnt/max*100}%"></div>
-            <span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${cnt}</span>
-          </div>
-        </div>
-      `).join("");
-
-      const total=sorted.reduce((s,[,c])=>s+c,0);
-      grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
-    }
-
-    /* Team Quick Panel */
     function renderTeamQuickPanel(data){
-      const teams = TEAM_NODES;
+      const teams = { "TEAM FAISON": ["KGU","TBN"], "TEAM FAUZIE": ["KGU","TBN"], "TEAM RUDI": ["SOO","NBN"], "TEAM ROSDEE": ["TNM"] };
       const colorByNode = { KGU:'bg-amber-400', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600', TNM:'bg-rose-500' };
-      const el = document.getElementById('teamQuickPanel');
-      el.innerHTML = '';
-
+      const el = document.getElementById('teamQuickPanel'); el.innerHTML = '';
       Object.entries(teams).forEach(([team, nodes])=>{
-        const chips = nodes.map(n=>{
-          const cnt = data.filter(d=>d['TM Node']===n).length;
-          const col = colorByNode[n] || 'bg-gray-400';
-          return `<span class="pill text-white ${col}">${n} ${cnt}</span>`;
-        }).join(' ');
-
-        const card = document.createElement('div');
-        card.className = 'card-soft p-4';
-        card.innerHTML = `
-          <div class="text-base font-semibold text-gray-800 mb-3">${team}</div>
-          <div class="flex items-center justify-between">
-            <div class="flex flex-wrap gap-2">${chips}</div>
-            <button class="expandBtn text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded">Expand</button>
-          </div>
-        `;
-        card.querySelector('.expandBtn').addEventListener('click', ()=>{
-          document.querySelector('#dashTabs [data-show="summaryDashboard"]').click();
-          setTimeout(()=>{
-            const teamId = team.replace(/\s+/g,'_');
-            const sec = document.getElementById(teamId);
-            if(sec && sec.classList.contains('hidden')) sec.classList.remove('hidden');
-            document.getElementById('summaryDashboard')?.scrollIntoView({behavior:'smooth'});
-          }, 50);
-        });
-
+        const chips = nodes.map(n=>{ const cnt = data.filter(d=>d['TM Node']===n).length; const col = colorByNode[n] || 'bg-gray-400'; return `<span class="pill text-white ${col}">${n} ${cnt}</span>`; }).join(' ');
+        const card = document.createElement('div'); card.className = 'card-soft p-4';
+        card.innerHTML = `<div class="text-base font-semibold text-gray-800 mb-3">${team}</div><div class="flex items-center justify-between"><div class="flex flex-wrap gap-2">${chips}</div><button class="expandBtn text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded">Expand</button></div>`;
+        card.querySelector('.expandBtn').addEventListener('click', ()=>{ document.querySelector('#dashTabs [data-show="summaryDashboard"]').click(); setTimeout(()=>{ const teamId = team.replace(/\s+/g,'_'); const sec = document.getElementById(teamId); if(sec && sec.classList.contains('hidden')) sec.classList.remove('hidden'); document.getElementById('summaryDashboard')?.scrollIntoView({behavior:'smooth'}); }, 50); });
         el.appendChild(card);
       });
     }
 
-    /* ===== Assignment Modal ===== */
+    /* ===== Assign Modal (kekal) ===== */
+    let currentAssignTeam = null;
+    function closeAssignModal(){ const m = document.getElementById('assignModal'); m.classList.add('hidden'); m.classList.remove('flex'); currentAssignTeam = null; }
     function openAssignModal(teamName){
       currentAssignTeam = teamName;
-      document.getElementById("assignTeamTitle").textContent = teamName;
-      document.getElementById("assignSearch").value = "";
-      document.getElementById("showPool").checked = true;
-      document.getElementById("showDone").checked = false;
-      renderAssignList();
+      const modal = document.getElementById('assignModal'); modal.classList.remove('hidden'); modal.classList.add('flex');
+      document.getElementById('assignTeamTitle').textContent = teamName;
+      document.getElementById('assignSearch').value = ''; document.getElementById('showPool').checked = false; document.getElementById('showDone').checked = false;
 
-      const m=document.getElementById("assignModal");
-      m.classList.remove("hidden"); m.classList.add("flex");
-    }
+      const rerender = ()=>{
+        const q = document.getElementById('assignSearch').value.trim().toLowerCase();
+        const showPool = document.getElementById('showPool').checked;
+        const showDone = document.getElementById('showDone').checked;
+        const TEAM_NODES = { 'TEAM FAISON':['KGU','TBN'], 'TEAM FAUZIE':['KGU','TBN'], 'TEAM RUDI':['SOO','NBN'], 'TEAM ROSDEE':['TNM'] };
+        const teamNodes = TEAM_NODES[teamName] || [];
+        const listEl = document.getElementById('assignList'); const asn = readAssignmentsCache(); const rows = [];
 
-    function renderAssignList(){
-      const team = currentAssignTeam;
-      if(!team) return;
+        for(const r of fullData){
+          if(q){ const blob = `${r['NTT Number']} ${r['Network ID']} ${r['Symptom']} ${r['TM Node']}`.toLowerCase(); if(!blob.includes(q)) continue; }
+          const a = asn[r['NTT Number']]; const inTeam = a && teamsMatch(a.team, teamName); const unassigned = !a || a.status==='unassigned' || !a.team;
+          if(inTeam){ if(!showDone && a.status==='done') continue; }
+          else if(showPool){ if(!(unassigned && teamNodes.includes(r['TM Node']))) continue; }
+          else { continue; }
 
-      const nodes = TEAM_NODES[team]||[];
-      const assignments = readAssignmentsCache();
-      const search = (document.getElementById("assignSearch").value||"").toLowerCase();
-      const showPool = document.getElementById("showPool").checked;
-      const showDone = document.getElementById("showDone").checked;
+          const isDone = a && a.status==='done'; const ageCat = r['Aging Category'] || '';
+          const agingClass = ageCat.includes('48H') ? 'bg-red-500' : (ageCat.includes('24H') ? 'bg-orange-400' : 'bg-green-500');
+          rows.push(`
+            <div class="grid grid-cols-12 px-3 py-2 hover:bg-gray-50">
+              <div class="col-span-6">
+                <div class="font-semibold text-gray-800">${r['NTT Number']}</div>
+                <div class="text-[12px] text-gray-600">${r['TM Node']} • ${r['Symptom']||'-'}</div>
+                <div class="mt-1 flex gap-2">
+                  <button class="px-2 py-0.5 text-xs rounded bg-indigo-600 text-white" data-assign="${r['NTT Number']}">${inTeam ? 'Unassign' : 'Assign'}</button>
+                  <button class="px-2 py-0.5 text-xs rounded ${isDone?'bg-emerald-600 text-white':'bg-gray-200 text-gray-700'}" data-done="${r['NTT Number']}">${isDone?'Done':'Mark done'}</button>
+                </div>
+              </div>
+              <div class="col-span-4">${r['Network ID']||'-'}</div>
+              <div class="col-span-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat}</span></div>
+            </div>`);
+        }
 
-      const source = fullData.filter(r=>nodes.includes(r["TM Node"]));
-      const list = source.filter(r=>{
-        const a = assignments[r["NTT Number"]];
-        const isUnassigned = !a || a.status==="unassigned" || !a.team;
-        const isDone = a && a.status==="done";
-        if(!showPool && isUnassigned) return false;
-        if(!showDone && isDone) return false;
-        if(!search) return true;
-        return [r["NTT Number"], r["Network ID"], r["Symptom"]].some(v=>String(v||"").toLowerCase().includes(search));
-      });
+        listEl.innerHTML = rows.join('') || '<div class="px-3 py-4 text-sm text-gray-500">No items.</div>';
+        document.getElementById('assignCount').textContent = rows.length;
 
-      // count current team active
-      const assignedCount = source.filter(r=>{
-        const a=assignments[r["NTT Number"]];
-        return a && teamsMatch(a.team,team) && a.status!=="done" && a.status!=="unassigned";
-      }).length;
-      document.getElementById("assignCount").textContent = assignedCount;
-
-      const wrap = document.getElementById("assignList");
-      wrap.innerHTML = list.map(r=>{
-        const a = assignments[r["NTT Number"]];
-        const isMine = a && teamsMatch(a.team,team) && a.status!=="done" && a.status!=="unassigned";
-        const isUnassigned = !a || a.status==="unassigned" || !a.team;
-        const isDone = a && a.status==="done";
-        const rowBg = isDone ? "bg-gray-50" : (isMine ? "bg-yellow-50" : "bg-white");
-
-        return `
-          <div class="grid grid-cols-12 items-center px-3 py-2 cursor-pointer hover:bg-indigo-50 ${rowBg}"
-               data-ntt="${r["NTT Number"]}">
-            <div class="col-span-6">
-              <a href="#" class="openInDetail text-indigo-600 underline">${r["NTT Number"]}</a>
-              <div class="text-[11px] text-gray-500">${(r["Symptom"]||"").slice(0,80)}</div>
-            </div>
-            <div class="col-span-4 font-mono">${r["Network ID"]||"-"}</div>
-            <div class="col-span-2 text-right">${agingBadge(r["Aging Category"])}</div>
-          </div>
-        `;
-      }).join("");
-
-      // click a row toggles assign/unassign; clicking link opens detail (stopPropagation)
-      wrap.querySelectorAll('.openInDetail').forEach(a=>{
-        a.addEventListener('click', (ev)=>{
-          ev.preventDefault();
-          ev.stopPropagation();
-          const ntt = a.closest('[data-ntt]').getAttribute('data-ntt');
-          const rec = fullData.find(x=>x["NTT Number"]===ntt);
-          if(rec) openDetail(rec);
+        listEl.querySelectorAll('[data-assign]').forEach(btn=>{
+          btn.addEventListener('click', async ()=>{
+            const ntt = btn.getAttribute('data-assign');
+            const a = getAssignment(ntt);
+            if(a && teamsMatch(a.team, teamName) && a.status!=='unassigned'){ await upsertAssignmentRemote({ nttNumber: ntt, team: '', status: 'unassigned' }); }
+            else { await upsertAssignmentRemote({ nttNumber: ntt, team: teamName, status: 'assigned' }); }
+            applyFilters(); rerender(); showToast('Updated');
+          });
         });
-      });
-
-      wrap.querySelectorAll('[data-ntt]').forEach(row=>{
-        row.addEventListener('click', async ()=>{
-          const ntt=row.getAttribute('data-ntt');
-          const current = getAssignment(ntt);
-          const isMine = current && teamsMatch(current.team,team) && current.status!=="done" && current.status!=="unassigned";
-          if(isMine){
-            await upsertAssignmentRemote({ nttNumber: ntt, team: "", status: "unassigned", note: (current && current.note)||"" });
-          } else {
-            await upsertAssignmentRemote({ nttNumber: ntt, team: team, status: "assigned", note: (current && current.note)||"" });
-          }
-          renderAssignList();
-          applyFilters();
+        listEl.querySelectorAll('[data-done]').forEach(btn=>{
+          btn.addEventListener('click', async ()=>{
+            const ntt = btn.getAttribute('data-done');
+            const a = getAssignment(ntt);
+            const rec = fullData.find(x=>x['NTT Number']===ntt);
+            const willBeDone = !(a && a.status==='done');
+            await setDoneRemote(ntt, willBeDone);
+            if(willBeDone && a && a.team) incProductivity(a.team, ntt);
+            if(willBeDone && rec) await sendTelegramResolved(rec);
+            applyFilters(); rerender();
+          });
         });
-      });
+      };
+
+      const run = debounce(rerender, 150);
+      document.getElementById('assignSearch').oninput = run;
+      document.getElementById('showPool').onchange = rerender;
+      document.getElementById('showDone').onchange = rerender;
+      rerender();
     }
   </script>
 </body>
