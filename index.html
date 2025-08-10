@@ -32,6 +32,13 @@
     #logTable thead th{position:sticky;top:0;z-index:1}
     #toast{position:fixed;bottom:16px;right:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 10px 20px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s;font-size:12px}
     #toast.show{opacity:1;transform:translateY(0)}
+    /* Tabs */
+    .tabbtn.active { background:#e0e7ff; border-color:#6366f1; color:#1f2937; font-weight:600; }
+    /* Soft cards & pills */
+    .card-soft { border-radius:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+    .pill { display:inline-flex; align-items:center; gap:.5rem; padding:.25rem .6rem; border-radius:9999px; font-weight:600; font-size:12px; }
+    /* Sticky tabs under header */
+    #dashTabs{ position:sticky; top:64px; z-index:30; background:#fff; padding:.25rem 0 .5rem; }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -40,7 +47,6 @@
     <h1 class="text-xl font-bold tracking-wide">📊 NTT Log Viewer</h1>
     <div class="flex items-center gap-3">
       <div id="lastUpdated" class="text-sm text-gray-100"></div>
-      <button id="refreshBtn" class="text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded border border-white/20">⟳ Sync from GitHub</button>
     </div>
   </header>
 
@@ -63,37 +69,60 @@
       <input id="searchInput" type="text" placeholder="🔍 Search keyword (e.g., dp faulty)" class="w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
     </div>
 
-    <div id="nttSummary" class="mb-6">
-      <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
-      <div id="nttSummaryContainer" class="flex flex-wrap gap-4 justify-start sm:justify-between"></div>
+    <!-- DASHBOARD TABS -->
+    <div id="dashTabs" class="mb-4 flex flex-wrap gap-2">
+      <button data-show="summary" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">
+        Summary
+      </button>
+      <button data-show="zoneOnly" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">
+        Zone View
+      </button>
+      <button data-show="summaryDashboard" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">
+        Team View
+      </button>
     </div>
 
-    <div class="mb-6">
-      <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
-      <div id="zoneDashboard" class="space-y-2"></div>
+    <!-- SUMMARY GRID (KPI + ZONE LEFT, TEAM QUICK RIGHT) -->
+    <div id="summaryGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
+      <!-- LEFT: KPI + ZONE -->
+      <div class="lg:col-span-8 space-y-4">
+        <div id="nttSummary" class="card-soft p-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
+          <div id="nttSummaryContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+        </div>
+
+        <div id="zoneCard" class="card-soft p-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
+          <div id="zoneDashboard" class="space-y-3"></div>
+          <div id="zoneGrand" class="flex justify-between mt-4 pt-3 border-t text-sm font-semibold text-gray-700"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: TEAM QUICK PANEL -->
+      <aside id="teamQuickPanel" class="lg:col-span-4 space-y-3"></aside>
     </div>
 
+    <!-- TEAM VIEW CARDS (compact) -->
     <div id="summaryDashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-sm"></div>
 
+    <!-- TABLE -->
     <div class="overflow-x-auto text-sm">
       <table class="min-w-full table-auto border-collapse text-center" id="logTable">
         <thead class="bg-gray-200 text-sm uppercase tracking-wider">
-         <tr>
-  <th class="px-4 py-2">Date</th>
-  <th class="px-4 py-2">NTT Number</th>
-  <th class="px-4 py-2">TM Node</th>
-  <th class="px-4 py-2">Symptom</th>
-  <th class="px-4 py-2">Domain</th>
-  <th class="px-4 py-2">Network ID</th>
-  <th class="px-4 py-2">CTTs Linked</th>
-  <th class="px-4 py-2">Aging</th>
-  <th class="px-4 py-2">Days</th>
-  <!-- NEW: desktop-only columns -->
-  <th class="px-4 py-2 hidden sm:table-cell">Assignee</th>
-  <th class="px-4 py-2 hidden sm:table-cell">Status</th>
-  <th class="px-4 py-2 hidden sm:table-cell">Actions</th>
-</tr>
-
+          <tr>
+            <th class="px-4 py-2">Date</th>
+            <th class="px-4 py-2">NTT Number</th>
+            <th class="px-4 py-2">TM Node</th>
+            <th class="px-4 py-2">Symptom</th>
+            <th class="px-4 py-2">Domain</th>
+            <th class="px-4 py-2">Network ID</th>
+            <th class="px-4 py-2">CTTs Linked</th>
+            <th class="px-4 py-2">Aging</th>
+            <th class="px-4 py-2">Days</th>
+            <th class="px-4 py-2 hidden sm:table-cell">Assignee</th>
+            <th class="px-4 py-2 hidden sm:table-cell">Status</th>
+            <th class="px-4 py-2 hidden sm:table-cell">Actions</th>
+          </tr>
         </thead>
         <tbody id="logTableBody"></tbody>
       </table>
@@ -169,7 +198,7 @@
         </div>
         <div class="flex items-center justify-between pt-2">
           <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
-          <div class="text-xs text-gray-500">Mark as <b>Done</b> & tambah productivity (sekali sahaja per NTT).</div>
+          <div class="text-xs text-gray-500">Mark as <b>Done</b>.</div>
         </div>
       </div>
     </div>
@@ -249,7 +278,7 @@
       }
     }
 
-    async function readAssignments(){ return await loadAssignmentsRemote(); } // for first load(){ return await loadAssignmentsRemote(); } // for first load
+    async function readAssignments(){ return await loadAssignmentsRemote(); }
     function getAssignment(ntt){ return readAssignmentsCache()[ntt] || null; }
     async function saveAssignment(ntt, team, note=""){ await upsertAssignmentRemote({ nttNumber: ntt, team, note, status:"assigned" }); }
     async function setDoneRemote(ntt, done=true){
@@ -292,14 +321,54 @@
     const cloudUrl=()=>REPO_RAW_URL+"?nocache="+Date.now();
     function showToast(msg){ if(!toast) return; toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1800); }
 
+    /* ===== Tabs (show/hide like mockup) ===== */
+    function setupTabs() {
+      const buttons = Array.from(document.querySelectorAll('#dashTabs .tabbtn'));
+      const sections = {
+        summaryGrid: document.getElementById('summaryGrid'),
+        nttSummary: document.getElementById('nttSummary'),
+        zoneCard: document.getElementById('zoneCard'),
+        teamQuick: document.getElementById('teamQuickPanel'),
+        summaryDashboard: document.getElementById('summaryDashboard')
+      };
+
+      function showOnly(which) {
+        if (which === 'summary') {
+          sections.summaryGrid.classList.remove('hidden');
+          sections.nttSummary.classList.remove('hidden');
+          sections.zoneCard.classList.remove('hidden');
+          sections.teamQuick.classList.remove('hidden');
+          sections.summaryDashboard.classList.add('hidden');
+        } else if (which === 'zoneOnly') {
+          sections.summaryGrid.classList.remove('hidden');
+          sections.nttSummary.classList.add('hidden');
+          sections.teamQuick.classList.add('hidden');
+          sections.zoneCard.classList.remove('hidden');
+          sections.summaryDashboard.classList.add('hidden');
+        } else if (which === 'summaryDashboard') {
+          sections.summaryGrid.classList.add('hidden');
+          sections.summaryDashboard.classList.remove('hidden');
+        }
+        buttons.forEach(b => b.classList.toggle('active', b.dataset.show===which));
+      }
+
+      // default: Summary
+      showOnly('summary');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => showOnly(btn.dataset.show));
+      });
+    }
+
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshFromGitHub(); });
 
     window.addEventListener("DOMContentLoaded", async ()=>{
       await refreshFromGitHub(true);
       await readAssignments(); // load centralized assignments
-      setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*3600);
+      setInterval(refreshFromGitHub, AUTO_REFRESH_SECONDS*1000);
       [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
       if(refreshBtn) refreshBtn.addEventListener("click",()=>syncNow());
+      setupTabs(); // init tabs
     });
 
     function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); }
@@ -319,7 +388,7 @@
         })).filter(r=>allowedNodes.includes(r["TM Node"]));
         fullData=data; localStorage.setItem("nttData",JSON.stringify(fullData));
         populateFilters(fullData); applyFilters();
-        lastUpdatedEl.textContent="Last updated from GitHub: "+nowStr();
+        lastUpdatedEl.textContent="Last updated: "+nowStr();
         lastUpdatedEl.className="text-sm text-green-100"; if(!firstLoad) showToast("Data refreshed");
       }catch(e){
         const cached=localStorage.getItem("nttData");
@@ -358,8 +427,9 @@
                           + '</span>';
 
         // Team select (Actions)
+        var TEAM_LIST_LOCAL = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"];
         var teamSelect = '<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="'+(row["NTT Number"]||'')+'">'
-                       + TEAM_LIST.map(function(t){
+                       + TEAM_LIST_LOCAL.map(function(t){
                            var sel = (asg && asg.team===t) ? ' selected' : '';
                            var label = 'Team ' + t.split(' ')[1].charAt(0) + t.split(' ')[1].slice(1).toLowerCase();
                            return '<option value="'+t+'"'+sel+'">'+label+'</option>';
@@ -432,7 +502,7 @@
           let a = getAssignment(ntt);
 
           if(!a && desired !== 'UNASSIGNED'){
-            await saveAssignment(ntt, TEAM_LIST[0], "");
+            await saveAssignment(ntt, ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"][0], "");
             a = getAssignment(ntt);
           }
 
@@ -442,7 +512,7 @@
           } else if(desired === 'UNASSIGNED'){
             await upsertAssignmentRemote({ nttNumber: ntt, team: "", status: "unassigned", note: (a && a.note) || "" });
           } else {
-            const teamVal = (a && a.team) ? a.team : TEAM_LIST[0];
+            const teamVal = (a && a.team) ? a.team : ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"][0];
             const statusVal = (desired === 'IN PROGRESS') ? 'in progress' : 'assigned';
             await upsertAssignmentRemote({ nttNumber: ntt, team: teamVal, status: statusVal, note: (a && a.note) || "" });
           }
@@ -472,60 +542,218 @@
         return okNode&&okDomain&&okAging&&okSearch;
       });
       currentFilteredData=filtered;
-      populateTable(filtered); populateDashboard(filtered); updateNTTSummary(filtered); populateZoneDashboard(filtered);
+      populateTable(filtered);
+      populateDashboard(filtered);
+      updateNTTSummary(filtered);
+      populateZoneDashboard(filtered);
+      renderTeamQuickPanel(filtered);   // NEW: panel kanan
     }
 
-    function toggleTeam(teamId){ const section=document.getElementById(teamId); if(section) section.classList.toggle("hidden"); }
+    function toggleTeam(teamId){
+      const section=document.getElementById(teamId);
+      if(section){
+        section.classList.toggle("hidden");
+        const btn = section.parentElement.querySelector('button .chev');
+        if (btn) btn.textContent = section.classList.contains('hidden') ? '▸' : '▾';
+      }
+    }
 
     const TEAM_ALIASES={"TEAM FAISON":["TEAM FAISON"],"TEAM FAUZIE":["TEAM FAUZIE"],"TEAM RUDI":["TEAM RUDI"],"TEAM ROSDEE":["TEAM ROSDEE"]};
     const TEAM_LIST = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"]; // for select
 
     function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
 
+    /* ----- Team View (compact + collapsible) ----- */
     function populateDashboard(data){
       const teams={"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
-      const agingLabels=["< 8H","8H - 12H","12H - 24H","24H - 48H","> 48H"]; const icons=["🟢","🟡","🔶","🔸","🔴"];
       summaryDashboard.innerHTML="";
       const assignments=readAssignmentsCache();
 
       Object.entries(teams).forEach(([team,nodes])=>{
         const teamId=team.replace(/\s+/g,"_");
-        let summaryHTML='<div class="border border-green-600 rounded p-2"><div class="flex justify-between items-center mb-2"><h2 class="text-center font-bold text-green-700">'+team+'</h2><button onclick="toggleTeam(\''+teamId+'\')" class="text-xs bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded">Hide</button></div><div id="'+teamId+'" class="team-section">';
-        nodes.forEach(node=>{
-          summaryHTML+='<div class="grid grid-cols-5 gap-2 text-xs mb-2">';
-          agingLabels.forEach((ag,idx)=>{
-            const count=data.filter(d=>d["TM Node"]===node && d["Aging Category"]===ag).length;
-            const color=ag.includes("48H")?"bg-red-500 text-white":(ag.includes("24H")?"bg-orange-400 text-white":"bg-gray-100");
-            summaryHTML+=`<div class="px-2 py-1 rounded ${color}">${icons[idx]} ${node} ${ag}: ${count}</div>`;
-          });
-          const total=data.filter(d=>d["TM Node"]===node).length;
-          summaryHTML+=`<div class="col-span-5 text-center text-blue-700 mt-1">📘 Total ${node}: ${total}</div></div>`;
-        });
-        const assignedForTeam=data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status!=="done" && a.status!=="unassigned"; }).length; // ASSIGNED & IN PROGRESS
-        const doneForTeam=data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status==="done"; }).length;
+
+        const assignedOpen = data.filter(d=>{
+          const a=assignments[d["NTT Number"]];
+          return a && teamsMatch(a.team, team) && a.status!=="done" && a.status!=="unassigned";
+        }).length;
+        const done = data.filter(d=>{
+          const a=assignments[d["NTT Number"]];
+          return a && teamsMatch(a.team, team) && a.status==="done";
+        }).length;
+        const totalTeam = assignedOpen + done;
         const prod=productivityCount(team);
-        summaryHTML+=`</div><div class="mt-2 flex items-center justify-between"><div class="text-xs space-x-2"><span class="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-700 font-semibold">🗂️ Assigned: ${assignedForTeam}</span><span class="inline-flex items-center px-2 py-1 rounded bg-emerald-100 text-emerald-700 font-semibold">✅ Done: ${doneForTeam}</span><span class="inline-flex items-center px-2 py-1 rounded bg-sky-100 text-sky-700 font-semibold">📈 Productivity: ${prod}</span></div><button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button></div></div>`;
-        summaryDashboard.innerHTML+=summaryHTML;
+        const pct = totalTeam ? Math.round((done/totalTeam)*100) : 0;
+
+        let html = `
+          <div class="rounded-lg border border-gray-200 p-3 bg-white shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="font-semibold text-gray-800">${team}</div>
+              <div class="text-xs text-gray-500">Total: <b>${totalTeam}</b></div>
+            </div>
+
+            <div class="mt-2">
+              <div class="h-2 bg-gray-200 rounded">
+                <div class="h-2 bg-emerald-500 rounded" style="width:${pct}%;"></div>
+              </div>
+              <div class="mt-1 flex flex-wrap gap-2 text-xs">
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">Assigned: ${assignedOpen}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Done: ${done}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-sky-100 text-sky-700">Productivity: ${prod}</span>
+              </div>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between">
+              <button class="text-xs px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center gap-1"
+                      onclick="toggleTeam('${teamId}')">
+                <span class="chev">▸</span> Details
+              </button>
+              <button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                Task Assign
+              </button>
+            </div>
+
+            <div id="${teamId}" class="team-section hidden mt-3">
+              ${nodes.map(node=>{
+                const a8   = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="< 8H").length;
+                const a12  = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="8H - 12H").length;
+                const a24  = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="12H - 24H").length;
+                const a48  = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="24H - 48H").length;
+                const a48p = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="> 48H").length;
+                const tot  = a8+a12+a24+a48+a48p;
+
+                return `
+                  <div class="mb-2">
+                    <div class="text-xs font-semibold text-gray-700 mb-1">${node} • Total ${tot}</div>
+                    <div class="grid grid-cols-5 gap-2 text-[11px]">
+                      <div class="px-2 py-1 rounded bg-gray-100">🟢 &lt;8H: ${a8}</div>
+                      <div class="px-2 py-1 rounded bg-gray-100">🟡 8–12H: ${a12}</div>
+                      <div class="px-2 py-1 rounded bg-gray-100">🔶 12–24H: ${a24}</div>
+                      <div class="px-2 py-1 rounded bg-orange-400 text-white">24–48H: ${a48}</div>
+                      <div class="px-2 py-1 rounded bg-red-500 text-white">&gt;48H: ${a48p}</div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+
+        summaryDashboard.insertAdjacentHTML('beforeend', html);
       });
 
-      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{ btn.addEventListener('click',()=>openAssignModal(btn.getAttribute('data-team'))); });
+      // Hook butang Assign (kekal logic asal)
+      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{
+        btn.addEventListener('click',()=>openAssignModal(btn.getAttribute('data-team')));
+      });
     }
 
+    /* ----- KPI Summary (clickable) ----- */
     function updateNTTSummary(data){
-      const cfg=[{label:"< 8H",ring:"ring-green-400",text:"text-green-600"},{label:"8H - 12H",ring:"ring-yellow-400",text:"text-yellow-600"},{label:"12H - 24H",ring:"ring-orange-400",text:"text-orange-500"},{label:"24H - 48H",ring:"ring-red-400",text:"text-red-500"},{label:"> 48H",ring:"ring-rose-400",text:"text-rose-600"}];
-      const c=document.getElementById("nttSummaryContainer"); c.innerHTML=""; const frag=document.createDocumentFragment();
-      cfg.forEach(cat=>{ const count=data.filter(d=>(d["Aging Category"]||"")===cat.label).length; const overdue=cat.label==="> 48H"? data.filter(d=>(d["Aging Category"]||"")===cat.label && getDayDifference(d["NTT Create Date"])>2).length:0; const w=document.createElement('div'); w.className='flex flex-col items-center'; w.innerHTML=`<div class="w-14 h-14 rounded-full ring-4 ${cat.ring} flex items-center justify-center text-lg font-bold text-gray-800">${count}</div><span class="text-xs mt-1 ${cat.text}">${cat.label}${overdue?` • overdue: ${overdue}`:""}</span>`; frag.appendChild(w); }); c.appendChild(frag);
+      const cfg=[
+        {label:"< 8H", ring:"ring-green-400", text:"text-green-600"},
+        {label:"8H - 12H", ring:"ring-yellow-400", text:"text-yellow-600"},
+        {label:"12H - 24H", ring:"ring-orange-400", text:"text-orange-500"},
+        {label:"24H - 48H", ring:"ring-red-400", text:"text-red-500"},
+        {label:"> 48H", ring:"ring-rose-400", text:"text-rose-600"}
+      ];
+      const c=document.getElementById("nttSummaryContainer");
+      c.innerHTML="";
+      const frag=document.createDocumentFragment();
+
+      cfg.forEach(cat=>{
+        const list=data.filter(d=>(d["Aging Category"]||"")===cat.label);
+        const count=list.length;
+        const overdue=(cat.label==="> 48H")
+          ? list.filter(d=>getDayDifference(d["NTT Create Date"])>2).length : 0;
+
+        const w=document.createElement('button');
+        w.type="button";
+        w.className='flex flex-col items-center focus:outline-none';
+        w.innerHTML=`
+          <div class="w-20 h-20 rounded-xl ring-4 ${cat.ring} flex items-center justify-center text-xl font-bold text-gray-800 bg-white">${count}</div>
+          <span class="text-xs mt-2 ${cat.text}">${cat.label}${overdue?` • overdue: ${overdue}`:""}</span>
+        `;
+        // Klik KPI => set filter aging + ke Team View + scroll
+        w.addEventListener('click', ()=>{
+          filterAging.value = cat.label;
+          applyFilters();
+          const teamBtn = document.querySelector('#dashTabs [data-show="summaryDashboard"]');
+          if (teamBtn) teamBtn.click();
+          document.getElementById('summaryDashboard')?.scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+        frag.appendChild(w);
+      });
+      c.appendChild(frag);
     }
 
+    /* ----- Zone Summary (card + grand total) ----- */
     function populateZoneDashboard(data){
       const targetZone="PBP SELATAN", targetDomain="PASSIVE ELEMENT NOVA", nodes=["KGU","TBN","SOO","NBN","TNM"];
       const filtered=data.filter(d=>String(d["Zone"]||"").trim().toUpperCase()===targetZone && String(d["Domain"]||"").trim().toUpperCase()===targetDomain && nodes.includes(String(d["TM Node"]||"").trim().toUpperCase()));
-      const el=document.getElementById("zoneDashboard");
-      if(!filtered.length){ el.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>'; return; }
-      const counts=Object.fromEntries(nodes.map(n=>[n,0])); filtered.forEach(r=>{ const n=String(r["TM Node"]||"").trim().toUpperCase(); if(n in counts) counts[n]++; });
-      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]); const max=Math.max(...sorted.map(([,c])=>c),1);
-      el.innerHTML=sorted.map(([n,cnt])=>`<div class="flex items-center justify-between gap-2"><div class="text-sm font-medium w-16">${n}</div><div class="w-full bg-gray-200 rounded h-4 relative"><div class="bg-red-500 h-4 rounded transition-all duration-500" style="width:${cnt/max*100}%"></div><span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${cnt}</span></div></div>`).join("");
-      const total=sorted.reduce((s,[,c])=>s+c,0); el.innerHTML+=`<div class="flex justify-between mt-4 pt-2 border-t text-sm font-semibold text-gray-700"><div>Grand Total</div><div>${total}</div></div>`;
+      const barWrap=document.getElementById("zoneDashboard");
+      const grand=document.getElementById("zoneGrand");
+
+      if(!filtered.length){
+        barWrap.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>';
+        grand.innerHTML=''; return;
+      }
+
+      const counts=Object.fromEntries(nodes.map(n=>[n,0]));
+      filtered.forEach(r=>{ const n=String(r["TM Node"]||"").trim().toUpperCase(); if(n in counts) counts[n]++; });
+      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+      const max=Math.max(...sorted.map(([,c])=>c),1);
+
+      barWrap.innerHTML=sorted.map(([n,cnt])=>`
+        <div class="flex items-center gap-3">
+          <div class="w-14 text-sm font-medium">${n}</div>
+          <div class="flex-1 bg-gray-200 rounded h-4 relative overflow-hidden">
+            <div class="bg-red-500 h-4" style="width:${cnt/max*100}%"></div>
+            <span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${cnt}</span>
+          </div>
+        </div>
+      `).join("");
+
+      const total=sorted.reduce((s,[,c])=>s+c,0);
+      grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
+    }
+
+    /* ----- Team Quick Panel (right) ----- */
+    function renderTeamQuickPanel(data){
+      const teams = {"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
+      const colorByNode = {KGU:'bg-amber-400', TNM:'bg-rose-500', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600'};
+      const el = document.getElementById('teamQuickPanel');
+      const asgMap = readAssignmentsCache();
+      el.innerHTML = '';
+
+      Object.entries(teams).forEach(([team, nodes])=>{
+        // node paling sibuk
+        let topNode = nodes[0], topCount = 0;
+        nodes.forEach(n=>{
+          const c = data.filter(d=>d['TM Node']===n).length;
+          if(c>topCount){ topCount=c; topNode=n; }
+        });
+
+        const badgeColor = colorByNode[topNode] || 'bg-gray-400';
+        const card = document.createElement('div');
+        card.className = 'card-soft p-4';
+        card.innerHTML = `
+          <div class="text-base font-semibold text-gray-800 mb-3">${team}</div>
+          <div class="flex items-center justify-between">
+            <span class="pill text-white ${badgeColor}">${topNode} ${topCount}</span>
+            <button class="expandBtn text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded">Expand</button>
+          </div>
+        `;
+        card.querySelector('.expandBtn').addEventListener('click', ()=>{
+          document.querySelector('#dashTabs [data-show="summaryDashboard"]').click();
+          setTimeout(()=>{
+            const teamId = team.replace(/\s+/g,'_');
+            const sec = document.getElementById(teamId);
+            if(sec && sec.classList.contains('hidden')){ sec.classList.remove('hidden'); }
+            document.getElementById('summaryDashboard')?.scrollIntoView({behavior:'smooth'});
+          }, 50);
+        });
+        el.appendChild(card);
+      });
     }
 
     /* ===== NTT Detail ===== */
