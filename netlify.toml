@@ -1,0 +1,19 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# 1) Proxy API → Netlify Functions (mesti di atas SPA redirect)
+[[redirects]]
+  from = "/api/*"
+  to   = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+# 2) SPA fallback
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
