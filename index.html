@@ -35,9 +35,7 @@
   }
 
   /* ===== Role gating ===== */
-  /* Nota: CM kini boleh akses CR/MT Pool & Task Assign (tiada 'nff-only' di butang itu) */
-  body[data-role="cm"] .nff-only { display:none !important; } /* kekal untuk elemen lain yang memang NFF sahaja */
-  /* Hide selection & action columns untuk CM di jadual utama */
+  body[data-role="cm"] .nff-only { display:none !important; }
   body[data-role="cm"] th.sel-col,
   body[data-role="cm"] th.action-col,
   body[data-role="cm"] td.sel-col,
@@ -62,20 +60,6 @@
 <meta name="theme-color" content="#4338ca">
 </head>
 <body class="bg-gray-100 text-gray-800">
-  
-<script>
-(() => {
-  const role = localStorage.getItem('role');
-  if (!role) {
-    // Paksa login jika belum ada sesi
-    location.href = "login.html?to=" + encodeURIComponent("index.html");
-  } else {
-    // Set data-role awal untuk CSS gating yang anda dah ada
-    document.body.setAttribute('data-role', role);
-  }
-})();
-</script>
-
 
 <!-- Header -->
 <header class="appbar px-4 md:px-6 py-3 shadow flex flex-wrap items-center justify-between gap-3">
@@ -83,6 +67,7 @@
     <span class="mi text-2xl">dataset_linked</span>
     <h1 class="app-title text-lg">NTT Log Viewer — Pro</h1>
   </div>
+
   <div class="flex items-center gap-2 text-sm">
     <!-- Log CR/MT: NFF sahaja -->
     <button id="openCrmt" class="nff-only btn btn--brand hidden">
@@ -91,7 +76,8 @@
 
     <div id="lastUpdated" class="text-indigo-100"></div>
 
-    <div class="flex items-center gap-1 role-badge rounded px-2 py-1">
+    <!-- role badge (akan disembunyi bila login CM) -->
+    <div id="roleBadgeWrap" class="flex items-center gap-1 role-badge rounded px-2 py-1">
       <span class="mi">badge</span>
       <select id="roleSelect" class="bg-transparent outline-none">
         <option value="cm">CM Team</option>
@@ -100,6 +86,11 @@
     </div>
 
     <button id="installBtn" class="hidden text-xs px-2 py-1 rounded bg-emerald-500 hover:bg-emerald-600">Install App</button>
+
+    <!-- 🆕 Logout -->
+    <button id="logoutBtn" class="text-xs px-2 py-1 rounded border border-white/30 bg-white/10 hover:bg-white/20 flex items-center gap-1">
+      <span class="mi">logout</span> Logout
+    </button>
   </div>
 </header>
 
@@ -162,6 +153,7 @@
           <button id="fdcFdpBtn" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs rounded bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1">
             <span class="mi">search</span> Search
           </button>
+          <!-- hasil carian (klik item = buka Google Maps) -->
           <div id="fdcFdpResults" class="locator-list hidden"></div>
         </div>
       </div>
@@ -372,14 +364,19 @@
           <label class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><span>Show Done</span></label>
         </div>
       </div>
-      <div class="border rounded overflow-hidden">
-        <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
-          <div class="col-span-6">NTT</div>
-          <div class="col-span-4">NETWORK ID</div>
-          <div class="col-span-2">AGING</div>
+
+      <!-- 🆕 wrapper overflow-x for mobile horizontal scroll -->
+      <div class="overflow-x-auto">
+        <div class="min-w-[720px] border rounded overflow-hidden">
+          <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
+            <div class="col-span-6">NTT</div>
+            <div class="col-span-4">NETWORK ID</div>
+            <div class="col-span-2">AGING</div>
+          </div>
+          <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
         </div>
-        <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
       </div>
+      <!-- end wrapper -->
     </div>
   </div>
 </div>
@@ -397,8 +394,7 @@
       <div class="sticky-top border-b bg-white p-3 flex flex-wrap items-center gap-2">
         <div class="flex items-center gap-2 flex-1">
           <span class="mi text-gray-500">search</span>
-          <input id="crmtSearch" type="text" placeholder="Search title / AA ID / node…"
-                 class="border rounded px-2 py-1 w-full">
+          <input id="crmtSearch" type="text" placeholder="Search title / AA ID / node…" class="border rounded px-2 py-1 w-full">
         </div>
         <div class="text-xs text-gray-500"><span id="crmtCount">0</span> item(s)</div>
       </div>
@@ -408,7 +404,7 @@
   </div>
 </div>
 
-<!-- CR/MT Detail Modal (NOTICE view + attachments) -->
+<!-- CR/MT Detail Modal -->
 <div id="crmtDetailModal" class="hidden fixed inset-0 bg-black/50 z-[70] items-start sm:items-center justify-center p-3">
   <div class="bg-white v-modal-panel shadow-2xl">
     <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -416,7 +412,6 @@
       <button id="crmtDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
     </div>
     <div class="v-modal-body p-4 text-sm space-y-3">
-      <!-- Notice header -->
       <div class="rounded-lg border border-indigo-200 bg-indigo-50/50 p-3">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>Type: <b id="crmtDetailType">-</b></div>
@@ -439,7 +434,6 @@
         <ul id="crmtDetailJobs" class="list-disc ml-5 space-y-1"></ul>
       </div>
 
-      <!-- Attachments -->
       <div class="rounded border p-3">
         <div class="font-semibold mb-2 flex items-center gap-1"><span class="mi text-gray-600">attachment</span> Attachments</div>
         <div id="crmtFilesEmpty" class="text-xs text-gray-500">No attachments.</div>
@@ -450,6 +444,16 @@
 </div>
 
 <script>
+/* ===== Paksa login & set data-role awal ===== */
+(() => {
+  const role = localStorage.getItem('role');
+  if (!role) {
+    location.href = "login.html?to=" + encodeURIComponent("index.html");
+  } else {
+    document.body.setAttribute('data-role', role);
+  }
+})();
+
 /* ========================= CONSTANTS & UTILITIES ========================= */
 const toast = (msg)=>{ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1800); };
 const allowedNodes = ["KGU","TBN","SOO","NBN","TNM"];
@@ -518,6 +522,14 @@ document.getElementById('openCrmt').addEventListener('click', ()=>{
   window.location.href = url;
 });
 
+/* ====== LOGOUT (baru) ====== */
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  try {
+    localStorage.removeItem('role');
+  } catch {}
+  location.href = 'login.html';
+});
+
 /* ========================= ASSIGNMENTS ========================= */
 function cacheAssignments(map){ localStorage.setItem(LS.ASSIGN, JSON.stringify(map)); localStorage.setItem(LS.ASSIGN_VER, String(Date.now())); }
 function readAssignmentsCache(){ try{ return JSON.parse(localStorage.getItem(LS.ASSIGN)||"{}"); }catch{ return {}; } }
@@ -576,6 +588,7 @@ async function loadLocationIndex(force=false){
 }
 function findLocByNetworkId(nid){ if(!locationIndex) return null; return locationIndex.find(r=>r.networkId===(nid||"").trim())||null; }
 
+/* === Carian FDC/FDP: papar senarai & buka Google Maps bila klik === */
 async function handleLocatorInput(){
   const q=(locator.input?.value||'').trim();
   if(!q){ locator.box.classList.add('hidden'); locator.box.innerHTML=''; return; }
@@ -587,13 +600,24 @@ async function handleLocatorInput(){
     r.section.toUpperCase().includes(term)
   ).slice(0,20);
   locator.box.innerHTML = items.map(r=>`
-    <div class="px-3 py-2 locator-item">
+    <div class="px-3 py-2 locator-item" data-network="${r.networkId}" data-lat="${r.lat}" data-lng="${r.lng}">
       <div class="font-semibold">${r.networkId}</div>
       <div class="text-xs text-gray-600">${r.street || '-'} • ${r.section || '-'}</div>
     </div>`).join('') || '<div class="px-3 py-2 text-sm text-gray-500">No results.</div>';
   locator.box.classList.remove('hidden');
   locator.box.querySelectorAll('.locator-item').forEach(el=>{
-    el.addEventListener('click', ()=>{ locator.input.value = el.querySelector('.font-semibold')?.textContent || ''; locator.box.classList.add('hidden'); });
+    el.addEventListener('click', ()=>{
+      const nid=el.getAttribute('data-network')||'';
+      const lat=el.getAttribute('data-lat')||'';
+      const lng=el.getAttribute('data-lng')||'';
+      locator.input.value = nid;
+      locator.box.classList.add('hidden');
+      if(lat && lng){
+        window.open(`https://maps.google.com/?q=${lat},${lng}`,'_blank');
+      } else {
+        toast('Coordinates not available for this location');
+      }
+    });
   });
 }
 
@@ -750,13 +774,8 @@ function renderTeamQuickPanel(data){
       <div class="flex items-center justify-between gap-3">
         <div class="flex flex-wrap gap-2">${chips} ${crmtChip}</div>
         <div class="flex items-center gap-2">
-          <!-- CM juga boleh akses CR/MT Pool & Task Assign -->
-          <button class="open-crmt-pool bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700" data-team="${team}">
-            CR/MT Pool
-          </button>
-          <button class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" data-team="${team}">
-            Task Assign
-          </button>
+          <button class="open-crmt-pool bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700" data-team="${team}">CR/MT Pool</button>
+          <button class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" data-team="${team}">Task Assign</button>
           <button class="expandBtn text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded">Expand</button>
         </div>
       </div>`;
@@ -835,7 +854,6 @@ function populateTableVirtual(data){
       const assigneeBadge=`<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${asg&&asg.team?'bg-purple-100 text-purple-700':'bg-gray-100 text-gray-600'}">${asg&&asg.team?asg.team:'UNASSIGNED'}</span>`;
       const agingClass=ageCat.includes("48H")?"bg-red-500":(ageCat.includes("24H")?"bg-orange-400":"bg-green-500");
       const sla = slaBadge(ageCat, row["NTT Create Date"]);
-      const disabledAssign = role==='cm' ? 'disabled' : '';
 
       out.push(`<tr class="border-b hover:bg-gray-50">
         <td class="px-2 py-2 sel-col"><input type="checkbox" class="selRow" data-ntt="${row["NTT Number"]}"></td>
@@ -854,7 +872,7 @@ function populateTableVirtual(data){
         <td class="px-2 py-2 hide-sm">${assigneeBadge}</td>
         <td class="px-2 py-2 hide-sm"><span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${badgeClass}">${statusLabel}</span></td>
         <td class="px-2 py-2 hide-sm action-col">
-          ${role!=='cm'?`<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="${row["NTT Number"]||''}" ${disabledAssign}>
+          ${role!=='cm'?`<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="${row["NTT Number"]||''}">
             <option>TEAM FAISON</option><option>TEAM FAUZIE</option><option>TEAM RUDI</option><option>TEAM ROSDEE</option>
           </select>`:''}
           ${role!=='cm'?`<select class="statusSelect border rounded px-2 py-1 text-sm ml-2" data-ntt="${row["NTT Number"]||''}">
@@ -1313,7 +1331,6 @@ function arrayifyJobs(jobs){
   if(Array.isArray(jobs)) return jobs.filter(Boolean).map(String);
   const s=String(jobs||'').trim();
   if(!s) return [];
-  // split by newline or semicolon or bullet
   return s.split(/\r?\n|;|•/).map(x=>x.trim()).filter(Boolean);
 }
 function renderCrmtAttachments(files){
@@ -1379,7 +1396,6 @@ function openCrmtDetail(item){
   const jobs=arrayifyJobs(item?.jobs || item?.work || item?.steps);
   ul.innerHTML = jobs.length ? jobs.map(x=>`<li>${x}</li>`).join('') : '<li class="list-none text-gray-500">No work items provided.</li>';
 
-  // Attachments from CR/MT Console (support several field names)
   const files = item?.files || item?.attachments || item?.docs || [];
   renderCrmtAttachments(files);
 
@@ -1387,10 +1403,9 @@ function openCrmtDetail(item){
 }
 document.getElementById('crmtDetailClose').onclick=()=>{ document.getElementById('crmtDetailModal').classList.add('hidden'); document.getElementById('crmtDetailModal').classList.remove('flex'); };
 
-/* ========================= INIT ========================= */
+/* ========================= INIT & ROLE ========================= */
 function updateRoleUI(){
   document.body.dataset.role = role;
-  // Log CR/MT hanya NFF
   const crmtBtn = document.getElementById('openCrmt');
   if (crmtBtn) crmtBtn.classList.toggle('hidden', role !== 'nff');
 }
@@ -1445,3 +1460,4 @@ function syncNow(){ toast("Syncing…"); refreshFromGitHub(true); refreshCTTFrom
 </script>
 </body>
 </html>
+
