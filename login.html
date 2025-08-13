@@ -79,10 +79,10 @@
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 </div>
 
-<!-- Top bar: only status chip (brand bar removed) -->
+<!-- Header dikekalkan, tetapi tanpa badge Online -->
 <header class="absolute inset-x-0 top-0 z-10">
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-end text-white/90">
-    <span id="netState" class="chip bg-white/20 backdrop-blur border border-white/30">Checking network…</span>
+    <!-- badge Online dibuang -->
   </div>
 </header>
 
@@ -131,7 +131,8 @@
               <span class="mi text-gray-700">visibility</span>
             </button>
           </div>
-          <div class="hint mt-1">Press <b>Enter</b> to log in.</div>
+          <!-- Hint dikemaskini (tiada perkataan 'Enter') -->
+          <div class="hint mt-1">Press to log in.</div>
           <div id="err" class="err mt-2 hidden">Wrong password. Please try again.</div>
         </div>
 
@@ -143,7 +144,13 @@
           <span class="text-sm text-gray-400">&nbsp;</span>
         </div>
 
-        <!-- SINGLE guest button -->
+        <!-- Butang Login (perkataan 'Enter' dibuang) -->
+        <button id="loginBtn" type="submit"
+          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          <span class="mi">login</span> Login
+        </button>
+
+        <!-- Guest button -->
         <button id="guestBtn" type="button"
           class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/85 hover:bg-white border border-gray-200 font-semibold">
           <span class="mi">visibility</span> Continue as Guest (read-only)
@@ -170,9 +177,10 @@
   const fromQS = new URLSearchParams(location.search);
   const redirectTo = decodeURIComponent(fromQS.get('to')||'index.html');
 
-  // Net badge
+  // Net badge (selamat jika elemen tiada)
   function setNetBadge(){
     const el = qs('#netState');
+    if(!el) return;                    // <-- guard supaya tiada error
     if(navigator.onLine){ el.textContent='Online'; el.className='chip bg-emerald-500/90 text-white'; }
     else{ el.textContent='Offline mode'; el.className='chip bg-amber-500/90 text-white'; }
   }
@@ -209,15 +217,15 @@
     qs('#resumeBtn').onclick = ()=> location.href = redirectTo;
   }
 
-  // Guest view-only  >>> UPDATED: role='cm'
+  // Guest view-only
   qs('#guestBtn').onclick=()=>{
-    localStorage.setItem('role','cm');          // was 'tech'
+    localStorage.setItem('role','cm');
     localStorage.setItem('auth','guest');
     localStorage.setItem('guest','1');
     location.href = redirectTo;
   };
 
-  // Submit via Enter (no button)
+  // Submit via button or Enter
   qs('#loginForm').addEventListener('submit', e=>{ e.preventDefault(); doLogin(); });
   qs('#passcode').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); doLogin(); }});
 
@@ -231,12 +239,12 @@
     if(selectedRole==='nff' && pass!==NFF_PASSWORD) return invalid();
 
     if(selectedRole==='cm'){
-      localStorage.setItem('role','cm');        // was 'tech'
+      localStorage.setItem('role','cm');
       localStorage.setItem('auth','cm');
       localStorage.setItem('cm_perms','assignment_only');
       localStorage.removeItem('guest');
     }else{
-      localStorage.setItem('role','nff');       // was 'admin'
+      localStorage.setItem('role','nff');
       localStorage.setItem('auth','nff');
       localStorage.removeItem('guest');
       localStorage.removeItem('cm_perms');
@@ -251,7 +259,6 @@
     }
   }
 
-  // ===== Keyboard-safe logic (iOS/Android) =====
   (function keyboardSafe(){
     const card = document.querySelector('.glass');
     const main = document.querySelector('main');
@@ -294,7 +301,6 @@
     );
   }
 
-  // Focus on load
   addEventListener('load', ()=> qs('#passcode').focus());
 </script>
 </body>
