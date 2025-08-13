@@ -1,308 +1,1447 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>NTT NOC — Login</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>NTT Log Viewer — Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<meta name="theme-color" content="#4338ca">
+
 <style>
-  :root{ --ink:#0b1020; --brand:#4338ca; --kb:0px; }
-  body{ font-family:'Inter','Segoe UI',system-ui,-apple-system,Arial,sans-serif; background:var(--ink); color:#111827; }
-
-  .mi{ font-family:'Material Symbols Rounded'; font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
-  .chip{ font-size:12px; padding:.25rem .6rem; border-radius:999px; }
-
-  /* Aurora */
-  .aurora{ position:fixed; inset:0; overflow:hidden; z-index:0; }
-  .blob{ position:absolute; border-radius:50%; filter:blur(70px); opacity:.42; mix-blend:screen; animation:float 26s ease-in-out infinite; }
-  .b1{ width:48vmax;height:48vmax;background:#4f46e5; left:-10vmax; top:-12vmax; }
-  .b2{ width:50vmax;height:50vmax;background:#059669; right:-12vmax; bottom:-14vmax; animation-delay:-9s; }
-  .b3{ width:36vmax;height:36vmax;background:#22d3ee; left:32%; top:58%; animation-delay:-14s; }
-  @keyframes float{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-2%,3%,0) scale(1.05)}}
-
-  /* Card */
-  .glass{
-    background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.82));
-    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-    border-radius:20px; border:1px solid rgba(255,255,255,.6);
-    box-shadow:0 22px 70px rgba(0,0,0,.3); position:relative;
-  }
-  .glass:before{
-    content:""; position:absolute; inset:-1.4px; border-radius:inherit; pointer-events:none;
-    background:conic-gradient(from 210deg at 50% 50%, #a5b4fc, #22d3ee, #10b981, #4f46e5, #a78bfa, #a5b4fc);
-    mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; padding:1.4px; opacity:.9;
+  :root{ --brand:#4f46e5; }
+  body { font-family: 'Inter','Segoe UI',Tahoma,Geneva,Verdana,sans-serif; font-size:13px; }
+  .mi { font-family: 'Material Symbols Rounded'; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .card-soft { border-radius:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  #toast{position:fixed;bottom:16px;right:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 10px 20px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s;font-size:12px}
+  #toast.show{opacity:1;transform:translateY(0)}
+  #logTable thead th{position:sticky;top:0;z-index:5;background:#eef2ff}
+  .ring-card { width:5.25rem; height:5.25rem; border-radius:0.75rem; background:#fff; display:flex; align-items:center; justify-content:center; font-size:1.25rem; font-weight:700; color:#1f2937; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+  .pill { display:inline-flex; align-items:center; gap:.4rem; padding:.2rem .5rem; border-radius:9999px; font-weight:600; font-size:12px; }
+  .sticky-top { position:sticky; top:0; z-index:40; background:#fff; }
+  .v-modal-panel{ width:100%; max-width:min(56rem, 96vw); max-height:calc(100vh - 32px); display:flex; flex-direction:column; border-radius:1rem; overflow:hidden; }
+  .v-modal-head{ position:sticky; top:0; z-index:2; }
+  .v-modal-body{ overflow:auto; }
+  #detailMap{ height:clamp(180px, 28vh, 320px); }
+  .shadow-inset { box-shadow: inset 0 1px 2px rgba(0,0,0,.05); }
+  .locator-list { position:absolute; left:0; right:0; top:100%; margin-top:.25rem; background:#fff; border:1px solid #e5e7eb; border-radius:.75rem; box-shadow:0 10px 20px rgba(0,0,0,.06); max-height:18rem; overflow:auto; z-index:30; }
+  .locator-item{ cursor:pointer; }
+  .locator-item:hover{ background:#f9fafb; }
+  @media (max-width:640px){
+    header{gap:.5rem;padding:12px!important}
+    .hide-sm{display:none!important}
+    .grid-sm{display:block}
   }
 
-  .brand-badge{ width:3rem;height:3rem;border-radius:12px;background:linear-gradient(135deg,#6366f1,#22d3ee); box-shadow:0 8px 24px rgba(79,70,229,.35); display:grid; place-items:center; color:#fff; }
+  /* ===== Role gating ===== */
+  /* Nota: CM kini boleh akses CR/MT Pool & Task Assign (tiada 'nff-only' di butang itu) */
+  body[data-role="cm"] .nff-only { display:none !important; } /* kekal untuk elemen lain yang memang NFF sahaja */
+  /* Hide selection & action columns untuk CM di jadual utama */
+  body[data-role="cm"] th.sel-col,
+  body[data-role="cm"] th.action-col,
+  body[data-role="cm"] td.sel-col,
+  body[data-role="cm"] td.action-col { display:none !important; }
 
-  /* Segmented role */
-  .seg{ display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:6px; border-radius:12px; background:#eef2ff; border:1px solid #c7d2fe; }
-  .seg>button{ border-radius:10px; padding:.7rem .9rem; display:flex; align-items:center; justify-content:center; gap:.5rem; font-weight:700; color:#374151; }
-  .seg>button[aria-pressed="true"]{ background:#4338ca; color:#fff; box-shadow:0 8px 24px rgba(67,56,202,.35); transform:translateY(-1px); }
+  /* Header */
+  .appbar{ background:var(--brand); color:white; }
+  .app-title{ font-weight:700; letter-spacing:.2px; }
+  .role-badge{ background:rgba(255,255,255,.12); }
+  .btn{ border-radius:8px; padding:.4rem .6rem; font-size:12px; border:1px solid #e5e7eb; background:#fff; }
+  .btn--brand{ background:#4f46e5; color:#fff; border-color:#4f46e5; }
 
-  /* Inputs */
-  .input{ width:100%; padding:.95rem 1rem .95rem 2.6rem; border-radius:12px; border:1px solid #d1d5db; background:#fff; outline:none; transition:border-color .15s, box-shadow .15s; }
-  .input:focus{ border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.25); }
-  .peek{ position:absolute; right:.45rem; top:50%; transform:translateY(-50%); padding:.4rem .55rem; border-radius:8px; }
-  .hint{ font-size:11px; color:#6b7280; }
-  .err{ font-size:12px; color:#dc2626; }
+  [data-node], [data-aging] { cursor:pointer; }
 
-  /* Keyboard-safe state */
-  body.kb-open main{ align-items:start; }
-  body.kb-open .glass{ translate:0 0; } /* biar natural, scroll yg jaga posisi */
-
-  /* ===== Mobile tweaks ===== */
-  @media (max-width: 640px){
-    main{ min-height: 100dvh; padding: 12px; }
-    header .chip{ font-size:11px; }
-    .glass{ border-radius:16px; }
-    .glass>.pad{ padding:18px; }
-    .brand-badge{ width:2.6rem; height:2.6rem; border-radius:10px; }
-    .seg{ grid-template-columns:1fr; }
-    .seg>button{ padding:.85rem .9rem; }
-    .input{ padding-left:2.4rem; }
-    .b1{ width:80vmin;height:80vmin; left:-30vmin; top:-22vmin; }
-    .b2{ width:86vmin;height:86vmin; right:-36vmin; bottom:-40vmin; }
-    .b3{ width:60vmin;height:60vmin; left:18vmin; top:56vmin; }
-  }
+  /* Attachments preview (CR/MT Detail) */
+  .file-card{ border:1px solid #e5e7eb; border-radius:.5rem; overflow:hidden; background:#fff; }
+  .file-thumb{ width:100%; height:9rem; object-fit:cover; background:#f3f4f6; display:block; }
+  .file-icon{ height:9rem; display:flex; align-items:center; justify-content:center; background:#f3f4f6; font-size:42px; color:#6b7280;}
+  .file-meta{ font-size:11px; padding:.35rem .5rem; }
 </style>
+<link rel="manifest" id="app-manifest">
+<meta name="theme-color" content="#4338ca">
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800">
+  
+<script>
+(() => {
+  const role = localStorage.getItem('role');
+  if (!role) {
+    // Paksa login jika belum ada sesi
+    location.href = "login.html?to=" + encodeURIComponent("index.html");
+  } else {
+    // Set data-role awal untuk CSS gating yang anda dah ada
+    document.body.setAttribute('data-role', role);
+  }
+})();
+</script>
 
-<!-- Aurora background -->
-<div class="aurora">
-  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-</div>
 
-<!-- Top bar: only status chip (brand bar removed) -->
-<header class="absolute inset-x-0 top-0 z-10">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-end text-white/90">
-    <span id="netState" class="chip bg-white/20 backdrop-blur border border-white/30">Checking network…</span>
+<!-- Header -->
+<header class="appbar px-4 md:px-6 py-3 shadow flex flex-wrap items-center justify-between gap-3">
+  <div class="flex items-center gap-2">
+    <span class="mi text-2xl">dataset_linked</span>
+    <h1 class="app-title text-lg">NTT Log Viewer — Pro</h1>
+  </div>
+  <div class="flex items-center gap-2 text-sm">
+    <!-- Log CR/MT: NFF sahaja -->
+    <button id="openCrmt" class="nff-only btn btn--brand hidden">
+      <span class="mi mr-1">assignment</span> Log CR/MT
+    </button>
+
+    <div id="lastUpdated" class="text-indigo-100"></div>
+
+    <div class="flex items-center gap-1 role-badge rounded px-2 py-1">
+      <span class="mi">badge</span>
+      <select id="roleSelect" class="bg-transparent outline-none">
+        <option value="cm">CM Team</option>
+        <option value="nff">NFF Team</option>
+      </select>
+    </div>
+
+    <button id="installBtn" class="hidden text-xs px-2 py-1 rounded bg-emerald-500 hover:bg-emerald-600">Install App</button>
   </div>
 </header>
 
-<main class="relative z-10 min-h-screen grid place-items-center px-5">
-  <div class="w-full max-w-md glass">
-    <div class="pad p-6 md:p-8">
-      <!-- Brand inside card -->
-      <div class="flex items-center gap-3 mb-4">
-        <div class="brand-badge"><span class="mi text-2xl">bolt</span></div>
-        <div>
-          <h1 class="text-xl font-extrabold text-gray-900 leading-tight">NTT Log Viewer — Pro</h1>
-          <p class="text-xs text-gray-600">Log in to continue</p>
-        </div>
-      </div>
+<main class="w-full min-h-screen px-2 sm:px-6 lg:px-8 py-4">
 
-      <!-- Quick resume (only for CM/NFF) -->
-      <div id="quickLast" class="hidden mb-4">
-        <button id="resumeBtn" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/80 hover:bg-white border border-gray-200 font-semibold">
-          <span class="mi">person</span><span>Continue as <b id="lastRoleLabel"></b></span>
+  <!-- Sticky Quick Bar -->
+  <section class="card-soft p-3 sm:p-4 mb-4 sticky-top border-indigo-100">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+      <div class="flex items-center gap-2 text-sm text-gray-700">
+        <span class="mi text-indigo-600">filter_list</span><span class="font-semibold">Quick Filters</span>
+        <span class="text-xs text-gray-500">(Press <b>/</b> to search)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="resetFilters" class="text-xs px-2.5 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 flex items-center gap-1">
+          <span class="mi">refresh</span> Reset
+        </button>
+        <button onclick="syncNow()" class="text-xs px-2.5 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1">
+          <span class="mi">sync</span> Sync
         </button>
       </div>
+    </div>
 
-      <!-- Role -->
-      <div class="mb-4">
-        <div class="text-xs font-semibold text-gray-700 mb-2">Choose Role</div>
-        <div class="seg" role="tablist" aria-label="Role">
-          <button id="btnCM"  role="tab" aria-selected="true" aria-pressed="true"  data-role="cm"><span class="mi">groups</span> CM Team</button>
-          <button id="btnNFF" role="tab" aria-selected="false" aria-pressed="false" data-role="nff"><span class="mi">workspace_premium</span> NFF Team</button>
+    <!-- Bar 1: Filters -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+      <div class="relative">
+        <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">apartment</span>
+        <select id="filterNode" class="w-full pl-10 pr-3 py-2.5 border rounded-lg bg-white shadow-inset">
+          <option value="">TM Node</option>
+          <option>KGU</option><option>TBN</option><option>SOO</option><option>NBN</option><option>TNM</option>
+        </select>
+      </div>
+      <div class="relative">
+        <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">dns</span>
+        <select id="filterDomain" class="w-full pl-10 pr-3 py-2.5 border rounded-lg bg-white shadow-inset">
+          <option value="">Domain</option>
+        </select>
+      </div>
+      <div class="relative">
+        <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">schedule</span>
+        <select id="filterAging" class="w-full pl-10 pr-3 py-2.5 border rounded-lg bg-white shadow-inset">
+          <option value="">Aging</option>
+        </select>
+      </div>
+      <div class="relative">
+        <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+        <input id="searchInput" type="text" placeholder="Global search (e.g., dp faulty, NTT-...)" class="w-full pl-10 pr-3 py-2.5 border rounded-lg bg-white shadow-inset"/>
+      </div>
+    </div>
+
+    <!-- Bar 2: FDC / FDP Location -->
+    <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div class="relative">
+        <label for="fdcFdpSearch" class="block text-[11px] font-semibold text-gray-600 mb-1 flex items-center gap-1">
+          <span class="mi">location_on</span> FDC / FDP Location
+        </label>
+        <div class="relative">
+          <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">pin_drop</span>
+          <input id="fdcFdpSearch" type="text" placeholder="Search Network ID / Street / Section"
+                class="w-full pl-10 pr-20 py-2.5 border rounded-lg bg-white shadow-inset"/>
+          <button id="fdcFdpBtn" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs rounded bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1">
+            <span class="mi">search</span> Search
+          </button>
+          <div id="fdcFdpResults" class="locator-list hidden"></div>
         </div>
-        <div class="mt-1 text-[11px] text-gray-600">
-          CM Team: read-only + NTT assignment (pool). NFF Team: full admin.
+      </div>
+    </div>
+
+    <div id="activeChips" class="mt-2 flex flex-wrap gap-2"></div>
+
+    <!-- Bulk bar -->
+    <div id="bulkBar" class="nff-only mt-3 hidden items-center justify-between flex-wrap gap-2 p-2 border rounded-lg bg-indigo-50">
+      <div class="text-sm flex items-center gap-2">
+        <span class="mi text-indigo-600">select_all</span>
+        <b id="bulkCount">0 selected</b>
+      </div>
+      <div class="flex items-center gap-2">
+        <select id="bulkTeam" class="border rounded px-2 py-1 text-sm">
+          <option>TEAM FAISON</option><option>TEAM FAUZIE</option><option>TEAM RUDI</option><option>TEAM ROSDEE</option>
+        </select>
+        <button id="bulkAssign" class="px-2 py-1 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700"><span class="mi">assignment_ind</span> Assign</button>
+        <button id="bulkDone" class="px-2 py-1 rounded bg-emerald-600 text-white text-sm hover:bg-emerald-700"><span class="mi">done_all</span> Mark Done</button>
+        <button id="bulkPing" class="px-2 py-1 rounded bg-sky-600 text-white text-sm hover:bg-sky-700"><span class="mi">send</span> Reminder</button>
+        <button id="clearSelection" class="px-2 py-1 rounded bg-white border text-sm hover:bg-gray-50"><span class="mi">close</span> Clear</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summaries -->
+  <div id="summaryGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
+    <div class="lg:col-span-8 space-y-4">
+      <div class="card-soft p-4">
+        <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
+        <div id="nttSummaryContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
+      </div>
+      <div class="card-soft p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-semibold text-gray-700">CTT Summary (Offline)</h2>
+          <span class="text-xs text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">Offline only</span>
+        </div>
+        <div id="cttSummaryContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
+      </div>
+      <div class="card-soft p-4">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
+        <div id="zoneDashboard" class="space-y-3"></div>
+        <div id="zoneGrand" class="flex justify-between mt-3 pt-3 border-t text-sm font-semibold text-gray-700"></div>
+      </div>
+    </div>
+
+    <!-- Team Dashboard -->
+    <aside id="teamQuickPanel" class="lg:col-span-4 space-y-3"></aside>
+  </div>
+
+  <div id="lintBanner" class="hidden p-2 rounded border bg-amber-50 text-amber-800 text-sm mb-3"></div>
+
+  <div id="loadingState" class="hidden text-sm text-gray-500 px-3 py-2">
+    <span class="mi align-middle mr-1 animate-pulse">hourglass_top</span> Loading data…
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto text-sm border rounded-lg bg-white">
+    <table class="min-w-full table-auto border-collapse text-center" id="logTable">
+      <thead class="text-xs uppercase tracking-wider">
+        <tr>
+          <th class="px-2 py-2 sel-col"><input type="checkbox" id="selAll"></th>
+          <th class="px-4 py-2">Date</th>
+          <th class="px-4 py-2">NTT Number</th>
+          <th class="px-4 py-2">TM Node</th>
+          <th class="px-4 py-2">Symptom</th>
+          <th class="px-4 py-2">Domain</th>
+          <th class="px-4 py-2">Network ID</th>
+          <th class="px-4 py-2">CTTs Linked</th>
+          <th class="px-4 py-2">Aging</th>
+          <th class="px-4 py-2">Days</th>
+          <th class="px-4 py-2 hide-sm">Assignee</th>
+          <th class="px-4 py-2 hide-sm">Status</th>
+          <th class="px-4 py-2 hide-sm action-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="logTableBody"></tbody>
+    </table>
+    <div id="virtInfo" class="text-xs text-gray-500 px-3 py-2">Rendering windowed rows for performance.</div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="px-4 sm:px-6 lg:px-8 mt-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="border-t border-gray-200"></div>
+    <div class="py-4 text-center text-xs text-gray-500">
+      © 2025 NTT Log Viewer • v1.0 | Build by Mohd Aizad Yakub •  NFF PBPS
+    </div>
+  </div>
+</footer>
+
+<!-- NTT Detail Modal -->
+<div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
+  <div class="bg-white v-modal-panel shadow-2xl">
+    <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+      <div class="font-semibold flex items-center gap-2">
+        <span class="mi">folder_open</span> NTT Log Detail
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="copyNttBtn" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-xs"><span class="mi">content_copy</span> Copy NTT</button>
+        <button id="shareNttBtn" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-xs"><span class="mi">ios_share</span> Share</button>
+        <button id="nttDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+    </div>
+    <div class="v-modal-body p-4 space-y-4 text-sm">
+      <div class="rounded-lg border border-indigo-200 p-3 bg-indigo-50/40">
+        <div class="font-semibold mb-1">📍 Location for: <span id="detailLocationFor" class="font-mono"></span></div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div>Street: <span id="detailStreet" class="font-medium"></span></div>
+          <div>Section: <span id="detailSection" class="font-medium"></span></div>
+          <div>Coordinates: <a id="detailCoordsLink" href="#" target="_blank" class="text-indigo-600 underline">-</a> <button id="copyCoordBtn" class="ml-2 text-xs bg-white border px-2 py-0.5 rounded">Copy</button></div>
+        </div>
+        <div id="mapPreviewWrap" class="mt-3 hidden">
+          <div class="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+            <span class="mi">map</span> Map Preview
+          </div>
+          <div class="rounded-lg overflow-hidden border">
+            <iframe id="detailMap" class="w-full" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
         </div>
       </div>
 
-      <!-- Password -->
-      <form id="loginForm" class="space-y-3">
-        <div>
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-gray-700">Password</label>
-            <a href="#" class="text-xs text-indigo-600 hover:underline">Forgot?</a>
-          </div>
-          <div class="relative">
-            <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">lock</span>
-            <input id="passcode" type="password" class="input" placeholder="••••••••" autocomplete="current-password">
-            <button type="button" id="togglePeek" class="peek hover:bg-gray-100">
-              <span class="mi text-gray-700">visibility</span>
-            </button>
-          </div>
-          <div class="hint mt-1">Press <b>Enter</b> to log in.</div>
-          <div id="err" class="err mt-2 hidden">Wrong password. Please try again.</div>
+      <div>
+        <div class="font-semibold mb-1">Description</div>
+        <pre id="detailDescription" class="text-xs whitespace-pre-wrap bg-gray-100 p-3 rounded border"></pre>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 text-xs text-gray-700">
+        <div>NTT: <b id="detailNttNo"></b></div>
+        <div>Assigned: <b id="detailAssignedTo">Unassigned</b></div>
+      </div>
+
+      <div class="rounded border p-3">
+        <div class="font-semibold mb-1 flex items-center gap-1"><span class="mi text-gray-600">history</span> Related History (90 days)</div>
+        <div id="historyList" class="text-xs text-gray-700 space-y-1"></div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="font-semibold flex items-center gap-2">Evidence
+          <span class="text-xs text-gray-500">Multiple files supported</span>
         </div>
-
-        <div class="flex items-center justify-between">
-          <label class="text-sm text-gray-700 flex items-center gap-2">
-            <input id="remember" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-            Remember this device
-          </label>
-          <span class="text-sm text-gray-400">&nbsp;</span>
+        <div id="dropZone" class="border-2 border-dashed rounded p-3 text-center text-gray-500">Drop files here or use input below</div>
+        <input id="evidenceInput" type="file" class="block w-full text-xs border rounded px-2 py-1" multiple>
+        <div class="flex items-center gap-2">
+          <button id="uploadEvidenceBtn" class="px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">Add Files</button>
+          <button id="clearEvidenceBtn" class="px-3 py-2 text-sm bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Clear All</button>
         </div>
+        <div id="evidenceStatus" class="text-xs text-gray-600"></div>
+        <div id="evidenceGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+      </div>
 
-        <!-- SINGLE guest button -->
-        <button id="guestBtn" type="button"
-          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/85 hover:bg-white border border-gray-200 font-semibold">
-          <span class="mi">visibility</span> Continue as Guest (read-only)
-        </button>
-      </form>
-
-      <div class="mt-6 text-[11px] leading-relaxed text-gray-600">
-        This system may log activity for operational purposes and for managing NTT for the CM Team.
+      <div class="flex items-center justify-between pt-2">
+        <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
+        <div class="text-xs text-gray-500">Mark as <b>Done</b>.</div>
       </div>
     </div>
   </div>
+</div>
 
-  <footer class="mt-6 text-xs text-white/85 text-center px-3" style="padding-bottom:calc(env(safe-area-inset-bottom) + 8px)">
-    © 2025 NTT Log Viwer • v1.0 | Build by Mohd Aizad Yakub •  NFF PBPS
-  </footer>
-</main>
+<!-- CTT Early Analysis Modal -->
+<div id="cttModal" class="hidden fixed inset-0 z-[65] bg-black/50 items-start sm:items-center justify-center p-3">
+  <div class="bg-white v-modal-panel shadow-2xl">
+    <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+      <div class="font-semibold">🔎 CTT Early Analysis — <span id="cttModalNode"></span></div>
+      <div class="flex items-center gap-2">
+        <button id="cttModalClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+    </div>
+    <div class="v-modal-body p-0 text-sm">
+      <div class="sticky-top border-b bg-white p-3 flex flex-wrap items-center gap-2">
+        <div id="cttSummaryLine" class="text-gray-700 flex-1"></div>
+        <div class="nff-only flex items-center gap-2">
+          <span class="mi text-gray-500">tune</span>
+          <label class="text-xs flex items-center gap-1"><input type="checkbox" id="exactMatch"> Exact</label>
+        </div>
+        <div class="flex items-center gap-2 flex-1">
+          <span class="mi text-gray-500">search</span>
+          <input id="cttFilterInput" type="text" placeholder="Filter DP/FDP/Network ID…" class="border rounded px-2 py-1 w-full">
+        </div>
+      </div>
+      <div class="border-t">
+        <div class="hidden sm:grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
+          <div class="col-span-4">DP / FDP / CTT ID</div>
+          <div class="col-span-5">Status • Desc</div>
+          <div class="col-span-3">Match (NTT, score)</div>
+        </div>
+        <div id="cttList" class="max-h-[62vh] overflow-y-auto divide-y"></div>
+      </div>
+      <div class="p-2 text-xs text-gray-500">* Matching uses fuzzy tiers (exact NID, DP/FDP substring/regex, DP code). “Potential NTT risk” when no match is found.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Modal -->
+<div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+  <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
+    <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+      <div class="font-semibold">📋 Team NTT Assignment — <span id="assignTeamTitle"></span></div>
+      <button id="assignModalClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+    </div>
+    <div class="p-4 space-y-3">
+      <div class="flex items-center justify-between gap-3">
+        <input id="assignSearch" type="text" placeholder="Search NTT / Network ID / Symptom" class="flex-1 border rounded px-3 py-2">
+        <div class="text-sm flex items-center gap-4">
+          <span>Assigned: <b id="assignCount">0</b></span>
+          <label class="flex items-center gap-1"><input id="showPool" type="checkbox" class="h-4 w-4"><span>Show Pool</span></label>
+          <label class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><span>Show Done</span></label>
+        </div>
+      </div>
+      <div class="border rounded overflow-hidden">
+        <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
+          <div class="col-span-6">NTT</div>
+          <div class="col-span-4">NETWORK ID</div>
+          <div class="col-span-2">AGING</div>
+        </div>
+        <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- CR/MT Pool Modal -->
+<div id="crmtPoolModal" class="hidden fixed inset-0 bg-black/50 z-[55] items-start sm:items-center justify-center p-3">
+  <div class="bg-white v-modal-panel shadow-2xl">
+    <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+      <div class="font-semibold">📥 CR/MT Pool — <span id="crmtPoolTitle"></span></div>
+      <button id="crmtPoolClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+    </div>
+    <div class="v-modal-body p-0 text-sm">
+      <div class="sticky-top border-b bg-white p-3 flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-2 flex-1">
+          <span class="mi text-gray-500">search</span>
+          <input id="crmtSearch" type="text" placeholder="Search title / AA ID / node…"
+                 class="border rounded px-2 py-1 w-full">
+        </div>
+        <div class="text-xs text-gray-500"><span id="crmtCount">0</span> item(s)</div>
+      </div>
+      <div id="crmtList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
+      <div class="p-2 text-xs text-gray-500">Tasks here come from CR/MT page. “Remove” only removes from team pool (doesn't delete original record).</div>
+    </div>
+  </div>
+</div>
+
+<!-- CR/MT Detail Modal (NOTICE view + attachments) -->
+<div id="crmtDetailModal" class="hidden fixed inset-0 bg-black/50 z-[70] items-start sm:items-center justify-center p-3">
+  <div class="bg-white v-modal-panel shadow-2xl">
+    <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+      <div class="font-semibold flex items-center gap-2"><span class="mi">assignment</span> CR/MT Detail — <span id="crmtDetailId" class="font-mono"></span></div>
+      <button id="crmtDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+    </div>
+    <div class="v-modal-body p-4 text-sm space-y-3">
+      <!-- Notice header -->
+      <div class="rounded-lg border border-indigo-200 bg-indigo-50/50 p-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>Type: <b id="crmtDetailType">-</b></div>
+          <div>Node: <b id="crmtDetailNode">-</b></div>
+          <div>Section/Street: <b id="crmtDetailLoc">-</b></div>
+          <div>Source: <a id="crmtDetailLink" href="#" target="_blank" class="text-indigo-600 underline">-</a></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-semibold mb-1">Title</div>
+        <div id="crmtDetailTitle" class="border rounded p-2 bg-gray-50"></div>
+      </div>
+      <div>
+        <div class="font-semibold mb-1">Description</div>
+        <pre id="crmtDetailDesc" class="whitespace-pre-wrap border rounded p-2 bg-gray-50"></pre>
+      </div>
+      <div>
+        <div class="font-semibold mb-1">Work Items / Steps</div>
+        <ul id="crmtDetailJobs" class="list-disc ml-5 space-y-1"></ul>
+      </div>
+
+      <!-- Attachments -->
+      <div class="rounded border p-3">
+        <div class="font-semibold mb-2 flex items-center gap-1"><span class="mi text-gray-600">attachment</span> Attachments</div>
+        <div id="crmtFilesEmpty" class="text-xs text-gray-500">No attachments.</div>
+        <div id="crmtFiles" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  const CM_PASSWORD  = 'cmteam';
-  const NFF_PASSWORD = 'nffteam';
+/* ========================= CONSTANTS & UTILITIES ========================= */
+const toast = (msg)=>{ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1800); };
+const allowedNodes = ["KGU","TBN","SOO","NBN","TNM"];
+const VALID = { domains: ["PASSIVE ELEMENT NOVA","LTE 4G","CORE","ACCESS"], aging: ["< 8H","8H - 12H","12H - 24H","24H - 48H","> 48H"] };
+const nowStr=()=>new Date().toLocaleString();
+const ASSIGN_REMOTE_RAW = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_assignments.csv";
+const ASSIGN_SAVE_ENDPOINT = "/.netlify/functions/assignments";
+const TELEGRAM_ENDPOINT="/.netlify/functions/notify-telegram";
+const LOCATION_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/network_id_location.csv";
+const CTT_REPO_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ctt_logs.csv";
+const REPO_RAW_URL="https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
+const AUTO_REFRESH_SECONDS=30;
 
-  const qs=(s,r=document)=>r.querySelector(s);
-  const qsa=(s,r=document)=>[...r.querySelectorAll(s)];
-  const fromQS = new URLSearchParams(location.search);
-  const redirectTo = decodeURIComponent(fromQS.get('to')||'index.html');
+const locator = { input:null, box:null };
+const LS = { NTT:"nttData", ASSIGN:"nttAssignments", ASSIGN_VER:"nttAssignmentsVersion", PROD:"nttProductivity", LOC:"nttLocationIndex", EV_PREFIX:"evidence:", TEAM_BOX:"nttTeamTasks" };
 
-  // Net badge
-  function setNetBadge(){
-    const el = qs('#netState');
-    if(navigator.onLine){ el.textContent='Online'; el.className='chip bg-emerald-500/90 text-white'; }
-    else{ el.textContent='Offline mode'; el.className='chip bg-amber-500/90 text-white'; }
+let role = (localStorage.getItem('role')||'cm'); // 'cm' or 'nff'
+
+function debounce(fn,ms=250){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a),ms); }; }
+function normId(s){ return String(s||'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,''); }
+function extractDpCode(s){ const m=String(s||'').toUpperCase().match(/DP0*\d{1,5}/); return m?m[0]:''; }
+function daysDiff(dateStr){ const t=new Date(), d=new Date(dateStr); if(isNaN(d)) return NaN; return Math.floor((t-d)/(1000*60*60*24)); }
+function copy(text){ navigator.clipboard?.writeText(text).then(()=>toast("Copied")).catch(()=>{}); }
+
+/* ===== CR/MT Inbox (Team task pool) ===== */
+function readTeamBox(){ try { return JSON.parse(localStorage.getItem(LS.TEAM_BOX) || '{}'); } catch { return {}; } }
+function writeTeamBox(obj){ localStorage.setItem(LS.TEAM_BOX, JSON.stringify(obj||{})); }
+
+/* ========================= STATE ========================= */
+let fullData=[], filteredData=[];
+let currentDetailRecord=null;
+let locationIndex=null;
+let cttData=[];
+let idxByNtt={}, idxByNetworkId={}, idxByNode={}, idxByDpCode={};
+
+/* ========================= PWA quick setup + Install button ========================= */
+(function setupPWA(){
+  const manifest = {"name":"NTT Log Viewer — Pro","short_name":"NTT NOC","start_url":"./","display":"standalone","background_color":"#111827","theme_color":"#4338ca","icons":[{"src":"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><rect width='128' height='128' fill='%234338ca'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white'>N</text></svg>","sizes":"128x128","type":"image/svg+xml"}]};
+  const blob = new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  document.getElementById('app-manifest').setAttribute('href', url);
+  const swCode = `const CACHE='ntt-v1';self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','https://cdn.tailwindcss.com','https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js'])))});self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(net=>{caches.open(CACHE).then(c=>c.put(e.request,net.clone()));return net;})))})`;
+  const swUrl = URL.createObjectURL(new Blob([swCode],{type:'text/javascript'}));
+  if('serviceWorker' in navigator){ navigator.serviceWorker.register(swUrl).catch(()=>{}); }
+})();
+let _deferredPrompt=null;
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault(); _deferredPrompt=e;
+  const btn=document.getElementById('installBtn');
+  if(btn){
+    btn.classList.remove('hidden');
+    btn.onclick=async ()=>{
+      btn.disabled=true;
+      try{
+        if(_deferredPrompt){ _deferredPrompt.prompt(); await _deferredPrompt.userChoice; }
+      }finally{
+        btn.disabled=false; btn.classList.add('hidden'); _deferredPrompt=null;
+      }
+    };
   }
-  addEventListener('online', setNetBadge); addEventListener('offline', setNetBadge); setNetBadge();
+});
 
-  // Role segmented
-  let selectedRole='cm';
-  function choose(role){
-    selectedRole = role;
-    const cm=qs('#btnCM'), nff=qs('#btnNFF');
-    const map={cm,nff};
-    Object.entries(map).forEach(([k,btn])=>{
-      const on=(k===role); btn.setAttribute('aria-selected',on?'true':'false'); btn.setAttribute('aria-pressed',on?'true':'false');
+/* Quick nav to CR/MT page (NFF only) */
+document.getElementById('openCrmt').addEventListener('click', ()=>{
+  const url = 'crmt.html?from=index';
+  window.location.href = url;
+});
+
+/* ========================= ASSIGNMENTS ========================= */
+function cacheAssignments(map){ localStorage.setItem(LS.ASSIGN, JSON.stringify(map)); localStorage.setItem(LS.ASSIGN_VER, String(Date.now())); }
+function readAssignmentsCache(){ try{ return JSON.parse(localStorage.getItem(LS.ASSIGN)||"{}"); }catch{ return {}; } }
+async function loadAssignmentsRemote(){
+  try{
+    const res=await fetch(ASSIGN_REMOTE_RAW+"?nocache="+Date.now(),{cache:"no-store"});
+    if(!res.ok) throw new Error(res.status);
+    const csv=await res.text(); const parsed=Papa.parse(csv,{header:true,skipEmptyLines:true});
+    const map={}; (parsed.data||[]).forEach(r=>{ const n=(r["NTT Number"]||"").trim(); if(!n) return;
+      map[n]={ team:(r["Team"]||"").trim(), status:(r["Status"]||"assigned").trim().toLowerCase(), note:r["Note"]||"", at:r["UpdatedAt"]||null };
     });
-    qs('#passcode').focus();
+    cacheAssignments(map); return map;
+  }catch{ return readAssignmentsCache(); }
+}
+async function upsertAssignmentRemote({ nttNumber, team, status="assigned", note="" }){
+  const optimistic={ team:(team||"").trim(), status:(status||"assigned").toLowerCase(), note:note||"", at:new Date().toISOString() };
+  const pre=readAssignmentsCache(); pre[nttNumber]=optimistic; cacheAssignments(pre);
+  try{
+    const res=await fetch(ASSIGN_SAVE_ENDPOINT,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({ nttNumber, team:optimistic.team, status:optimistic.status, note:optimistic.note })});
+    if(!res.ok) throw new Error(await res.text());
+    const { row } = await res.json(); const cache=readAssignmentsCache();
+    cache[nttNumber]={ team:row.Team, status:row.Status.toLowerCase(), note:row.Note, at:row.UpdatedAt }; cacheAssignments(cache);
+    return row;
+  }catch(e){ toast("Saved locally (will sync)"); return { Team:optimistic.team, Status:optimistic.status, Note:optimistic.note, UpdatedAt:optimistic.at }; }
+}
+function getAssignment(ntt){ return readAssignmentsCache()[ntt]||null; }
+async function setDoneRemote(ntt, done=true){
+  const current=getAssignment(ntt)||{}; await upsertAssignmentRemote({ nttNumber:ntt, team:current.team||"", status: done ? "done" : "assigned" });
+}
+
+/* ========================= PRODUCTIVITY & EVIDENCE ========================= */
+function readProd(){ try{ return JSON.parse(localStorage.getItem(LS.PROD)||'{"counts":{},"items":{}}'); }catch{return {counts:{},items:{}}; } }
+function writeProd(p){ localStorage.setItem(LS.PROD, JSON.stringify(p)); }
+function incProductivity(team, ntt){ const p=readProd(); if(p.items[ntt]) return; p.items[ntt]=true; p.counts[team]=(p.counts[team]||0)+1; writeProd(p); }
+
+function evKey(ntt){ return `${LS.EV_PREFIX}${ntt}`; }
+function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evKey(ntt))||'{"items":[]}'); }catch{return {items:[]};} }
+function saveEvidence(ntt, files){ const cur=readEvidence(ntt); cur.items.push(...files); localStorage.setItem(evKey(ntt), JSON.stringify(cur)); }
+function clearEvidence(ntt){ localStorage.removeItem(evKey(ntt)); }
+
+/* ========================= LOCATION INDEX ========================= */
+async function loadLocationIndex(force=false){
+  if(locationIndex && !force) return locationIndex;
+  try{ const cached=JSON.parse(localStorage.getItem(LS.LOC)||"null"); if(!force && cached && Array.isArray(cached.rows)){ locationIndex=cached.rows; return locationIndex; } }catch{}
+  const resp=await fetch(LOCATION_RAW_URL+"?nocache="+Date.now(),{cache:"no-store"}); const text=await resp.text();
+  const parsed=Papa.parse(text,{header:true,skipEmptyLines:true});
+  locationIndex=(parsed.data||[]).map(r=>{
+    const networkId=(r["Network ID"]||"").trim(); const street=r["Street Name"]||""; const section=r["Section"]||"";
+    const lat=(r["Latitude"]||"").toString().trim(); const lng=(r["Longitude"]||"").toString().trim();
+    const tmnode=(r["TM Node"]||r["Node"]||r["TMNode"]||"").toString().trim().toUpperCase();
+    const dpFdpId=(r["DP / FDP ID"]||r["DP/FDP ID"]||r["DP ID"]||r["FDP ID"]||"").toString().trim().toUpperCase();
+    return { networkId, street, section, lat, lng, tmnode, dpFdpId, nNetwork:normId(networkId), nDp:normId(dpFdpId) };
+  });
+  localStorage.setItem(LS.LOC, JSON.stringify({rows:locationIndex,at:Date.now()}));
+  return locationIndex;
+}
+function findLocByNetworkId(nid){ if(!locationIndex) return null; return locationIndex.find(r=>r.networkId===(nid||"").trim())||null; }
+
+async function handleLocatorInput(){
+  const q=(locator.input?.value||'').trim();
+  if(!q){ locator.box.classList.add('hidden'); locator.box.innerHTML=''; return; }
+  await loadLocationIndex();
+  const term=q.toUpperCase();
+  const items=locationIndex.filter(r =>
+    r.networkId.toUpperCase().includes(term) ||
+    r.street.toUpperCase().includes(term)  ||
+    r.section.toUpperCase().includes(term)
+  ).slice(0,20);
+  locator.box.innerHTML = items.map(r=>`
+    <div class="px-3 py-2 locator-item">
+      <div class="font-semibold">${r.networkId}</div>
+      <div class="text-xs text-gray-600">${r.street || '-'} • ${r.section || '-'}</div>
+    </div>`).join('') || '<div class="px-3 py-2 text-sm text-gray-500">No results.</div>';
+  locator.box.classList.remove('hidden');
+  locator.box.querySelectorAll('.locator-item').forEach(el=>{
+    el.addEventListener('click', ()=>{ locator.input.value = el.querySelector('.font-semibold')?.textContent || ''; locator.box.classList.add('hidden'); });
+  });
+}
+
+/* ========================= CTT LOAD ========================= */
+function pick(row, keys){ for(const k of keys){ if(row[k]!==undefined && row[k]!==null) return row[k]; } return ""; }
+function isOfflineSession(val){ return String(val||'').toUpperCase().includes('OFFLINE'); }
+async function refreshCTTFromGitHub(){
+  try{
+    const res=await fetch(CTT_REPO_RAW_URL+"?nocache="+Date.now(),{cache:"no-store"});
+    if(!res.ok) throw new Error(res.status);
+    const text=await res.text();
+    const parsed=Papa.parse(text,{header:true,skipEmptyLines:true});
+    const rows=(parsed.data||[]).map(x=>{
+      const node=(pick(x,["TM Node","Node","TMNode"])||"").toString().trim().toUpperCase();
+      const session=(pick(x,["Session","SESSION"])||"").toString().trim().toUpperCase();
+      const status=(pick(x,["Status","CTT Status"])||"").toString().trim();
+      const dp=(pick(x,["DP ID","FDP ID","DP / FDP ID","DP/FDP ID","CTT ID"])||"").toString().trim().toUpperCase();
+      const nid=(pick(x,["Network ID","NID","FDP/DP Network ID"])||"").toString().trim().toUpperCase();
+      const date=(pick(x,["CTT Create Date","Create Date","Date"])||"").toString().trim();
+      const desc=(pick(x,["Description","Remarks","Symptom"])||"").toString();
+      const cttNo=(pick(x,["CTT Number","CTT No","CTT Ticket","CTT Case","Case Number","SR Number","SR No"])||"").toString().trim();
+      return { node, session, status, dp, networkId:nid, date, desc, cttNo, raw:x };
+    });
+    cttData=rows.filter(r=>allowedNodes.includes(r.node)&&isOfflineSession(r.session));
+    renderCTTSummary();
+  }catch(e){ console.warn(e); cttData=[]; renderCTTSummary(); }
+}
+
+/* ========================= NTT LOAD & LINT ========================= */
+async function refreshFromGitHub(firstLoad=false){
+  setLoading(true);
+  try{
+    const resp=await fetch(REPO_RAW_URL+"?nocache="+Date.now(),{cache:"no-store"});
+    if(!resp.ok) throw new Error("HTTP "+resp.status);
+    const csvText=await resp.text();
+    const parsed=Papa.parse(csvText,{header:true,skipEmptyLines:true});
+    const data=(parsed.data||[]).map(row=>({
+      "NTT Create Date":row["NTT Create Date"],"NTT Number":row["NTT Number"],
+      "TM Node":(row["TM Node"]||"").trim().toUpperCase(),"Symptom":row["Symptom"],
+      "Domain":(row["Domain"]||"").trim(),"Network ID":row["Network ID"],"CTTs Linked":row["CTTs Linked"],
+      "Aging Category":(row["Aging Category"]||"").trim(),"Zone":(row["Zone"]||"").trim().toUpperCase(),
+      "Description":row["Description"]
+    })).filter(r=>allowedNodes.includes(r["TM Node"]));
+    fullData=data; localStorage.setItem(LS.NTT, JSON.stringify(fullData));
+    reindex(); populateFilters(fullData); lintData(fullData); applyFilters();
+    document.getElementById('lastUpdated').textContent="Last updated: "+nowStr();
+    document.getElementById('lastUpdated').className="text-sm text-green-100";
+    if(!firstLoad) toast("Data refreshed");
+  }catch(e){
+    const cached=localStorage.getItem(LS.NTT);
+    if(cached){ fullData=JSON.parse(cached); reindex(); populateFilters(fullData); lintData(fullData); applyFilters();
+      document.getElementById('lastUpdated').textContent="Using cache: "+nowStr();
+      document.getElementById('lastUpdated').className="text-sm text-yellow-200"; toast("Using cache");
+    } else {
+      fullData=[{ "NTT Create Date":"2025-08-08 15:42:01","NTT Number":"NTT-20250808-38216","TM Node":"KGU","Symptom":"FDP Down","Domain":"PASSIVE ELEMENT NOVA","Network ID":"KGU_C018_DP0036","CTTs Linked":"","Aging Category":"12H - 24H","Zone":"PBP SELATAN","Description":"Check for optical cable cut/connection malfunction between FDC to FDP"}];
+      reindex(); populateFilters(fullData); lintData(fullData); applyFilters();
+      document.getElementById('lastUpdated').textContent="No network — showing sample data";
+      document.getElementById('lastUpdated').className="text-sm text-rose-100"; toast("Loaded sample data");
+    }
+  } finally { setLoading(false); }
+}
+function setLoading(on=true){ document.getElementById('loadingState').classList.toggle('hidden', !on); }
+function lintData(data){
+  let bad=0;
+  data.forEach(r=>{
+    if(!VALID.aging.includes(r["Aging Category"])) bad++;
+    const d = (r["Domain"]||"").toUpperCase();
+    if(d==="TRANSPORT") bad++;
+  });
+  const banner=document.getElementById('lintBanner');
+  if(bad>0){ banner.classList.remove('hidden'); banner.innerHTML=`<b>Data warning:</b> ${bad} invalid fields detected (aging/domain).`; }
+  else{ banner.classList.add('hidden'); }
+}
+
+/* ========================= INDEXES ========================= */
+function reindex(){
+  idxByNtt={}; idxByNetworkId={}; idxByNode={}; idxByDpCode={};
+  for(const r of fullData){
+    idxByNtt[r["NTT Number"]] = r;
+    const nid=(r["Network ID"]||"").toUpperCase();
+    const node=(r["TM Node"]||"").toUpperCase();
+    const dpCode=extractDpCode(nid);
+    if(nid){ (idxByNetworkId[nid] ||= []).push(r); }
+    if(node){ (idxByNode[node] ||= []).push(r); }
+    if(dpCode){ (idxByDpCode[dpCode] ||= []).push(r); }
   }
-  qs('#btnCM').addEventListener('click',()=>choose('cm'));
-  qs('#btnNFF').addEventListener('click',()=>choose('nff'));
-  qsa('[role="tab"]').forEach(b=>b.addEventListener('keydown',e=>{
-    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ e.preventDefault(); choose(selectedRole==='cm'?'nff':'cm'); }
+}
+
+/* ========================= SUMMARY/TEAM/ZONE ========================= */
+function renderCTTSummary(){
+  const wrap=document.getElementById('cttSummaryContainer');
+  if(!wrap) return;
+  const nodes=["KGU","TBN","SOO","NBN","TNM"];
+  const counts=Object.fromEntries(nodes.map(n=>[n,0]));
+  cttData.forEach(r=>{ if(counts[r.node]!==undefined) counts[r.node]++; });
+  wrap.innerHTML = nodes.map(n=>{
+    const cnt=counts[n]||0;
+    const ring = cnt>20?'ring-rose-400':cnt>10?'ring-orange-300':'ring-indigo-300';
+    return `<div class="flex flex-col items-center" data-node="${n}" role="button" tabindex="0">
+      <div class="ring-card ring-4 ${ring}">${cnt}</div>
+      <span class="text-xs mt-2 text-gray-700">${n}</span>
+    </div>`;
+  }).join('');
+  if(!wrap.dataset.bound){
+    wrap.addEventListener('click', async (e)=>{ const el=e.target.closest('[data-node]'); if(!el) return; await loadLocationIndex().catch(()=>{}); openCTTAnalysis(el.dataset.node); });
+    wrap.dataset.bound='1';
+  }
+}
+function updateNTTSummary(data){
+  const cfg=[{label:"< 8H",ring:"ring-green-400",text:"text-green-600"},{label:"8H - 12H",ring:"ring-yellow-400",text:"text-yellow-600"},
+    {label:"12H - 24H",ring:"ring-orange-400",text:"text-orange-500"},{label:"24H - 48H",ring:"ring-red-400",text:"text-red-500"},{label:"> 48H",ring:"ring-rose-400",text:"text-rose-600"}];
+  const c=document.getElementById('nttSummaryContainer');
+  c.innerHTML = cfg.map(cat=>{
+    const count=data.filter(d=>(d["Aging Category"]||"")===cat.label).length;
+    return `<div class="flex flex-col items-center" role="button" tabindex="0" data-aging="${cat.label}">
+      <div class="ring-card ring-4 ${cat.ring}">${count}</div><span class="text-xs mt-2 ${cat.text}">${cat.label}</span></div>`;
+  }).join('');
+  c.querySelectorAll('[data-aging]').forEach(el=>el.addEventListener('click',()=>{
+    document.getElementById('filterAging').value=el.dataset.aging; applyFilters();
+    document.getElementById('teamQuickPanel')?.scrollIntoView({behavior:'smooth', block:'start'});
   }));
+}
+function populateZoneDashboard(data){
+  const targetZone="PBP SELATAN", targetDomain="PASSIVE ELEMENT NOVA", nodes=["KGU","TBN","SOO","NBN","TNM"];
+  const filtered=data.filter(d=>String(d["Zone"]||"").toUpperCase()===targetZone && String(d["Domain"]||"").toUpperCase()===targetDomain && nodes.includes(String(d["TM Node"]||"").toUpperCase()));
+  const barWrap=document.getElementById("zoneDashboard"); const grand=document.getElementById("zoneGrand");
+  if(!filtered.length){ barWrap.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>'; grand.innerHTML=''; return; }
+  const counts=Object.fromEntries(nodes.map(n=>[n,0])); filtered.forEach(r=>{ const n=(r["TM Node"]||"").toUpperCase(); if(n in counts) counts[n]++; });
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]); const max=Math.max(...sorted.map(([,c])=>c),1);
+  barWrap.innerHTML=sorted.map(([n,cnt])=>`<div class="flex items-center gap-3"><div class="w-14 text-sm font-medium">${n}</div><div class="flex-1 bg-gray-200 rounded h-4 relative overflow-hidden"><div class="bg-red-500 h-4" style="width:${cnt/max*100}%"></div><span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${cnt}</span></div></div>`).join("");
+  const total=sorted.reduce((s,[,c])=>s+c,0); grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
+}
 
-  // Peek password
-  qs('#togglePeek').onclick=()=>{
-    const i=qs('#passcode'); const isPw=i.type==='password'; i.type=isPw?'text':'password';
-    qs('#togglePeek').innerHTML=`<span class="mi text-gray-700">${isPw?'visibility_off':'visibility'}</span>`; i.focus();
-  };
+/* === Integrated Team Dashboard === */
+function renderTeamQuickPanel(data){
+  const teams = { "TEAM FAISON": ["KGU","TBN"], "TEAM FAUZIE": ["KGU","TBN"], "TEAM RUDI": ["SOO","NBN"], "TEAM ROSDEE": ["TNM"] };
+  const colorByNode = { KGU:'bg-amber-400', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600', TNM:'bg-rose-500' };
+  const el=document.getElementById('teamQuickPanel'); el.innerHTML='';
+  const inbox = readTeamBox();
 
-  // Quick resume only for CM/NFF (not guest)
-  const lastAuth = localStorage.getItem('auth');
-  if(lastAuth==='cm' || lastAuth==='nff'){
-    qs('#lastRoleLabel').textContent = lastAuth==='cm' ? 'CM TEAM' : 'NFF TEAM';
-    qs('#quickLast').classList.remove('hidden');
-    qs('#resumeBtn').onclick = ()=> location.href = redirectTo;
+  Object.entries(teams).forEach(([team,nodes])=>{
+    const chips=nodes.map(n=>{
+      const cnt=data.filter(d=>d['TM Node']===n).length;
+      const col=colorByNode[n]||'bg-gray-400';
+      return `<span class="pill text-white ${col}">${n} ${cnt}</span>`;
+    }).join(' ');
+
+    const crmtCount = (inbox[team]||[]).length;
+    const crmtChip = `<span class="pill bg-sky-100 text-sky-700">CR/MT ${crmtCount}</span>`;
+
+    const card=document.createElement('div'); card.className='card-soft p-4';
+    card.innerHTML=`
+      <div class="text-base font-semibold text-gray-800 mb-3">${team}</div>
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-2">${chips} ${crmtChip}</div>
+        <div class="flex items-center gap-2">
+          <!-- CM juga boleh akses CR/MT Pool & Task Assign -->
+          <button class="open-crmt-pool bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700" data-team="${team}">
+            CR/MT Pool
+          </button>
+          <button class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" data-team="${team}">
+            Task Assign
+          </button>
+          <button class="expandBtn text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded">Expand</button>
+        </div>
+      </div>`;
+    card.querySelector('.expandBtn').addEventListener('click',()=>{ 
+      document.getElementById('summaryGrid')?.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    card.querySelector('.open-assign-modal')?.addEventListener('click',()=>openAssignModal(team));
+    card.querySelector('.open-crmt-pool')?.addEventListener('click',()=>openCrmtPool(team));
+    el.appendChild(card);
+  });
+}
+
+/* ========================= FILTERS/TABLE ========================= */
+const filterNode = document.getElementById("filterNode");
+const filterDomain = document.getElementById("filterDomain");
+const filterAging = document.getElementById("filterAging");
+const searchInput = document.getElementById("searchInput");
+const activeChips = document.getElementById('activeChips');
+const logTableBody = document.getElementById('logTableBody');
+
+function populateFilters(data){
+  const domains=[...new Set([...VALID.domains, ...data.map(d=>(d["Domain"]||"").trim())])].filter(Boolean).filter(d=>d.toUpperCase()!=="TRANSPORT").sort();
+  const agings=[...VALID.aging];
+  filterDomain.innerHTML='<option value="">Domain</option>'+domains.map(d=>`<option value="${d}">${d}</option>`).join('');
+  filterAging.innerHTML='<option value="">Aging</option>'+agings.map(a=>`<option value="${a}">${a}</option>`).join('');
+}
+function renderActiveChips(){
+  const chips=[];
+  const add=(label,value,clear)=>{ if(!value) return; chips.push(`<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 text-xs border"><span class="mi text-[16px]">label</span><b>${label}:</b> ${value}<button type="button" class="ml-1" onclick="${clear}"><span class="mi text-[16px]">close</span></button></span>`); };
+  add('Node',filterNode.value,`filterNode.value='';applyFilters();`);
+  add('Domain',filterDomain.value,`filterDomain.value='';applyFilters();`);
+  add('Aging',filterAging.value,`filterAging.value='';applyFilters();`);
+  if((searchInput.value||'').trim()){
+    chips.push(`<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs border border-indigo-200"><span class="mi text-[16px]">search</span><b>Search:</b> ${searchInput.value.trim()} <button type="button" class="ml-1" onclick="document.getElementById('searchInput').value='';applyFilters();"><span class="mi text-[16px]">close</span></button></span>`);
+  }
+  activeChips.innerHTML=chips.join('');
+}
+function applyFilters(){
+  const node=filterNode.value, domain=filterDomain.value, aging=filterAging.value, keyword=(searchInput.value||"").toLowerCase();
+  filteredData = fullData.filter(row=>{
+    const okNode=!node||(row["TM Node"]||"")===node;
+    const okDomain=!domain||(row["Domain"]||"")===domain;
+    const okAging=!aging||(row["Aging Category"]||"")===aging;
+    const okSearch=!keyword||Object.values(row).some(v=>String(v||"").toLowerCase().includes(keyword));
+    return okNode&&okDomain&&okAging&&okSearch;
+  });
+  populateTableVirtual(filteredData);
+  updateNTTSummary(filteredData);
+  populateZoneDashboard(filteredData);
+  renderTeamQuickPanel(filteredData);
+  renderActiveChips();
+}
+function slaBadge(ageCat, created){
+  const base = { "< 8H":8, "8H - 12H":12, "12H - 24H":24, "24H - 48H":48, "> 48H":72 };
+  const h = base[ageCat] || 24;
+  const hours = Math.max(0, h - Math.floor((Date.now() - new Date(created).getTime()) / 3600000));
+  if(hours<=0) return `<span class="px-2 py-0.5 rounded bg-red-600 text-white text-xs">SLA breached</span>`;
+  if(hours<=6) return `<span class="px-2 py-0.5 rounded bg-amber-500 text-white text-xs">At risk in ${hours}h</span>`;
+  return `<span class="px-2 py-0.5 rounded bg-gray-100 text-gray-700 text-xs">ETA ${hours}h</span>`;
+}
+function populateTableVirtual(data){
+  const ROW_H=44; const VIEW_N=80;
+  const container=document.querySelector('#logTable').parentElement;
+  const tbody=logTableBody;
+  let start=0;
+
+  function renderWindow(){
+    const end=Math.min(start+VIEW_N, data.length);
+    const windowRows=data.slice(start,end);
+    const out=[];
+    windowRows.forEach(row=>{
+      const ageCat=row["Aging Category"]||""; const days=daysDiff(row["NTT Create Date"]);
+      const asg=getAssignment(row["NTT Number"]); const stat=asg && asg.status ? asg.status : "assigned";
+      const statusLabel=(stat==="done")?"RESOLVED":(stat==="in progress"?"IN PROGRESS":(stat==="unassigned"?"UNASSIGNED":"ASSIGNED"));
+      const badgeClass=(stat==="done")?"bg-emerald-100 text-emerald-700":(stat==="in progress")?"bg-amber-100 text-amber-700":(stat==="unassigned")?"bg-gray-100 text-gray-600":"bg-indigo-100 text-indigo-700";
+      const assigneeBadge=`<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${asg&&asg.team?'bg-purple-100 text-purple-700':'bg-gray-100 text-gray-600'}">${asg&&asg.team?asg.team:'UNASSIGNED'}</span>`;
+      const agingClass=ageCat.includes("48H")?"bg-red-500":(ageCat.includes("24H")?"bg-orange-400":"bg-green-500");
+      const sla = slaBadge(ageCat, row["NTT Create Date"]);
+      const disabledAssign = role==='cm' ? 'disabled' : '';
+
+      out.push(`<tr class="border-b hover:bg-gray-50">
+        <td class="px-2 py-2 sel-col"><input type="checkbox" class="selRow" data-ntt="${row["NTT Number"]}"></td>
+        <td class="px-2 py-2">${row["NTT Create Date"]||""}</td>
+        <td class="px-2 py-2">
+          <button class="text-indigo-600 underline open-detail" data-ntt="${row["NTT Number"]||""}">${row["NTT Number"]||""}</button>
+          <div class="text-[10px] mt-0.5">${sla}</div>
+        </td>
+        <td class="px-2 py-2">${row["TM Node"]||""}</td>
+        <td class="px-2 py-2">${row["Symptom"]||""}</td>
+        <td class="px-2 py-2">${row["Domain"]||""}</td>
+        <td class="px-2 py-2">${row["Network ID"]||""}</td>
+        <td class="px-2 py-2">${row["CTTs Linked"]||""}</td>
+        <td class="px-2 py-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat||'-'}</span></td>
+        <td class="px-2 py-2">${isFinite(days)?days:"-"}</td>
+        <td class="px-2 py-2 hide-sm">${assigneeBadge}</td>
+        <td class="px-2 py-2 hide-sm"><span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${badgeClass}">${statusLabel}</span></td>
+        <td class="px-2 py-2 hide-sm action-col">
+          ${role!=='cm'?`<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="${row["NTT Number"]||''}" ${disabledAssign}>
+            <option>TEAM FAISON</option><option>TEAM FAUZIE</option><option>TEAM RUDI</option><option>TEAM ROSDEE</option>
+          </select>`:''}
+          ${role!=='cm'?`<select class="statusSelect border rounded px-2 py-1 text-sm ml-2" data-ntt="${row["NTT Number"]||''}">
+            <option ${stat==='unassigned'?'selected':''}>UNASSIGNED</option>
+            <option ${stat==='assigned' || !asg?'selected':''}>ASSIGNED</option>
+            <option ${stat==='in progress'?'selected':''}>IN PROGRESS</option>
+            <option ${stat==='done'?'selected':''}>RESOLVED</option>
+          </select>`:''}
+        </td>
+      </tr>`);
+    });
+    tbody.innerHTML=out.join('');
+    bindRowEvents();
+    updateBulkUI();
   }
 
-  // Guest view-only
-  qs('#guestBtn').onclick=()=>{
-    localStorage.setItem('role','tech');
-    localStorage.setItem('auth','guest');
-    localStorage.setItem('guest','1');
-    location.href = redirectTo;
-  };
-
-  // Submit via Enter (no button)
-  qs('#loginForm').addEventListener('submit', e=>{ e.preventDefault(); doLogin(); });
-  qs('#passcode').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); doLogin(); }});
-
-  function doLogin(){
-    const pass = qs('#passcode').value.trim();
-    const remember = qs('#remember').checked;
-    const err = qs('#err');
-
-    if(!pass) return invalid();
-    if(selectedRole==='cm'  && pass!==CM_PASSWORD) return invalid();
-    if(selectedRole==='nff' && pass!==NFF_PASSWORD) return invalid();
-
-    if(selectedRole==='cm'){
-      localStorage.setItem('role','tech');
-      localStorage.setItem('auth','cm');
-      localStorage.setItem('cm_perms','assignment_only');
-      localStorage.removeItem('guest');
-    }else{
-      localStorage.setItem('role','admin');
-      localStorage.setItem('auth','nff');
-      localStorage.removeItem('guest');
-      localStorage.removeItem('cm_perms');
-    }
-
-    if(remember){ localStorage.setItem('remember_device','1'); } else { localStorage.removeItem('remember_device'); }
-    location.href = redirectTo;
-
-    function invalid(){
-      err.classList.remove('hidden');
-      const field = qs('#passcode'); field.style.borderColor='#fca5a5'; field.focus(); shake();
-    }
+  function onScroll(){
+    const y=container.scrollTop;
+    start = Math.max(0, Math.min(data.length-1, Math.floor(y / ROW_H)));
+    renderWindow();
   }
 
-  // ===== Keyboard-safe logic (iOS/Android) =====
-  (function keyboardSafe(){
-    const card = document.querySelector('.glass');
-    const main = document.querySelector('main');
-    const vv = window.visualViewport;
+  renderWindow();
+  container.onscroll=debounce(onScroll, 50);
+  document.getElementById('virtInfo').textContent=`Rendering ${Math.min(VIEW_N,data.length)} of ${data.length} rows (auto adjusts while scrolling).`;
+}
+function bindRowEvents(){
+  logTableBody.querySelectorAll('.open-detail').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ const ntt=btn.getAttribute('data-ntt'); const rec=idxByNtt[ntt]; if(rec) openDetail(rec); });
+  });
+  logTableBody.querySelectorAll('.assigneeSelect').forEach(sel=>{
+    sel.value = (getAssignment(sel.dataset.ntt)?.team)||"TEAM FAISON";
+    sel.addEventListener('change', async ()=>{
+      const ntt=sel.dataset.ntt; const team=sel.value; const current=getAssignment(ntt);
+      const nextStatus=(!current || current.status==='unassigned') ? 'assigned' : (current.status||'assigned');
+      await upsertAssignmentRemote({ nttNumber:ntt, team, status:nextStatus, note:(current&&current.note)||"" }); applyFilters(); toast('Assignee updated');
+    });
+  });
+  logTableBody.querySelectorAll('.statusSelect').forEach(sel=>{
+    sel.addEventListener('change', async ()=>{
+      const ntt=sel.dataset.ntt; const desired=sel.value; let a=getAssignment(ntt);
+      if(!a && desired!=='UNASSIGNED'){ await upsertAssignmentRemote({ nttNumber:ntt, team:"TEAM FAISON", status:"assigned" }); a=getAssignment(ntt); }
+      if(desired==='RESOLVED'){ await setDoneRemote(ntt,true); if(a&&a.team) incProductivity(a.team, ntt); const rec=idxByNtt[ntt]; if(rec) await sendTelegramResolved(rec); }
+      else if(desired==='UNASSIGNED'){ await upsertAssignmentRemote({ nttNumber:ntt, team:"", status:"unassigned" }); }
+      else { const teamVal=(a&&a.team)?a.team:"TEAM FAISON"; const statusVal=(desired==='IN PROGRESS')?'in progress':'assigned'; await upsertAssignmentRemote({ nttNumber:ntt, team:teamVal, status:statusVal }); }
+      applyFilters(); toast('Status updated');
+    });
+  });
+  logTableBody.querySelectorAll('.selRow').forEach(cb=>cb.addEventListener('change', updateBulkUI));
+}
+function updateBulkUI(){
+  const sel = [...document.querySelectorAll('.selRow:checked')].map(el=>el.dataset.ntt);
+  const bar = document.getElementById('bulkBar');
+  document.getElementById('bulkCount').textContent = `${sel.length} selected`;
+  bar.classList.toggle('hidden', sel.length===0);
+}
+document.getElementById('selAll').addEventListener('change', ()=>{
+  const on = document.getElementById('selAll').checked;
+  document.querySelectorAll('.selRow').forEach(cb=>{ cb.checked=on; });
+  updateBulkUI();
+});
+document.getElementById('clearSelection').addEventListener('click', ()=>{
+  document.getElementById('selAll').checked=false;
+  document.querySelectorAll('.selRow').forEach(cb=>cb.checked=false);
+  updateBulkUI();
+});
 
-    function apply(kb){
-      // simpan nilai untuk CSS (kalau perlu)
-      document.documentElement.style.setProperty('--kb', kb + 'px');
+/* ===== Bulk actions ===== */
+document.getElementById('bulkAssign').addEventListener('click', async ()=>{
+  const team=document.getElementById('bulkTeam').value;
+  const sel=[...document.querySelectorAll('.selRow:checked')].map(el=>el.dataset.ntt);
+  if(!sel.length) return toast('No selection');
+  for(const n of sel){ await upsertAssignmentRemote({ nttNumber:n, team, status:'assigned' }); }
+  toast(`Assigned ${sel.length} → ${team}`);
+  applyFilters();
+});
+document.getElementById('bulkDone').addEventListener('click', async ()=>{
+  const sel=[...document.querySelectorAll('.selRow:checked')].map(el=>el.dataset.ntt);
+  if(!sel.length) return toast('No selection');
+  for(const n of sel){ await setDoneRemote(n,true); const a=getAssignment(n); if(a && a.team) incProductivity(a.team,n); const rec=idxByNtt[n]; if(rec) await sendTelegramResolved(rec); }
+  toast(`Marked done: ${sel.length}`);
+  applyFilters();
+});
+document.getElementById('bulkPing').addEventListener('click', ()=>{
+  const sel=[...document.querySelectorAll('.selRow:checked')].map(el=>el.dataset.ntt);
+  if(!sel.length) return toast('No selection');
+  const lines=sel.map(n=>{ const r=idxByNtt[n]; return `${n} • ${r["TM Node"]} • ${r["Network ID"]} • ${r["Aging Category"]}`; });
+  copy(`Reminder:\n${lines.join('\n')}`);
+  toast('Reminder copied');
+});
 
-      if(kb > 80){            // heuristik: keyboard terbuka
-        document.body.classList.add('kb-open');
-        // beri ruang pada bawah ikut tinggi keyboard + safe area
-        main.style.paddingBottom = (kb + 24) + 'px';
-        // pastikan kad nampak jelas
-        setTimeout(()=>{ card.scrollIntoView({block:'center', behavior:'smooth'}); }, 50);
-      }else{
-        document.body.classList.remove('kb-open');
-        main.style.paddingBottom = '';
+/* ========================= DETAIL MODAL (NTT) ========================= */
+async function openDetail(record){
+  currentDetailRecord=record; await loadLocationIndex();
+  const loc=findLocByNetworkId(record["Network ID"]);
+  document.getElementById("detailLocationFor").textContent = record["Network ID"]||"-";
+  document.getElementById("detailStreet").textContent = (loc&&loc.street)||"-";
+  document.getElementById("detailSection").textContent = (loc&&loc.section)||"-";
+  const link=document.getElementById("detailCoordsLink"), mapWrap=document.getElementById("mapPreviewWrap"), mapFrame=document.getElementById("detailMap");
+  if(loc && loc.lat && loc.lng){
+    link.textContent = `${loc.lat}, ${loc.lng}`; link.href=`https://maps.google.com/?q=${loc.lat},${loc.lng}`;
+    const lat=parseFloat(loc.lat), lng=parseFloat(loc.lng); const d=0.005; const bbox=`${lng-d}%2C${lat-d}%2C${lng+d}%2C${lat+d}`;
+    mapFrame.src=`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`; mapWrap.classList.remove('hidden');
+  } else { link.textContent="-"; link.href="#"; mapFrame.src=""; mapWrap.classList.add('hidden'); }
+  document.getElementById("detailDescription").textContent = record["Description"]||"-";
+  document.getElementById("detailNttNo").textContent = record["NTT Number"]||"-";
+  const a=getAssignment(record["NTT Number"]); document.getElementById("detailAssignedTo").textContent=(a&&a.team)?a.team:"Unassigned";
+  renderEvidenceGrid(record["NTT Number"]);
+  renderRelatedHistory(record);
+  const m=document.getElementById('nttDetailModal'); m.classList.remove('hidden'); m.classList.add('flex');
+}
+document.getElementById('nttDetailClose').onclick=()=>document.getElementById('nttDetailModal').classList.add('hidden');
+document.getElementById('copyNttBtn').onclick=()=>{ if(currentDetailRecord) copy(currentDetailRecord["NTT Number"]); };
+document.getElementById('shareNttBtn').onclick=()=>{
+  if(!currentDetailRecord) return;
+  const url = `${location.origin}${location.pathname}?ntt=${encodeURIComponent(currentDetailRecord["NTT Number"])}`;
+  const text = `NTT ${currentDetailRecord["NTT Number"]} • ${currentDetailRecord["Network ID"]} (${currentDetailRecord["TM Node"]})
+${url}`;
+  if(navigator.share){ navigator.share({ title:'NTT Detail', text, url }).catch(()=>{}); }
+  else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');
+};
+document.getElementById('copyCoordBtn').onclick=()=>{
+  const a=document.getElementById('detailCoordsLink'); if(a && a.textContent && a.textContent!=='-') copy(a.textContent);
+};
+document.getElementById('resolveBtn').addEventListener('click', async ()=>{
+  if(!currentDetailRecord) return;
+  const ntt=currentDetailRecord["NTT Number"]; const a=getAssignment(ntt);
+  await setDoneRemote(ntt,true); if(a&&a.team) incProductivity(a.team, ntt); await sendTelegramResolved(currentDetailRecord);
+  document.getElementById('nttDetailModal').classList.add('hidden'); applyFilters();
+});
+function renderRelatedHistory(rec){
+  const nid=(rec["Network ID"]||"").toUpperCase(); const dpCode=extractDpCode(nid);
+  const cutoff=Date.now() - 90*24*3600000;
+  const list=[...(idxByNetworkId[nid]||[]),...((idxByDpCode[dpCode]||[]))].filter(r=>r!==rec && new Date(r["NTT Create Date"]).getTime()>=cutoff);
+  list.sort((a,b)=>new Date(b["NTT Create Date"])-new Date(a["NTT Create Date"]));
+  const html=list.slice(0,6).map(r=>`<div class="flex items-center justify-between gap-2">
+    <div class="truncate"><span class="font-semibold text-indigo-700 cursor-pointer underline" data-open="${r["NTT Number"]}">${r["NTT Number"]}</span> • ${r["Symptom"]||'-'}</div>
+    <div class="text-[11px] text-gray-500">${r["NTT Create Date"]}</div>
+  </div>`).join('') || '<div class="text-xs text-gray-500">No recent history.</div>';
+  const box=document.getElementById('historyList'); box.innerHTML=html;
+  box.querySelectorAll('[data-open]').forEach(a=>a.addEventListener('click',()=>{ const rec=idxByNtt[a.getAttribute('data-open')]; if(rec) openDetail(rec); }));
+}
+function renderEvidenceGrid(ntt){
+  const grid=document.getElementById('evidenceGrid'); const ev=readEvidence(ntt).items||[];
+  grid.innerHTML = ev.map((x,i)=>`<div class="border rounded p-1">
+    ${x.type?.startsWith('image/')?`<img src="${x.data}" class="w-full h-28 object-cover rounded">`:`<div class="h-28 flex items-center justify-center bg-gray-100 rounded">${x.name}</div>`}
+    <div class="mt-1 text-[11px] truncate">${x.name}</div>
+    <div class="flex items-center gap-1 mt-1">
+      <a href="${x.data}" target="_blank" class="text-xs px-2 py-0.5 bg-blue-600 text-white rounded">View</a>
+      <a href="${x.data}" download="${x.name}" class="text-xs px-2 py-0.5 bg-indigo-600 text-white rounded">Download</a>
+      <button data-del="${i}" class="text-xs px-2 py-0.5 bg-gray-200 rounded">Remove</button>
+    </div>
+  </div>`).join('') || '<div class="text-xs text-gray-500">No evidence yet.</div>';
+  grid.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.onclick=()=>{ const ev=readEvidence(ntt); ev.items.splice(parseInt(btn.dataset.del),1); localStorage.setItem(evKey(ntt), JSON.stringify(ev)); renderEvidenceGrid(ntt); };
+  });
+}
+function filesToBase64List(fileList){
+  const jobs=[...fileList].map(file=>new Promise((resolve)=>{
+    const fr=new FileReader(); fr.onload=()=>resolve({ name:file.name, type:file.type, data:fr.result }); fr.readAsDataURL(file);
+  }));
+  return Promise.all(jobs);
+}
+document.getElementById('uploadEvidenceBtn').addEventListener('click', async ()=>{
+  if(!currentDetailRecord) return;
+  const inp=document.getElementById('evidenceInput'); if(!(inp.files&&inp.files.length)) return;
+  const arr=await filesToBase64List(inp.files); saveEvidence(currentDetailRecord["NTT Number"], arr);
+  document.getElementById('evidenceStatus').textContent='Evidence saved locally.'; renderEvidenceGrid(currentDetailRecord["NTT Number"]);
+});
+document.getElementById('clearEvidenceBtn').onclick=()=>{ if(!currentDetailRecord) return; clearEvidence(currentDetailRecord["NTT Number"]); renderEvidenceGrid(currentDetailRecord["NTT Number"]); };
+document.getElementById('dropZone').addEventListener('dragover',e=>{e.preventDefault();});
+document.getElementById('dropZone').addEventListener('drop',async e=>{
+  e.preventDefault(); if(!currentDetailRecord) return;
+  const files=e.dataTransfer.files; const arr=await filesToBase64List(files); saveEvidence(currentDetailRecord["NTT Number"], arr); renderEvidenceGrid(currentDetailRecord["NTT Number"]);
+});
+
+/* ========================= CTT ANALYSIS ========================= */
+function fuzzyMatchScore(ctt, ntt){
+  const nidU=(ntt["Network ID"]||"").toUpperCase();
+  const dpStr=(ctt.dp||"").toUpperCase();
+  const nidCTT=(ctt.networkId||"").toUpperCase();
+  const dpCode=extractDpCode(dpStr)||extractDpCode(nidCTT);
+  let score=0;
+  if(nidCTT && nidU===nidCTT) score+=60;
+  if(dpStr && nidU.includes(dpStr)) score+=30;
+  if(dpCode && nidU.includes(dpCode)) score+=20;
+  if((ntt["TM Node"]||"").toUpperCase()===ctt.node) score+=10;
+  return { score };
+}
+function openCTTAnalysis(node){
+  const modal=document.getElementById('cttModal');
+  document.getElementById('cttModalNode').textContent=node;
+  const listEl=document.getElementById('cttList');
+  const sumEl=document.getElementById('cttSummaryLine');
+  const filtEl=document.getElementById('cttFilterInput');
+  const exactEl=document.getElementById('exactMatch');
+
+  const rows=cttData.filter(r=>r.node===node);
+
+  const matches = rows.map(r=>{
+    const candidates = (idxByNode[node]||[]);
+    const scored = candidates.map(ntt=>({ ntt, ...fuzzyMatchScore(r, ntt) }))
+                             .filter(x=>x.score>0)
+                             .sort((a,b)=>b.score-a.score)
+                             .slice(0,5);
+    return { ...r, matches: scored };
+  });
+
+  function updateSummary(list, isExact){
+    const matched = list.reduce((acc,m)=>{
+      const ok = isExact ? m.matches.some(x=>x.score>=60) : (m.matches && m.matches.length>0);
+      return acc + (ok?1:0);
+    },0);
+    const risk = Math.max(list.length - matched, 0);
+    sumEl.innerHTML = `
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-gray-100 text-gray-700">Total Offline CTT: <b>${rows.length}</b></span>
+        <span class="px-2 py-0.5 rounded bg-green-100 text-green-800">With match: <b>${matched}</b></span>
+        <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">Potential NTT risk: <b>${risk}</b></span>
+      </div>`;
+  }
+
+  function renderList(term=''){
+    const t=term.trim().toUpperCase();
+    const exact=!!exactEl?.checked;
+    const data = matches.filter(m=>{
+      const blob=`${m.dp} ${m.cttNo||''} ${m.networkId} ${m.session} ${m.status} ${m.desc}`.toUpperCase();
+      return !t || blob.includes(t);
+    });
+
+    updateSummary(data, exact);
+
+    listEl.innerHTML = data.map(m=>{
+      const statusHtml = `
+        <span class="inline-flex items-center px-2 py-0.5 rounded ${m.session==='OFFLINE'?'bg-rose-100 text-rose-700':'bg-gray-100 text-gray-700'}">${m.session||'-'}</span>
+        ${m.status?`<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-gray-100 text-gray-700">${m.status}</span>`:''}
+      `;
+      const best = (m.matches||[]).filter(x=>!exact || x.score>=60);
+      const chips = best.length
+        ? best.map(s=>{
+            const id=s.ntt["NTT Number"];
+            return `<button class="inline-flex px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold mr-1 hover:bg-emerald-200" data-open-ntt="${id}">
+              ${id}<span class="ml-1 text-[10px] text-emerald-800">(${s.score})</span>
+            </button>`;
+          }).join('')
+        : `<span class="inline-flex px-2 py-0.5 rounded bg-amber-100 text-amber-800">Potential NTT risk</span>`;
+
+      return `<div class="px-3 py-2 hover:bg-gray-50">
+        <div class="sm:grid sm:grid-cols-12 sm:items-start sm:gap-3">
+          <div class="sm:col-span-4">
+            <div class="font-semibold text-gray-800">${m.dp || m.networkId || '-'}</div>
+            ${m.cttNo?`<div class="text-[12px] text-gray-600">CTT : ${m.cttNo}</div>`:''}
+            <div class="text-[12px] text-gray-500 mt-0.5">${m.date||''}</div>
+          </div>
+          <div class="sm:col-span-5 mt-2 sm:mt-0">
+            ${statusHtml}
+            ${m.desc?`<div class="text-[12px] text-gray-600 mt-1 line-clamp-3">${m.desc}</div>`:''}
+          </div>
+          <div class="sm:col-span-3 mt-2 sm:mt-0">${chips}</div>
+        </div>
+      </div>`;
+    }).join('') || '<div class="px-3 py-3 text-sm text-gray-500">No items.</div>';
+  }
+
+  renderList();
+  if(filtEl) filtEl.value='';
+  if(exactEl) exactEl.checked=exactEl.checked||false;
+  if(filtEl) filtEl.oninput=(e)=>renderList(e.target.value);
+  if(exactEl) exactEl.onchange=()=>renderList(filtEl.value);
+
+  if(!listEl.dataset.boundOpen){
+    listEl.addEventListener('click',(e)=>{
+      const btn=e.target.closest('[data-open-ntt]'); if(!btn) return;
+      const rec=idxByNtt[btn.getAttribute('data-open-ntt')]; if(rec) openDetail(rec); else toast('NTT not found');
+    });
+    listEl.dataset.boundOpen='1';
+  }
+
+  modal.classList.remove('hidden'); modal.classList.add('flex');
+}
+document.getElementById('cttModalClose').onclick=()=>document.getElementById('cttModal').classList.add('hidden');
+
+/* ========================= TELEGRAM ========================= */
+async function sendTelegramResolved(record){
+  const payload={ nttNumber:record["NTT Number"], node:record["TM Node"], networkId:record["Network ID"], aging:record["Aging Category"]||"-" };
+  fetch(TELEGRAM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});
+}
+
+/* ========================= ASSIGN MODAL ========================= */
+let currentAssignTeam=null;
+function closeAssignModal(){ const m=document.getElementById('assignModal'); m.classList.add('hidden'); m.classList.remove('flex'); currentAssignTeam=null; }
+function openAssignModal(teamName){
+  currentAssignTeam=teamName;
+  const modal=document.getElementById('assignModal'); modal.classList.remove('hidden'); modal.classList.add('flex');
+  document.getElementById('assignTeamTitle').textContent=teamName;
+  document.getElementById('assignSearch').value=''; document.getElementById('showPool').checked=false; document.getElementById('showDone').checked=false;
+
+  const rerender=()=>{
+    const q=document.getElementById('assignSearch').value.trim().toLowerCase();
+    const showPool=document.getElementById('showPool').checked;
+    const showDone=document.getElementById('showDone').checked;
+    const TEAM_NODES={ 'TEAM FAISON':['KGU','TBN'], 'TEAM FAUZIE':['KGU','TBN'], 'TEAM RUDI':['SOO','NBN'], 'TEAM ROSDEE':['TNM'] };
+    const teamNodes=TEAM_NODES[teamName]||[];
+    const listEl=document.getElementById('assignList'); const asn=readAssignmentsCache(); const rows=[];
+
+    for(const r of fullData){
+      if(q){ const blob=`${r['NTT Number']} ${r['Network ID']} ${r['Symptom']} ${r['TM Node']}`.toLowerCase(); if(!blob.includes(q)) continue; }
+      const a=asn[r['NTT Number']]; const inTeam=a && a.team===teamName; const unassigned=!a || a.status==='unassigned' || !a.team;
+      if(inTeam){ if(!showDone && a.status==='done') continue; }
+      else if(showPool){ if(!(unassigned && teamNodes.includes(r['TM Node']))) continue; }
+      else { continue; }
+
+      const isDone=a && a.status==='done'; const ageCat=r['Aging Category'] || '';
+      const agingClass=ageCat.includes('48H')?'bg-red-500':(ageCat.includes('24H')?'bg-orange-400':'bg-green-500');
+      rows.push(`
+        <div class="grid grid-cols-12 px-3 py-2 hover:bg-gray-50">
+          <div class="col-span-6">
+            <div class="font-semibold text-gray-800">${r['NTT Number']}</div>
+            <div class="text-[12px] text-gray-600">${r['TM Node']} • ${r['Symptom']||'-'}</div>
+            <div class="mt-1 flex gap-2">
+              <button class="px-2 py-0.5 text-xs rounded bg-indigo-600 text-white" data-assign="${r['NTT Number']}">${inTeam ? 'Unassign' : 'Assign'}</button>
+              <button class="px-2 py-0.5 text-xs rounded ${isDone?'bg-emerald-600 text-white':'bg-gray-200 text-gray-700'}" data-done="${r['NTT Number']}">${isDone?'Done':'Mark done'}</button>
+            </div>
+          </div>
+          <div class="col-span-4">${r['Network ID']||'-'}</div>
+          <div class="col-span-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat}</span></div>
+        </div>`);
+    }
+
+    listEl.innerHTML=rows.join('') || '<div class="px-3 py-4 text-sm text-gray-500">No items.</div>';
+    document.getElementById('assignCount').textContent=rows.length;
+
+    listEl.querySelectorAll('[data-assign]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const ntt=btn.getAttribute('data-assign');
+        const a=getAssignment(ntt);
+        if(a && a.team===teamName && a.status!=='unassigned'){ await upsertAssignmentRemote({ nttNumber:ntt, team:'', status:'unassigned' }); }
+        else { await upsertAssignmentRemote({ nttNumber:ntt, team:teamName, status:'assigned' }); }
+        applyFilters(); rerender(); toast('Updated');
+      });
+    });
+    listEl.querySelectorAll('[data-done]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const ntt=btn.getAttribute('data-done');
+        const a=getAssignment(ntt);
+        const rec=idxByNtt[ntt];
+        const willBeDone=!(a && a.status==='done');
+        await setDoneRemote(ntt, willBeDone);
+        if(willBeDone && a && a.team) incProductivity(a.team, ntt);
+        if(willBeDone && rec) await sendTelegramResolved(rec);
+        applyFilters(); rerender();
+      });
+    });
+  };
+
+  const run=debounce(rerender,150);
+  document.getElementById('assignSearch').oninput=run;
+  document.getElementById('showPool').onchange=rerender;
+  document.getElementById('showDone').onchange=rerender;
+  rerender();
+}
+document.getElementById('assignModalClose').addEventListener('click', closeAssignModal);
+document.getElementById('assignModal').addEventListener('click', (e)=>{ if(e.target.id==='assignModal') closeAssignModal(); });
+
+/* ========================= CR/MT POOL (Team View) ========================= */
+function openCrmtPool(teamName){
+  const modal=document.getElementById('crmtPoolModal');
+  const title=document.getElementById('crmtPoolTitle');
+  const search=document.getElementById('crmtSearch');
+  const list=document.getElementById('crmtList');
+  const count=document.getElementById('crmtCount');
+
+  title.textContent = teamName;
+
+  function inferType(id){
+    const u=(id||'').toUpperCase();
+    if(u.includes('CR')) return 'CR';
+    if(u.includes('MT')) return 'MT';
+    return '';
+  }
+
+  function fileCount(it){
+    const arr = it?.files || it?.attachments || it?.docs || [];
+    return Array.isArray(arr) ? arr.length : 0;
+  }
+
+  function render(){
+    const q=(search.value||'').trim().toLowerCase();
+    const box=readTeamBox();
+    const items=(box[teamName]||[]);
+    const filtered = q ? items.filter(x=>{
+      const blob=`${x.title||''} ${x.aa||''} ${x.id||''} ${x.node||''} ${x.section||''} ${x.street||''}`.toLowerCase();
+      return blob.includes(q);
+    }) : items;
+
+    count.textContent = filtered.length;
+    list.innerHTML = filtered.map((t,i)=>{
+      const id = t.id || t.aa || t.AA || t.case || '';
+      const type = t.type || inferType(id);
+      const node = t.node || t.tmnode || '';
+      const where = (t.section || t.street || '') || '-';
+      const idChip = id ? `<button class="px-2 py-0.5 text-[11px] rounded bg-indigo-100 text-indigo-800 font-semibold" data-view="${i}">${id}</button>` : '';
+      const typeChip = type ? `<span class="ml-1 px-1.5 py-0.5 text-[11px] rounded bg-gray-100 text-gray-700">${type}</span>` : '';
+      const fCount = fileCount(t);
+      const filesChip = fCount ? `<span class="ml-2 px-2 py-0.5 text-[11px] rounded-full bg-gray-100 text-gray-700">Files (${fCount})</span>` : '';
+
+      return `
+      <div class="px-3 py-2 hover:bg-gray-50 flex items-center justify-between">
+        <div class="min-w-0">
+          <div class="font-semibold text-gray-800 truncate">${t.title || '(no title)'}</div>
+          <div class="text-[12px] text-gray-600 flex items-center gap-1">
+            ${idChip}${typeChip}${node?`<span class="ml-2">${node}</span>`:''}${where?`<span class="ml-2">• ${where}</span>`:''}${filesChip}
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-2 py-0.5 text-xs rounded bg-emerald-600 text-white" data-view="${i}">View</button>
+          ${t.link?`<a href="${t.link}" target="_blank" class="px-2 py-0.5 text-xs rounded bg-indigo-600 text-white">Open</a>`:''}
+          <button class="px-2 py-0.5 text-xs rounded bg-gray-200" data-remove="${i}">Remove</button>
+        </div>
+      </div>`;
+    }).join('') || '<div class="px-3 py-4 text-sm text-gray-500">No items in pool.</div>';
+
+    list.querySelectorAll('[data-remove]').forEach(btn=>{
+      btn.onclick=()=>{
+        const idx=parseInt(btn.dataset.remove,10);
+        const box=readTeamBox();
+        (box[teamName]||[]).splice(idx,1);
+        writeTeamBox(box);
+        render();
+        renderTeamQuickPanel(filteredData);
+      };
+    });
+
+    list.querySelectorAll('[data-view]').forEach(btn=>{
+      btn.onclick=()=>{
+        const idx=parseInt(btn.dataset.view,10);
+        const box=readTeamBox();
+        const item=(box[teamName]||[])[idx];
+        openCrmtDetail(item);
+      };
+    });
+  }
+
+  search.value='';
+  search.oninput=debounce(render,150);
+  document.getElementById('crmtPoolClose').onclick=()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); };
+  modal.addEventListener('click',(e)=>{ if(e.target.id==='crmtPoolModal') { modal.classList.add('hidden'); modal.classList.remove('flex'); } });
+
+  render();
+  modal.classList.remove('hidden'); modal.classList.add('flex');
+}
+
+/* ===== CR/MT Detail modal helpers ===== */
+function arrayifyJobs(jobs){
+  if(!jobs) return [];
+  if(Array.isArray(jobs)) return jobs.filter(Boolean).map(String);
+  const s=String(jobs||'').trim();
+  if(!s) return [];
+  // split by newline or semicolon or bullet
+  return s.split(/\r?\n|;|•/).map(x=>x.trim()).filter(Boolean);
+}
+function renderCrmtAttachments(files){
+  const grid = document.getElementById('crmtFiles');
+  const empty = document.getElementById('crmtFilesEmpty');
+
+  const arr = Array.isArray(files) ? files : [];
+  if (!arr.length){
+    empty.classList.remove('hidden');
+    grid.innerHTML = '';
+    return;
+  }
+  empty.classList.add('hidden');
+
+  function iconFor(type){
+    if(!type) return 'insert_drive_file';
+    const t = type.toLowerCase();
+    if(t.includes('pdf')) return 'picture_as_pdf';
+    if(t.includes('word')||t.includes('doc')) return 'description';
+    if(t.includes('excel')||t.includes('sheet')||t.includes('csv')||t.includes('spreadsheet')) return 'table_chart';
+    if(t.startsWith('image/')) return 'image';
+    if(t.includes('zip')||t.includes('rar')) return 'folder_zip';
+    return 'insert_drive_file';
+  }
+
+  grid.innerHTML = arr.map((f,i)=>{
+    const name = f?.name || `file-${i+1}`;
+    const type = f?.type || '';
+    const data = typeof f === 'string' ? f : (f?.data || '');
+    const isImg = (type && type.startsWith('image/')) || (typeof data === 'string' && data.startsWith('data:image/'));
+
+    const thumb = isImg
+      ? `<img class="file-thumb" src="${data}" alt="${name}">`
+      : `<div class="file-icon"><span class="mi">${iconFor(type)}</span></div>`;
+
+    return `<div class="file-card">
+      ${thumb}
+      <div class="file-meta truncate">${name}</div>
+      <div class="p-2 flex items-center gap-2">
+        <a class="text-xs px-2 py-0.5 rounded bg-blue-600 text-white" href="${data}" target="_blank">View</a>
+        <a class="text-xs px-2 py-0.5 rounded bg-indigo-600 text-white" href="${data}" download="${name}">Download</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+function openCrmtDetail(item){
+  const modal=document.getElementById('crmtDetailModal');
+  const id = item?.id || item?.aa || item?.AA || item?.case || '-';
+  const type = item?.type || ((id && id.toUpperCase().includes('CR'))?'CR':(id && id.toUpperCase().includes('MT')?'MT':'-'));
+  const node = item?.node || item?.tmnode || '-';
+  const loc  = (item?.section || item?.street || '-') || '-';
+  const link = item?.link || '#';
+  document.getElementById('crmtDetailId').textContent = id || '-';
+  document.getElementById('crmtDetailType').textContent = type || '-';
+  document.getElementById('crmtDetailNode').textContent = node || '-';
+  const a=document.getElementById('crmtDetailLink'); a.textContent=link && link!=='#' ? 'Open source' : '-'; a.href=link || '#';
+  document.getElementById('crmtDetailLoc').textContent = loc;
+
+  document.getElementById('crmtDetailTitle').textContent = item?.title || '(no title)';
+  document.getElementById('crmtDetailDesc').textContent  = item?.desc || item?.description || '';
+
+  const ul=document.getElementById('crmtDetailJobs');
+  const jobs=arrayifyJobs(item?.jobs || item?.work || item?.steps);
+  ul.innerHTML = jobs.length ? jobs.map(x=>`<li>${x}</li>`).join('') : '<li class="list-none text-gray-500">No work items provided.</li>';
+
+  // Attachments from CR/MT Console (support several field names)
+  const files = item?.files || item?.attachments || item?.docs || [];
+  renderCrmtAttachments(files);
+
+  modal.classList.remove('hidden'); modal.classList.add('flex');
+}
+document.getElementById('crmtDetailClose').onclick=()=>{ document.getElementById('crmtDetailModal').classList.add('hidden'); document.getElementById('crmtDetailModal').classList.remove('flex'); };
+
+/* ========================= INIT ========================= */
+function updateRoleUI(){
+  document.body.dataset.role = role;
+  // Log CR/MT hanya NFF
+  const crmtBtn = document.getElementById('openCrmt');
+  if (crmtBtn) crmtBtn.classList.toggle('hidden', role !== 'nff');
+}
+
+async function init(){
+  const sel = document.getElementById('roleSelect');
+  sel.value = role;
+  sel.onchange = (e)=>{ role = e.target.value; localStorage.setItem('role', role); updateRoleUI(); applyFilters(); };
+
+  updateRoleUI();
+
+  // Shortcut "/" focuses search
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const tag = (document.activeElement.tagName || '').toLowerCase();
+      if (tag !== 'input' && tag !== 'textarea') {
+        e.preventDefault();
+        document.getElementById('searchInput')?.focus();
       }
     }
+  });
 
-    function onChange(){
-      // bezakan antara innerHeight & viewport actual (yang mengecil bila keyboard muncul)
-      const kb = vv ? Math.max(0, window.innerHeight - vv.height) : 0;
-      apply(kb);
-    }
+  await loadAssignmentsRemote().catch(()=>{});
+  await refreshFromGitHub(true);
+  await refreshCTTFromGitHub();
+  loadLocationIndex().catch(()=>{});
 
-    // daftar event
-    if(vv){
-      vv.addEventListener('resize', onChange);
-      vv.addEventListener('scroll',  onChange);
-    }
-    window.addEventListener('orientationchange', onChange);
-    window.addEventListener('focusin', onChange);
-    window.addEventListener('focusout', onChange);
+  // Auto open detail from ?ntt=
+  const nttParam = new URLSearchParams(location.search).get('ntt');
+  if (nttParam && idxByNtt[nttParam]) { openDetail(idxByNtt[nttParam]); }
 
-    // trigger awal
-    onChange();
-  })();
+  setInterval(()=>{ refreshFromGitHub(); refreshCTTFromGitHub(); }, AUTO_REFRESH_SECONDS*1000);
 
-  function shake(){
-    const el=document.querySelector('.glass');
-    el.animate(
-      [{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},
-       {transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],
-      {duration:320,easing:'ease-in-out'}
-    );
-  }
+  [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",debounce(applyFilters,120)));
+  document.getElementById('resetFilters').addEventListener('click', ()=>{ filterNode.value=""; filterDomain.value=""; filterAging.value=""; searchInput.value=""; applyFilters(); });
 
-  // Focus on load
-  addEventListener('load', ()=> qs('#passcode').focus());
+  // Locator wiring
+  locator.input = document.getElementById('fdcFdpSearch');
+  locator.box   = document.getElementById('fdcFdpResults');
+  document.getElementById('fdcFdpBtn').addEventListener('click', handleLocatorInput);
+  locator.input.addEventListener('input', debounce(handleLocatorInput, 200));
+  locator.input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ handleLocatorInput(); } });
+  document.addEventListener('click', (e)=>{ const w=locator.box; if(!w) return; if(!w.contains(e.target) && e.target!==locator.input && e.target!==document.getElementById('fdcFdpBtn')){ w.classList.add('hidden'); } });
+
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ refreshFromGitHub(); refreshCTTFromGitHub(); } });
+  window.addEventListener('focus', ()=>{ renderTeamQuickPanel(filteredData); });
+}
+init();
+
+/* helpers */
+function syncNow(){ toast("Syncing…"); refreshFromGitHub(true); refreshCTTFromGitHub(); }
 </script>
 </body>
 </html>

@@ -73,6 +73,30 @@
   @media (max-width:900px){
     .tbl{display:none}               /* hide desktop header */
   }
+  
+  <!-- LETAK INI TERUS DI BAWAH <body> -->
+<script>
+(() => {
+  const here = "crmt.html";
+  const role = localStorage.getItem('role');
+
+  // Tiada sesi? Paksa login, kembali ke crmt lepas berjaya
+  if (!role) {
+    location.href = "login.html?to=" + encodeURIComponent(here);
+    return;
+  }
+
+  // Bukan NFF? Halang akses
+  if (role !== "nff") {
+    location.href = "index.html?denied=1";
+    return;
+  }
+
+  // Opsyen: untuk CSS role-gating jika diperlukan
+  document.body.setAttribute("data-role", role);
+})();
+</script>
+
 </style>
 </head>
 <body class="min-h-screen">
