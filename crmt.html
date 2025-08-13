@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>CR/MT Console — NFF only</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    --bg-dark:#0b1021;
+    --bg-d1:#0f172a;
+    --ring:#6366f1;
+  }
+  /* Base */
+  html { font-size:14px; }        /* smaller base for compact UI */
+  body{
+    font-family:Inter,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 700px at 12% 8%, #3a3a9e 0%, #1e235f 40%, var(--bg-d1) 100%) fixed,
+      radial-gradient(900px 600px at 88% 85%, #0d3f53 0%, var(--bg-dark) 55%) fixed;
+    color:#0f172a;
+  }
+  .screen{max-width:1200px}
+  .card{border-radius:14px;background:#fff;border:1px solid #e5e7eb;box-shadow:0 10px 28px rgba(0,0,0,.08)}
+  .inp{border:1px solid #e5e7eb;border-radius:10px;padding:.6rem .8rem;width:100%;background:#fff;transition:border-color .15s, box-shadow .15s}
+  .inp:focus{outline:0;border-color:var(--ring);box-shadow:0 0 0 3px rgba(99,102,241,.22)}
+  .toggle{border:1px solid #e5e7eb;border-radius:10px;padding:.45rem .7rem;background:#fff;font-size:.9rem}
+  .toggle.active.cr{background:#fff7ed;border-color:#fdba74;color:#9a3412;font-weight:700}
+  .toggle.active.mt{background:#eef2ff;border-color:#c7d2fe;color:#3730a3;font-weight:700}
+  #formCard{position:relative;overflow:hidden}
+  #formCard[data-mode="CR"]{--ring:#f97316;border-color:#fed7aa;background:linear-gradient(180deg,#fff7ed, #fff 36%)}
+  #formCard[data-mode="MT"]{--ring:#6366f1;border-color:#c7d2fe;background:linear-gradient(180deg,#eef2ff, #fff 36%)}
+
+  .btn-ghost{border:1px solid #e5e7eb;background:#fff;border-radius:9px;padding:.42rem .65rem;transition:background .15s;font-size:.9rem}
+  .btn-ghost:hover{background:#f8fafc}
+
+  /* Send to Pool / Remove */
+  .btn-pool{border:none;border-radius:9px;padding:.38rem .6rem;color:#fff;font-weight:700;box-shadow:0 6px 14px rgba(0,0,0,.08);font-size:.88rem}
+  .btn-pool.cr{background:linear-gradient(135deg,#fb923c,#f97316)}
+  .btn-pool.mt{background:linear-gradient(135deg,#60a5fa,#7c3aed)}
+  .btn-pool:hover{filter:brightness(1.05)}
+  .btn-danger{border:1px solid #fecaca;color:#b91c1c;background:#fff;border-radius:9px;padding:.38rem .6rem;font-size:.88rem}
+  .btn-danger:hover{background:#fff1f2}
+
+  /* Tiny badge button (Files) */
+  .btn-badge{border:1px solid #e5e7eb;border-radius:9999px;padding:.18rem .5rem;font-size:.78rem;background:#f8fafc;color:#334155}
+  .btn-badge:hover{background:#eef2f7}
+
+  /* Table / list */
+  .tbl th{font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:#6b7280}
+  .rowline{display:grid;grid-template-columns:1.4fr .6fr 1.1fr 1fr 1fr;gap:.5rem;align-items:center;padding:.5rem 0;}
+  .rowline:hover{background:#fafafa}
+  .row-m{border:1px solid #e5e7eb;border-radius:10px;padding:.7rem} /* mobile card */
+
+  /* Dropzone */
+  .dz{border:2px dashed #cbd5e1;border-radius:10px;padding:12px;text-align:center;color:#475569;background:#fff}
+  .dz.drag{background:#f8fafc;border-color:#94a3b8}
+
+  /* Chips (mobile meta) */
+  .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.15rem .5rem;border-radius:9999px;font-weight:600;font-size:.75rem;background:#f1f5f9;color:#0f172a}
+  .chip-cr{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+  .chip-mt{background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe}
+
+  /* Files modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:60}
+  .modal.show{display:flex}
+  .modal-panel{background:#fff;border-radius:14px;max-width:min(900px,92vw);max-height:80vh;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,.25)}
+  .modal-head{position:sticky;top:0;background:#0ea5e9;color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+
+  /* Responsive */
+  @media (max-width:900px){
+    .tbl{display:none}               /* hide desktop header */
+  }
+</style>
+</head>
+<body class="min-h-screen">
+  <header class="text-white/90">
+    <div class="screen mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="font-semibold tracking-wide text-[15px]">⚡ CR/MT Console <span class="text-[11px] ml-2 bg-white/10 px-2 py-1 rounded">NFF only</span></div>
+      <a href="index.html" class="text-[13px] bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded">← Back to Dashboard</a>
+    </div>
+  </header>
+
+  <main class="screen mx-auto px-4 py-5 grid gap-4 lg:grid-cols-2">
+    <!-- Left: form -->
+    <section id="formCard" data-mode="CR" class="card p-4 lg:p-5">
+      <div class="flex items-center justify-between">
+        <div class="font-semibold text-[15px]">Log Caution Report / Manual Task</div>
+        <!-- Import/Export removed -->
+      </div>
+
+      <div class="mt-3 flex gap-2">
+        <button id="btnCR" class="toggle active cr">Caution Report</button>
+        <button id="btnMT" class="toggle">Manual Task</button>
+      </div>
+
+      <div class="mt-3 grid gap-3">
+        <div>
+          <label class="text-[11px] font-semibold text-gray-600">Priority</label>
+          <select id="priority" class="inp">
+            <option>Normal</option><option>Low</option><option>High</option><option>Critical</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-semibold text-gray-600">Title</label>
+          <input id="title" class="inp" placeholder="e.g., CR: Replace FDP cable at KGU_C018_DP0036" />
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-semibold text-gray-600">Aduan Awan ID</label>
+            <input id="aaid" class="inp" placeholder="e.g., AA-2025-00123" />
+          </div>
+          <div>
+            <label class="text-[11px] font-semibold text-gray-600">Source Link (optional)</label>
+            <input id="link" class="inp" placeholder="https://…" />
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-semibold text-gray-600">TM Node</label>
+            <select id="node" class="inp">
+              <option value="">Choose node</option>
+              <option>KGU</option><option>TBN</option><option>SOO</option><option>NBN</option><option>TNM</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-semibold text-gray-600">Section / Street (optional)</label>
+            <input id="street" class="inp" placeholder="(optional)" />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-semibold text-gray-600">Description</label>
+          <textarea id="desc" rows="4" class="inp" placeholder="What needs to be done? What's the issue / scope?"></textarea>
+        </div>
+
+        <!-- Attachments -->
+        <div>
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-semibold text-gray-600">Attachments</label>
+            <div class="flex gap-2">
+              <button id="btnSelect" class="btn-ghost text-[12px]">Select files</button>
+              <button id="btnClearFiles" class="btn-ghost text-[12px]">Clear</button>
+            </div>
+          </div>
+          <div id="dropZone" class="dz mt-2">
+            Drop files here or click <b>Select files</b>. (images, pdf, docs, etc.)
+          </div>
+          <input id="fileInput" type="file" multiple class="hidden"
+                 accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.txt" />
+          <div id="fileInfo" class="text-[12px] text-gray-500 mt-2">No files yet.</div>
+          <div id="fileGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2"></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-semibold text-gray-600">Assign to CM Team</label>
+            <select id="team" class="inp">
+              <option>TEAM FAISON</option><option>TEAM FAUZIE</option>
+              <option>TEAM RUDI</option><option>TEAM ROSDEE</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-semibold text-gray-600">Status</label>
+            <select id="status" class="inp">
+              <option>Draft</option><option selected>Assigned</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button id="btnSave" class="btn-ghost">Save</button>
+          <button id="saveAssign" class="px-3 py-2 rounded text-white text-[13px]"
+                  style="background:linear-gradient(135deg,#60a5fa,#7c3aed)">Save & Assign</button>
+          <button id="btnReset" class="btn-ghost">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: records -->
+    <section class="card p-4 lg:p-5">
+      <div class="flex items-center justify-between">
+        <div class="font-semibold text-[15px]">CR/MT Records</div>
+        <button id="clearAll" class="btn-ghost text-[12px]">Clear</button>
+      </div>
+
+      <div class="mt-3 grid gap-2 md:grid-cols-4">
+        <input id="search" class="inp md:col-span-2" placeholder="Search title / AA ID / node" />
+        <select id="fType" class="inp">
+          <option value="">All</option>
+          <option value="CR">CR</option>
+          <option value="MT">MT</option>
+        </select>
+        <select id="fTeam" class="inp">
+          <option value="">Any</option>
+          <option>TEAM FAISON</option><option>TEAM FAUZIE</option>
+          <option>TEAM RUDI</option><option>TEAM ROSDEE</option>
+        </select>
+      </div>
+
+      <!-- desktop header -->
+      <div class="mt-3 tbl">
+        <div class="rowline border-b">
+          <div class="font-semibold text-gray-500 text-[11px] uppercase tracking-wide">ID</div>
+          <div class="font-semibold text-gray-500 text-[11px] uppercase tracking-wide">Node</div>
+          <div class="font-semibold text-gray-500 text-[11px] uppercase tracking-wide">Team</div>
+          <div class="font-semibold text-gray-500 text-[11px] uppercase tracking-wide">Status</div>
+          <div class="font-semibold text-gray-500 text-[11px] uppercase tracking-wide">Actions</div>
+        </div>
+      </div>
+
+      <div id="rows" class=""></div>
+      <div id="empty" class="text-[13px] text-gray-500 py-4 hidden">No items yet.</div>
+    </section>
+  </main>
+
+  <!-- Files modal -->
+  <div id="filesModal" class="modal">
+    <div class="modal-panel w-[900px] max-w-[92vw]">
+      <div class="modal-head">
+        <div class="font-semibold">Attachments — <span id="filesTitle"></span></div>
+        <button id="filesClose" class="bg-white/10 hover:bg-white/20 px-3 py-1 rounded">Close</button>
+      </div>
+      <div id="filesBody" class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+    </div>
+  </div>
+
+<script>
+/* ===== Local storage keys ===== */
+const LS_STORE  = 'crmtStore';        // array of records
+const LS_SERIAL = 'crmtSerial';       // map { "KGU-CR": 12, ... }
+const LS_FILES  = (id)=>`crmtFiles:${id}`; // per-record files
+const LS_TEAM_BOX = 'nttTeamTasks';   // { TEAM: [ {id, kind, ...} ] }
+
+/* ===== Helpers ===== */
+const $  = (q)=>document.querySelector(q);
+const $$ = (q)=>document.querySelectorAll(q);
+
+const formCard = document.getElementById('formCard');
+const btnCR = document.getElementById('btnCR');
+const btnMT = document.getElementById('btnMT');
+let mode = 'CR'; // CR / MT
+
+function getStore(){ try{ return JSON.parse(localStorage.getItem(LS_STORE)||'[]'); }catch{return [];} }
+function setStore(arr){ localStorage.setItem(LS_STORE, JSON.stringify(arr||[])); }
+function getSerial(){ try{ return JSON.parse(localStorage.getItem(LS_SERIAL)||'{}'); }catch{return {};} }
+function setSerial(map){ localStorage.setItem(LS_SERIAL, JSON.stringify(map||{})); }
+function getFiles(id){ try{ return JSON.parse(localStorage.getItem(LS_FILES(id))||'{"items":[]}'); }catch{return {items:[]};} }
+function setFiles(id, payload){ localStorage.setItem(LS_FILES(id), JSON.stringify(payload||{items:[]})); }
+function delFiles(id){ localStorage.removeItem(LS_FILES(id)); }
+function readTeamBox(){ try{ return JSON.parse(localStorage.getItem(LS_TEAM_BOX) || '{}'); } catch { return {}; } }
+function writeTeamBox(obj){ localStorage.setItem(LS_TEAM_BOX, JSON.stringify(obj||{})); }
+
+function nextId(node, type){
+  const key = `${node}-${type}`;
+  const map = getSerial();
+  map[key] = (map[key]||0) + 1;
+  setSerial(map);
+  return `${node} ${type}${String(map[key]).padStart(5,'0')}`;
+}
+
+function refreshMode(){
+  formCard.dataset.mode = mode;
+  if(mode==='CR'){ btnCR.className='toggle active cr'; btnMT.className='toggle'; }
+  else{ btnMT.className='toggle active mt'; btnCR.className='toggle'; }
+}
+
+/* ===== Form actions ===== */
+btnCR.onclick=()=>{ mode='CR'; refreshMode(); };
+btnMT.onclick=()=>{ mode='MT'; refreshMode(); };
+
+function readForm(){
+  return {
+    type: mode,
+    priority: $('#priority').value,
+    title: $('#title').value.trim(),
+    aaid: $('#aaid').value.trim(),
+    link: $('#link').value.trim(),
+    node: $('#node').value.trim(),
+    street: $('#street').value.trim(),
+    desc: $('#desc').value.trim(),
+    team: $('#team').value,
+    status: $('#status').value,
+  };
+}
+
+function clearForm(){
+  $('#priority').value = 'Normal';
+  $('#title').value = '';
+  $('#aaid').value = '';
+  $('#link').value = '';
+  $('#node').value = '';
+  $('#street').value = '';
+  $('#desc').value = '';
+  $('#team').value = 'TEAM FAISON';
+  $('#status').value = 'Assigned';
+  pendingFiles = []; renderFiles();
+}
+
+/* ===== Uploads (Attachments) ===== */
+let pendingFiles = []; // {name,type,size,data}
+
+function filesToBase64List(fileList){
+  const jobs = [...fileList].map(file=> new Promise(res=>{
+    const fr=new FileReader();
+    fr.onload=()=>res({ name:file.name, type:file.type, size:file.size, data:fr.result });
+    fr.readAsDataURL(file);
+  }));
+  return Promise.all(jobs);
+}
+function renderFiles(){
+  const info = $('#fileInfo');
+  const grid = $('#fileGrid');
+  if(!pendingFiles.length){
+    info.textContent = 'No files yet.';
+    grid.innerHTML = '';
+    return;
+  }
+  info.textContent = `${pendingFiles.length} file(s) selected.`;
+  grid.innerHTML = pendingFiles.map((f,i)=>`
+    <div class="border rounded-lg p-1">
+      ${f.type?.startsWith('image/') ? `<img src="${f.data}" class="w-full h-24 object-cover rounded">`
+        : `<div class="h-24 flex items-center justify-center bg-slate-50 rounded text-[11px] text-slate-600">${f.name.split('.').pop()?.toUpperCase()||'FILE'}</div>`}
+      <div class="text-[11px] mt-1 truncate">${f.name}</div>
+      <button data-del="${i}" class="mt-1 btn-ghost text-[11px]">Remove</button>
+    </div>`).join('');
+  grid.querySelectorAll('[data-del]').forEach(b=>{
+    b.onclick=()=>{ pendingFiles.splice(parseInt(b.dataset.del),1); renderFiles(); };
+  });
+}
+
+$('#btnSelect').onclick=()=>$('#fileInput').click();
+$('#fileInput').addEventListener('change', async (e)=>{
+  if(!e.target.files?.length) return;
+  const items = await filesToBase64List(e.target.files);
+  pendingFiles.push(...items);
+  renderFiles();
+  e.target.value='';
+});
+const dz = $('#dropZone');
+dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', ()=>dz.classList.remove('drag'));
+dz.addEventListener('drop', async e=>{
+  e.preventDefault(); dz.classList.remove('drag');
+  const files = e.dataTransfer.files;
+  if(!files?.length) return;
+  const items = await filesToBase64List(files);
+  pendingFiles.push(...items);
+  renderFiles();
+});
+$('#btnClearFiles').onclick=()=>{ pendingFiles=[]; renderFiles(); };
+
+/* ===== Save / Pool ===== */
+function saveRecord(assignToPool=false){
+  const f = readForm();
+  if(!f.node){ alert('Please choose TM Node'); return; }
+  if(!f.title){ alert('Please enter Title'); return; }
+
+  const id = nextId(f.node, f.type);
+  setFiles(id, { items: pendingFiles.slice() });
+
+  const rec = {
+    id, type:f.type, node:f.node, team:f.team,
+    status: f.status || 'Assigned',
+    title:f.title, aaid:f.aaid, link:f.link, street:f.street, desc:f.desc,
+    files: pendingFiles.length,
+    createdAt: new Date().toISOString()
+  };
+  const store = getStore(); store.unshift(rec); setStore(store);
+  if(assignToPool) sendToPool(rec);
+  pendingFiles = []; renderFiles();
+  render();
+}
+
+function sendToPool(rec){
+  const box = readTeamBox();
+  const t = rec.team || 'TEAM FAISON';
+  (box[t] ||= []);
+  box[t].unshift({
+    id: rec.id, kind:'CRMT', type: rec.type,
+    title: rec.title, node: rec.node,
+    status: 'draft', createdAt: rec.createdAt
+  });
+  writeTeamBox(box);
+}
+
+/* ===== Row templates (desktop + mobile) ===== */
+function rowTemplate(rec){
+  const poolCls = rec.type==='CR' ? 'cr' : 'mt';
+  const filesBtn = rec.files>0
+      ? `<button class="btn-badge" data-files="${rec.id}">Files (${rec.files})</button>`
+      : ``;
+
+  // desktop row
+  const desktop = `
+    <div class="rowline hidden md:grid">
+      <div class="font-medium text-slate-900">${rec.id}</div>
+      <div class="text-slate-700">${rec.node}</div>
+      <div class="text-slate-700">${rec.team||'-'}</div>
+      <div class="flex items-center gap-2">
+        ${filesBtn}
+        <button class="btn-pool ${poolCls}" data-pool="${rec.id}">Send to Pool</button>
+      </div>
+      <div>
+        <button class="btn-danger" data-del="${rec.id}">Remove</button>
+      </div>
+    </div>`;
+
+  // mobile card
+  const mobile = `
+    <div class="md:hidden row-m mt-2 bg-white">
+      <div class="flex items-start justify-between gap-3">
+        <div class="font-semibold text-slate-900">${rec.id}</div>
+        <div class="flex gap-2">
+          ${filesBtn}
+          <button class="btn-pool ${poolCls}" data-pool="${rec.id}">Send to Pool</button>
+          <button class="btn-danger" data-del="${rec.id}">Remove</button>
+        </div>
+      </div>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <span class="chip">${rec.node}</span>
+        <span class="chip">${rec.team||'-'}</span>
+        <span class="chip ${rec.type==='CR'?'chip-cr':'chip-mt'}">${rec.type}</span>
+      </div>
+    </div>`;
+
+  return desktop + mobile;
+}
+
+function render(){
+  const q  = $('#search').value.trim().toLowerCase();
+  const ft = $('#fType').value;
+  const fm = $('#fTeam').value;
+
+  let rows = getStore();
+  if(q){
+    rows = rows.filter(r=>{
+      const blob = `${r.id} ${r.node} ${r.team} ${r.title} ${r.aaid}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
+  if(ft) rows = rows.filter(r=>r.type===ft);
+  if(fm) rows = rows.filter(r=>r.team===fm);
+
+  $('#rows').innerHTML = rows.map(rowTemplate).join('');
+  $('#empty').classList.toggle('hidden', rows.length>0);
+
+  // actions
+  $$('#rows [data-del]').forEach(b=>{
+    b.onclick=()=>{
+      const id=b.dataset.del;
+      if(!confirm('Remove this record?')) return;
+      const arr=getStore().filter(x=>x.id!==id);
+      setStore(arr); delFiles(id); render();
+    };
+  });
+  $$('#rows [data-pool]').forEach(b=>{
+    b.onclick=()=>{
+      const id=b.dataset.pool;
+      const rec=getStore().find(x=>x.id===id);
+      if(rec && confirm('Send this item to the team pool?')){ sendToPool(rec); }
+    };
+  });
+  $$('#rows [data-files]').forEach(b=>{
+    b.onclick=()=>openFiles(b.dataset.files);
+  });
+}
+
+/* ===== Files modal ===== */
+function openFiles(id){
+  const data = getFiles(id).items||[];
+  $('#filesTitle').textContent = id;
+  const body = $('#filesBody');
+  if(!data.length){ body.innerHTML = `<div class="text-sm text-gray-600 p-3">No files for this record.</div>`; }
+  else{
+    body.innerHTML = data.map((f)=>`
+      <div class="border rounded-lg overflow-hidden">
+        ${f.type?.startsWith('image/') ?
+          `<img src="${f.data}" class="w-full h-44 object-cover">`
+          : `<div class="h-44 flex items-center justify-center bg-slate-100 text-slate-700 text-sm px-2 text-center">${f.name}</div>`}
+        <div class="p-2 text-[13px] flex items-center justify-between gap-2">
+          <div class="truncate">${f.name}</div>
+          <a href="${f.data}" download="${f.name}" class="px-2 py-1 text-[12px] bg-indigo-600 text-white rounded">Download</a>
+        </div>
+      </div>`).join('');
+  }
+  $('#filesModal').classList.add('show');
+}
+$('#filesClose').onclick=()=>$('#filesModal').classList.remove('show');
+$('#filesModal').addEventListener('click', e=>{ if(e.target.id==='filesModal') $('#filesModal').classList.remove('show'); });
+
+/* ===== Buttons & init ===== */
+document.getElementById('btnSave').onclick=()=>saveRecord(false);
+document.getElementById('saveAssign').onclick=()=>saveRecord(true);
+document.getElementById('btnReset').onclick=clearForm;
+document.getElementById('clearAll').onclick=()=>{ if(confirm('Clear all local records?')){ localStorage.removeItem(LS_STORE); render(); } };
+['search','fType','fTeam'].forEach(id=>document.getElementById(id).addEventListener('input', render));
+
+function init(){ refreshMode(); renderFiles(); render(); }
+init();
+</script>
+</body>
+</html>
