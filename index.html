@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>NTT Log Viewer — Pro</title>
@@ -105,9 +106,193 @@
         <button onclick="syncNow()" class="text-xs px-2.5 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1">
           <span class="mi">sync</span> Sync
         </button>
+=======
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>NTT Log Viewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <!-- Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter','Segoe UI',Tahoma,Geneva,Verdana,sans-serif; font-size:13px; }
+    .mi { font-family: 'Material Symbols Rounded'; font-weight: normal; font-style: normal; font-size: 18px; display: inline-block; line-height: 1; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+    @media print {
+      header,.shadow,.rounded-xl,input,select,button,#searchInput,#summaryDashboard,#assignModal,script{display:none!important}
+      main{padding:0;background:#fff;box-shadow:none}
+      table{font-size:12px} th,td{padding:4px 8px!important}
+    }
+
+    @media (hover:none) and (pointer:coarse), screen and (max-width:640px){
+      :root{--m-pad:12px}
+      main,header,.team-section,.grid,table,.overflow-x-auto{width:100%!important;max-width:100%!important}
+      body{overflow-x:hidden}
+      header{display:flex!important;flex-direction:column!important;gap:.5rem!important;padding:var(--m-pad)!important}
+      main>.grid:first-of-type{display:flex!important;flex-direction:column!important;gap:.5rem!important}
+      #summaryDashboard{display:flex!important;flex-direction:column!important;gap:.75rem!important}
+      .overflow-x-auto{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+      #logTable{min-width:720px}
+      #logTable th,#logTable td{text-align:center;white-space:nowrap}
+      #assignModal{align-items:flex-start!important;padding-top:var(--m-pad)!important}
+      #assignModal>div{width:100%!important;max-width:none!important;border-radius:.75rem!important}
+    }
+
+    #logTable th,#logTable td{text-align:center}
+    #logTable thead th{position:sticky;top:0;z-index:5;background:#e5e7eb}
+
+    #toast{position:fixed;bottom:16px;right:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 10px 20px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s;font-size:12px}
+    #toast.show{opacity:1;transform:translateY(0)}
+
+    .tabbtn.active { background:#e0e7ff; border-color:#6366f1; color:#1f2937; font-weight:600; }
+    .card-soft { border-radius:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+    .pill { display:inline-flex; align-items:center; gap:.5rem; padding:.25rem .6rem; border-radius:9999px; font-weight:600; font-size:12px; }
+    .locator-item:hover{ background:#f3f4f6; }
+
+    /* Modal fit-to-viewport */
+    :root { --vh: 100vh; }
+    .v-modal-panel{
+      width:100%;
+      max-width:min(48rem, 96vw);
+      max-height:calc(var(--vh) - 32px);
+      display:flex; flex-direction:column; border-radius:1rem; overflow:hidden;
+    }
+    .v-modal-head{ position:sticky; top:0; z-index:1; }
+    .v-modal-body{ overflow:auto; }
+    #detailMap{ height:clamp(180px, 28vh, 320px); }
+    #detailDescription{ max-height:clamp(180px, 38vh, 420px); }
+    @media (max-width:640px){
+      .v-modal-panel{ max-width:96vw; }
+      #detailDescription{ font-size:11px; }
+    }
+
+    /* iOS form controls cleanup */
+    :root { -webkit-text-size-adjust: 100%; }
+    * { -webkit-tap-highlight-color: transparent; }
+
+    .select-ios{
+      -webkit-appearance: none !important;
+      appearance: none !important;
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:10px;
+      padding:12px 44px 12px 44px;
+      line-height:1.2;
+      min-height:44px;
+      width:100%;
+      box-shadow:0 1px 1px rgba(0,0,0,.02);
+      cursor:pointer;
+    }
+    .field-icon{ position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#9ca3af; pointer-events:none; }
+    .field-chev { position:absolute; right:12px; top:50%; transform:translateY(-50%); color:#6b7280; pointer-events:none; }
+    .select-ios:focus{ outline:none; box-shadow:0 0 0 3px rgba(99,102,241,.35); border-color:#a5b4fc; }
+    @supports (-webkit-touch-callout:none){
+      select.select-ios, input[type="text"], textarea { font-size:16px !important; }
+    }
+    .ios-clip-fix{ -webkit-mask-image: -webkit-radial-gradient(white, black); }
+
+    /* ring cards (NTT/CTT Summary) */
+    .ring-card { width:5.25rem; height:5.25rem; border-radius:0.75rem; background:#fff; display:flex; align-items:center; justify-content:center; font-size:1.25rem; font-weight:700; color:#1f2937; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-indigo-700 text-white px-6 py-4 shadow flex flex-wrap gap-3 items-center justify-between">
+    <h1 class="text-xl font-bold tracking-wide">📊 NTT Log Viewer</h1>
+    <div id="lastUpdated" class="text-sm text-gray-100"></div>
+  </header>
+
+  <main class="w-full min-h-screen px-2 sm:px-6 lg:px-8 py-6 bg-white shadow rounded-xl">
+
+    <!-- Quick Filters -->
+    <section class="card-soft p-4 sm:p-5 mb-5">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <span class="mi">filter_list</span>
+          <span class="font-semibold">Quick Filters</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="resetFilters" class="text-xs px-2.5 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 flex items-center gap-1">
+            <span class="mi">refresh</span> Reset
+          </button>
+
+          <button type="button" id="importCsv" class="text-xs px-2.5 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 flex items-center gap-1">
+            <span class="mi">upload_file</span> Import
+          </button>
+          <input id="csvFileInput" type="file" accept=".csv" class="hidden" />
+
+          <button type="button" onclick="syncNow()" class="text-xs px-2.5 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1">
+            <span class="mi">sync</span> Sync
+          </button>
+        </div>
+>>>>>>> f377e2e17351987db333ae8e377e9813726d59b0
       </div>
+
+      <!-- 3 Filter: iOS-friendly select -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="relative ios-clip-fix">
+          <span class="mi field-icon">apartment</span>
+          <select id="filterNode" class="select-ios">
+            <option value="">Filter by TM Node</option>
+            <option value="KGU">KGU</option><option value="TBN">TBN</option>
+            <option value="SOO">SOO</option><option value="NBN">NBN</option><option value="TNM">TNM</option>
+          </select>
+          <span class="mi field-chev">expand_more</span>
+        </div>
+
+        <div class="relative ios-clip-fix">
+          <span class="mi field-icon">dns</span>
+          <select id="filterDomain" class="select-ios">
+            <option value="">Filter by Domain</option>
+          </select>
+          <span class="mi field-chev">expand_more</span>
+        </div>
+
+        <div class="relative ios-clip-fix">
+          <span class="mi field-icon">schedule</span>
+          <select id="filterAging" class="select-ios">
+            <option value="">Filter by Aging</option>
+          </select>
+          <span class="mi field-chev">expand_more</span>
+        </div>
+      </div>
+
+      <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="relative">
+          <label for="searchInput" class="block text-[11px] font-semibold text-gray-600 mb-1 flex items-center gap-1">
+            <span class="mi">manage_search</span> Global Search
+          </label>
+          <span class="mi absolute left-3 top-[38px] md:top-1/2 md:-translate-y-1/2 text-gray-400">search</span>
+          <input id="searchInput" type="text" placeholder="Search keyword (e.g., dp faulty)"
+                 class="text-[16px] w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+        </div>
+
+        <div class="relative">
+          <label for="fdcFdpSearch" class="block text-[11px] font-semibold text-gray-600 mb-1 flex items-center gap-1">
+            <span class="mi">location_on</span> FDC / FDP Location
+          </label>
+          <span class="mi absolute left-3 top-[38px] md:top-1/2 md:-translate-y-1/2 text-gray-400">pin_drop</span>
+          <input id="fdcFdpSearch" type="text" placeholder="Search Network ID / Street / Section"
+                 class="text-[16px] w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+          <div id="fdcFdpResults" class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto hidden z-30"></div>
+        </div>
+      </div>
+
+      <div id="activeChips" class="mt-3 flex flex-wrap gap-2"></div>
+    </section>
+
+    <!-- Tabs -->
+    <div id="dashTabs" class="mb-4 flex flex-wrap gap-2">
+      <button data-show="summary" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Summary</button>
+      <button data-show="zoneOnly" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Zone View</button>
+      <button data-show="summaryDashboard" class="tabbtn px-3 py-1.5 rounded border bg-white text-gray-700 hover:bg-indigo-50">Team View</button>
     </div>
 
+<<<<<<< HEAD
     <!-- Bar 1: Filters -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
       <div class="relative">
@@ -1395,10 +1580,349 @@ async function init(){
       if (tag !== 'input' && tag !== 'textarea') {
         e.preventDefault();
         document.getElementById('searchInput')?.focus();
+=======
+    <!-- SUMMARY GRID -->
+    <div id="summaryGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
+      <div class="lg:col-span-8 space-y-4">
+        <!-- NTT Summary -->
+        <div id="nttSummary" class="card-soft p-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-3">NTT Summary</h2>
+          <!-- grid 5 lajur seperti CTT -->
+          <div id="nttSummaryContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
+        </div>
+
+        <!-- CTT Summary -->
+        <div id="cttSummary" class="card-soft p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-lg font-semibold text-gray-700">CTT Summary (Offline)</h2>
+            <span class="text-xs text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">Offline only</span>
+          </div>
+          <div id="cttSummaryContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
+        </div>
+
+        <!-- Zone Summary -->
+        <div id="zoneCard" class="card-soft p-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-3">📍 Zone Summary — PBP SELATAN: Passive Element Nova</h2>
+          <div id="zoneDashboard" class="space-y-3"></div>
+          <div id="zoneGrand" class="flex justify-between mt-4 pt-3 border-t text-sm font-semibold text-gray-700"></div>
+        </div>
+      </div>
+
+      <aside id="teamQuickPanel" class="lg:col-span-4 space-y-3"></aside>
+    </div>
+
+    <!-- TEAM VIEW CARDS -->
+    <div id="summaryDashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-sm"></div>
+
+    <!-- Loading indicator -->
+    <div id="loadingState" class="hidden text-sm text-gray-500 px-3 py-2">
+      <span class="mi align-middle mr-1 animate-pulse">hourglass_top</span> Loading data…
+    </div>
+
+    <!-- TABLE -->
+    <div class="overflow-x-auto text-sm">
+      <table class="min-w-full table-auto border-collapse text-center" id="logTable">
+        <thead class="bg-gray-200 text-sm uppercase tracking-wider">
+          <tr>
+            <th class="px-4 py-2">Date</th>
+            <th class="px-4 py-2">NTT Number</th>
+            <th class="px-4 py-2">TM Node</th>
+            <th class="px-4 py-2">Symptom</th>
+            <th class="px-4 py-2">Domain</th>
+            <th class="px-4 py-2">Network ID</th>
+            <th class="px-4 py-2">CTTs Linked</th>
+            <th class="px-4 py-2">Aging</th>
+            <th class="px-4 py-2">Days</th>
+            <th class="px-4 py-2 hidden sm:table-cell">Assignee</th>
+            <th class="px-4 py-2 hidden sm:table-cell">Status</th>
+            <th class="px-4 py-2 hidden sm:table-cell">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="logTableBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- NTT Detail Modal -->
+  <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
+    <div class="bg-white v-modal-panel shadow-2xl">
+      <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">🗂️ NTT Log Detail</div>
+        <button id="nttDetailClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+      <div class="v-modal-body p-4 space-y-4 text-sm">
+        <div class="rounded-lg border border-indigo-200 p-3 bg-indigo-50/40">
+          <div class="font-semibold mb-1">📍 Location for: <span id="detailLocationFor" class="font-mono"></span></div>
+          <div class="grid grid-cols-1 gap-1">
+            <div>Street: <span id="detailStreet" class="font-medium"></span></div>
+            <div>Section: <span id="detailSection" class="font-medium"></span></div>
+            <div>Coordinates: <a id="detailCoordsLink" href="#" target="_blank" class="text-indigo-600 underline">-</a></div>
+          </div>
+          <div id="mapPreviewWrap" class="mt-3 hidden">
+            <div class="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+              <span class="mi">map</span> Map Preview
+            </div>
+            <div class="rounded-lg overflow-hidden border">
+              <iframe id="detailMap" class="w-full" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="font-semibold mb-1">Description</div>
+          <pre id="detailDescription" class="text-xs whitespace-pre-wrap bg-gray-100 p-3 rounded border"></pre>
+        </div>
+
+        <div class="text-xs text-gray-600">
+          <div>NTT: <b id="detailNttNo"></b></div>
+          <div>Assigned: <b id="detailAssignedTo">Unassigned</b></div>
+        </div>
+
+        <!-- Evidence -->
+        <div class="space-y-2">
+          <div class="font-semibold">Upload Evidence:</div>
+          <input id="evidenceInput" type="file" class="block w-full text-xs border rounded px-2 py-1">
+          <div class="flex items-center gap-2">
+            <button id="uploadEvidenceBtn" class="px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">Upload Evidence</button>
+            <button id="removeEvidenceBtn" class="px-3 py-2 text-sm bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Remove</button>
+          </div>
+          <div id="evidenceStatus" class="text-xs text-gray-600"></div>
+
+          <div id="evidencePreview" class="mt-2 hidden">
+            <div class="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+              <span class="mi">image</span> Evidence Preview
+            </div>
+            <div class="rounded border bg-gray-50 p-2 flex items-start gap-3">
+              <img id="evidenceThumb" alt="evidence" class="max-h-40 rounded hidden"/>
+              <div class="text-xs text-gray-600">
+                <div id="evidenceName" class="font-semibold"></div>
+                <div class="mt-2 flex items-center gap-2">
+                  <a id="viewEvidenceBtn" target="_blank" class="px-2 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-700">View</a>
+                  <a id="downloadEvidenceBtn" download class="px-2 py-1 rounded bg-indigo-600 text-white text-xs hover:bg-indigo-700">Download</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <button id="resolveBtn" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Resolve NTT</button>
+          <div class="text-xs text-gray-500">Mark as <b>Done</b>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTT Early Analysis Modal -->
+  <div id="cttModal" class="hidden fixed inset-0 z-[65] bg-black/50 items-start sm:items-center justify-center p-3">
+    <div class="bg-white v-modal-panel shadow-2xl">
+      <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">🔎 CTT Early Analysis — <span id="cttModalNode"></span></div>
+        <button id="cttModalClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+      <div class="v-modal-body p-4 space-y-3 text-sm">
+        <div id="cttSummaryLine" class="text-gray-700"></div>
+        <div class="flex items-center gap-2">
+          <span class="mi text-gray-500">search</span>
+          <input id="cttFilterInput" type="text" placeholder="Filter DP/FDP/Network ID…" class="border rounded px-2 py-1 w-full">
+        </div>
+        <div class="border rounded overflow-hidden">
+          <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
+            <div class="col-span-4">DP / FDP / CTT ID</div>
+            <div class="col-span-4">Status (Session)</div>
+            <div class="col-span-4">Matching Network IDs</div>
+          </div>
+          <div id="cttList" class="max-h-[60vh] overflow-y-auto divide-y"></div>
+        </div>
+        <div class="text-xs text-gray-500">* “Matching Network IDs” dipadan dari <b>ntt_logs</b> — memapar <b>NTT Number</b> apabila DP/FDP/CTT ID wujud dalam medan <i>Network ID</i> (node yang sama). Jika tiada padanan, ditanda <b>Potential NTT risk</b>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign Modal -->
+  <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
+      <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
+        <div class="font-semibold">📋 Team NTT Assignment — <span id="assignTeamTitle"></span></div>
+        <button id="assignModalClose" class="bg-white/10 hover:bg-white/20 px-2 py-1 rounded">Close</button>
+      </div>
+      <div class="p-4 space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <input id="assignSearch" type="text" placeholder="Search NTT / Network ID / Symptom" class="flex-1 border rounded px-3 py-2">
+          <div class="text-sm flex items-center gap-4">
+            <span>Assigned: <b id="assignCount">0</b></span>
+            <label class="flex items-center gap-1"><input id="showPool" type="checkbox" class="h-4 w-4"><span>Show Pool</span></label>
+            <label class="flex items-center gap-1"><input id="showDone" type="checkbox" class="h-4 w-4"><span>Show Done</span></label>
+          </div>
+        </div>
+        <div class="border rounded overflow-hidden">
+          <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
+            <div class="col-span-6">NTT</div>
+            <div class="col-span-4">NETWORK ID</div>
+            <div class="col-span-2">AGING</div>
+          </div>
+          <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    /* ---------- Utilities ---------- */
+    const lastUpdatedEl = document.getElementById("lastUpdated");
+    const logTableBody  = document.getElementById("logTableBody");
+    const filterNode    = document.getElementById("filterNode");
+    const filterDomain  = document.getElementById("filterDomain");
+    const filterAging   = document.getElementById("filterAging");
+    const searchInput   = document.getElementById("searchInput");
+    const summaryDashboard = document.getElementById("summaryDashboard");
+    const toast = document.getElementById("toast");
+    const activeChips = document.getElementById('activeChips');
+
+    function debounce(fn, ms=200){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), ms); }; }
+    const locator = { input:null, box:null };
+
+    function setViewportVar(){ document.documentElement.style.setProperty('--vh', window.innerHeight + 'px'); }
+    setViewportVar(); window.addEventListener('resize', setViewportVar);
+
+    const allowedNodes = ["KGU","TBN","SOO","NBN","TNM"];
+
+    function showToast(msg){ toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),1800); }
+    function setLoading(on=true){ const el = document.getElementById('loadingState'); if(!el) return; el.classList.toggle('hidden', !on); }
+
+    // --- Normalizer & extractor for IDs ---
+    function normId(s){
+      return String(s||'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+    }
+    function extractDpCode(s){
+      const m = String(s||'').toUpperCase().match(/DP0*\d{1,5}/);
+      return m ? m[0] : '';
+    }
+
+    /* ---------- Assignments (kekal) ---------- */
+    const ASSIGN_REMOTE_RAW = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_assignments.csv";
+    const ASSIGN_SAVE_ENDPOINT = "/.netlify/functions/assignments";
+    const ASSIGN_KEY = "nttAssignments";
+    const ASSIGN_VER_KEY = "nttAssignmentsVersion";
+    function cacheAssignments(map){ localStorage.setItem(ASSIGN_KEY, JSON.stringify(map)); localStorage.setItem(ASSIGN_VER_KEY, String(Date.now())); }
+    function readAssignmentsCache(){ try{ return JSON.parse(localStorage.getItem(ASSIGN_KEY)||"{}"); }catch{ return {}; } }
+    async function loadAssignmentsRemote() {
+      try {
+        const res = await fetch(ASSIGN_REMOTE_RAW + "?nocache=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP "+res.status);
+        const csv = await res.text();
+        const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+        const map = {};
+        (parsed.data || []).forEach(r => {
+          const ntt = (r["NTT Number"]||"").trim();
+          if (!ntt) return;
+          map[ntt] = { team:(r["Team"]||"").trim(), status:(r["Status"]||"assigned").trim().toLowerCase(), note:r["Note"]||"", at:r["UpdatedAt"]||null };
+        });
+        cacheAssignments(map);
+        return map;
+      } catch(e) { return readAssignmentsCache(); }
+    }
+    async function upsertAssignmentRemote({ nttNumber, team, status="assigned", note="" }) {
+      const optimistic = { team: (team||"").trim(), status: (status||"assigned").toLowerCase(), note: note||"", at: new Date().toISOString() };
+      const preCache = readAssignmentsCache(); preCache[nttNumber] = optimistic; cacheAssignments(preCache);
+      try {
+        const res = await fetch(ASSIGN_SAVE_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nttNumber, team: optimistic.team, status: optimistic.status, note: optimistic.note }) });
+        if (!res.ok) throw new Error(await res.text());
+        const { row } = await res.json();
+        const cache = readAssignmentsCache();
+        cache[nttNumber] = { team: row.Team, status: row.Status.toLowerCase(), note: row.Note, at: row.UpdatedAt };
+        cacheAssignments(cache); return row;
+      } catch (e) {
+        showToast("Saved locally (will sync when online)");
+        return { Team: optimistic.team, Status: optimistic.status, Note: optimistic.note, UpdatedAt: optimistic.at };
+      }
+    }
+    async function readAssignments(){ return await loadAssignmentsRemote(); }
+    function getAssignment(ntt){ return readAssignmentsCache()[ntt] || null; }
+    async function saveAssignment(ntt, team, note=""){ await upsertAssignmentRemote({ nttNumber: ntt, team, note, status:"assigned" }); }
+    async function setDoneRemote(ntt, done=true){ const current = getAssignment(ntt) || {}; await upsertAssignmentRemote({ nttNumber: ntt, team: current.team || "", status: done ? "done" : "assigned" }); }
+    window.addEventListener("storage",(e)=>{ if(e.key===ASSIGN_VER_KEY) applyFilters(); });
+
+    /* ---------- Productivity & Evidence (kekal) ---------- */
+    const PRODUCTIVITY_KEY="nttProductivity";
+    function readProd(){ try{ return JSON.parse(localStorage.getItem(PRODUCTIVITY_KEY)||'{"counts":{},"items":{}}'); }catch{ return {counts:{},items:{}}; } }
+    function writeProd(p){ localStorage.setItem(PRODUCTIVITY_KEY, JSON.stringify(p)); }
+    function incProductivity(team, ntt){ const p=readProd(); if(p.items[ntt]) return; p.items[ntt]=true; p.counts[team]=(p.counts[team]||0)+1; writeProd(p); }
+    function productivityCount(team){ const p=readProd(); return p.counts[team]||0; }
+    function evidenceKey(ntt){ return `evidence:${ntt}`; }
+    function saveEvidence(ntt, base64, name){ localStorage.setItem(evidenceKey(ntt), JSON.stringify({base64,name,at:new Date().toISOString()})); }
+    function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evidenceKey(ntt))||"null"); }catch{return null;} }
+    function removeEvidence(ntt){ localStorage.removeItem(evidenceKey(ntt)); }
+
+    /* ---------- Location Index ---------- */
+    const LOCATION_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/network_id_location.csv";
+    let locationIndex=null;
+
+    async function loadLocationIndex(force=false){
+      if(locationIndex && !force) return locationIndex;
+      try{
+        const cached=JSON.parse(localStorage.getItem("nttLocationIndex")||"null");
+        if(!force && cached && Array.isArray(cached.rows)){ locationIndex=cached.rows; return locationIndex; }
+      }catch{}
+      const resp=await fetch(LOCATION_RAW_URL+"?nocache="+Date.now(),{cache:"no-store"});
+      const text=await resp.text();
+      const parsed=Papa.parse(text,{header:true,skipEmptyLines:true});
+
+      locationIndex=(parsed.data||[]).map(r=>{
+        const networkId = (r["Network ID"]||"").trim();
+        const street    = r["Street Name"]||"";
+        const section   = r["Section"]||"";
+        const lat       = (r["Latitude"]||"").toString().trim();
+        const lng       = (r["Longitude"]||"").toString().trim();
+        const tmnode    = (r["TM Node"]||r["Node"]||r["TMNode"]||"").toString().trim().toUpperCase();
+        const dpFdpId   = (r["DP / FDP ID"]||r["DP/FDP ID"]||r["DP ID"]||r["FDP ID"]||"").toString().trim().toUpperCase();
+        return { networkId, street, section, lat, lng, tmnode, dpFdpId, nNetwork: normId(networkId), nDp: normId(dpFdpId) };
+      });
+
+      localStorage.setItem("nttLocationIndex", JSON.stringify({rows:locationIndex, at:Date.now()}));
+      return locationIndex;
+    }
+    function findLocationByNetworkId(nid){ if(!locationIndex) return null; return locationIndex.find(r=>r.networkId===(nid||"").trim())||null; }
+
+    /* ---------- CTT Summary (OFFLINE ikut Session) ---------- */
+    const CTT_REPO_RAW_URL = "https://raw.githubusercontent.com/jadyakub/ntt-data/main/ctt_logs.csv";
+    let cttData = []; // normalised rows
+
+    function pick(row, keys){ for(const k of keys){ if(row[k]!==undefined && row[k]!==null) return row[k]; } return ""; }
+    function isOfflineSession(val){ return String(val || '').toUpperCase().includes('OFFLINE'); }
+
+    async function refreshCTTFromGitHub(){
+      try{
+        const res = await fetch(CTT_REPO_RAW_URL + "?nocache=" + Date.now(), { cache:"no-store" });
+        if(!res.ok) throw new Error("HTTP "+res.status);
+        const text = await res.text();
+        const parsed = Papa.parse(text, { header:true, skipEmptyLines:true });
+
+        const rows = (parsed.data||[]).map(x=>{
+          const node    = (pick(x, ["TM Node","Node","TMNode"])||"").toString().trim().toUpperCase();
+          const session = (pick(x, ["Session","SESSION"])||"").toString().trim().toUpperCase();
+          const status  = (pick(x, ["Status","CTT Status"])||"").toString().trim();
+          const dp      = (pick(x, ["DP ID","FDP ID","DP / FDP ID","DP/FDP ID","CTT ID"])||"").toString().trim().toUpperCase();
+          const nid     = (pick(x, ["Network ID","NID","FDP/DP Network ID"])||"").toString().trim().toUpperCase();
+          const date    = (pick(x, ["CTT Create Date","Create Date","Date"])||"").toString().trim();
+          const desc    = (pick(x, ["Description","Remarks","Symptom"])||"").toString();
+          return { node, session, status, dp, networkId:nid, date, desc, raw:x };
+        });
+
+        cttData = rows.filter(r => allowedNodes.includes(r.node) && isOfflineSession(r.session));
+        renderCTTSummary();
+      }catch(e){
+        console.error("CTT load failed:", e);
+        cttData = [];
+        renderCTTSummary();
+>>>>>>> f377e2e17351987db333ae8e377e9813726d59b0
       }
     }
   });
 
+<<<<<<< HEAD
   await loadAssignmentsRemote().catch(()=>{});
   await refreshFromGitHub(true);
   await refreshCTTFromGitHub();
@@ -1429,5 +1953,722 @@ init();
 /* helpers */
 function syncNow(){ toast("Syncing…"); refreshFromGitHub(true); refreshCTTFromGitHub(); }
 </script>
+=======
+    // CTT Summary with event delegation (try/catch safe)
+    function renderCTTSummary(){
+      const wrap = document.getElementById('cttSummaryContainer');
+      if(!wrap) return;
+      const nodes = ["KGU","TBN","SOO","NBN","TNM"];
+      const counts = Object.fromEntries(nodes.map(n=>[n,0]));
+      cttData.forEach(r => { if(counts[r.node]!==undefined) counts[r.node]++; });
+
+      wrap.innerHTML = nodes.map(n=>{
+        const cnt = counts[n] || 0;
+        const ring = cnt>20?'ring-rose-400':cnt>10?'ring-orange-300':'ring-indigo-300';
+        return `
+          <div class="flex flex-col items-center" data-node="${n}" role="button" tabindex="0" aria-label="CTT ${n}">
+            <div class="ring-card ring-4 ${ring}">${cnt}</div>
+            <span class="text-xs mt-2 text-gray-700">${n}</span>
+          </div>`;
+      }).join('');
+
+      if (!wrap.dataset.bound) {
+        wrap.addEventListener('click', async (e) => {
+          const el = e.target.closest('[data-node]');
+          if (!el) return;
+          try { await loadLocationIndex(); } catch(err){ console.warn('loadLocationIndex failed on click:', err); }
+          openCTTAnalysis(el.dataset.node);
+        });
+        wrap.addEventListener('keydown', async (e) => {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          const el = e.target.closest('[data-node]');
+          if (!el) return;
+          e.preventDefault();
+          try { await loadLocationIndex(); } catch(err){ console.warn('loadLocationIndex failed on keydown:', err); }
+          openCTTAnalysis(el.dataset.node);
+        });
+        wrap.dataset.bound = '1';
+      }
+    }
+
+    /* ========= UPDATED: CTT ↔ NTT matching uses NTT logs (fullData) ========= */
+    function openCTTAnalysis(node){
+      const modal = document.getElementById('cttModal');
+      document.getElementById('cttModalNode').textContent = node;
+      const listEl = document.getElementById('cttList');
+      const sumEl  = document.getElementById('cttSummaryLine');
+      const filtEl = document.getElementById('cttFilterInput');
+
+      const rows = cttData.filter(r => r.node === node);
+
+      // Build match list against NTT logs: same node, DP/FDP/CTT ID appears inside NTT Network ID
+      const matches = rows.map(r => {
+        const dpStr = (r.dp || '').toUpperCase();
+        const nidStr = (r.networkId || '').toUpperCase();
+        const dpCode = extractDpCode(dpStr) || extractDpCode(nidStr);
+        const nttNums = [];
+
+        for (const n of fullData) {
+          if ((n["TM Node"]||"").toUpperCase() !== node) continue;
+          const netU = (n["Network ID"]||"").toUpperCase();
+          if (!netU) continue;
+          if ((dpStr && netU.includes(dpStr)) || (nidStr && netU.includes(nidStr)) || (dpCode && netU.includes(dpCode))) {
+            const num = n["NTT Number"];
+            if (num && !nttNums.includes(num)) nttNums.push(num);
+          }
+        }
+        return { ...r, nttNums };
+      });
+
+      const withMatch = matches.filter(m => m.nttNums.length > 0).length;
+      sumEl.innerHTML = `
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-gray-100 text-gray-700">Total Offline CTT: <b>${rows.length}</b></span>
+          <span class="px-2 py-0.5 rounded bg-green-100 text-green-800">With Network ID match: <b>${withMatch}</b></span>
+          <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">Potential NTT risk: <b>${Math.max(rows.length-withMatch,0)}</b></span>
+        </div>`;
+
+      function renderList(term = '') {
+        const t = term.trim().toUpperCase();
+        const data = matches.filter(m => {
+          const blob = `${m.dp} ${m.networkId} ${m.session} ${m.status} ${m.desc}`.toUpperCase();
+          return !t || blob.includes(t);
+        });
+
+        listEl.innerHTML = data.map(m => {
+          const statusHtml = `
+            <span class="inline-flex items-center px-2 py-0.5 rounded ${m.session==='OFFLINE'?'bg-rose-100 text-rose-700':'bg-gray-100 text-gray-700'}">
+              ${m.session || '-'}
+            </span>
+            ${m.status ? `<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-gray-100 text-gray-700">${m.status}</span>` : ''}`;
+
+          const matchCol = (m.nttNums && m.nttNums.length)
+            ? m.nttNums.map(x=>`<span class="inline-flex px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold mr-1">${x}</span>`).join('')
+            : `<span class="inline-flex px-2 py-0.5 rounded bg-amber-100 text-amber-800">Potential NTT risk</span>`;
+
+          return `
+            <div class="grid grid-cols-12 px-3 py-2 hover:bg-gray-50">
+              <div class="col-span-4">
+                <div class="font-semibold text-gray-800">${m.dp || m.networkId || '-'}</div>
+                <div class="text-[12px] text-gray-600">${m.date || ''}</div>
+              </div>
+              <div class="col-span-4">
+                ${statusHtml}
+                ${m.desc ? `<div class="text-[12px] text-gray-600 mt-1 line-clamp-2">${m.desc}</div>`:''}
+              </div>
+              <div class="col-span-4">${matchCol}</div>
+            </div>`;
+        }).join('') || '<div class="px-3 py-3 text-sm text-gray-500">No items.</div>';
+      }
+
+      renderList();
+      filtEl.value = '';
+      filtEl.oninput = (e) => renderList(e.target.value);
+
+      modal.classList.remove('hidden'); 
+      modal.classList.add('flex');
+    }
+    // =========================================================================
+
+    // Tutup CTT modal
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('cttModalClose').addEventListener('click', ()=>document.getElementById('cttModal').classList.add('hidden'));
+      document.getElementById('cttModal').addEventListener('click', (e)=>{ if(e.target.id==='cttModal') document.getElementById('cttModal').classList.add('hidden'); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getElementById('cttModal').classList.add('hidden'); });
+    });
+
+    /* ---------- NTT data & UI ---------- */
+    let fullData=[]; let currentDetailRecord=null;
+    const REPO_RAW_URL="https://raw.githubusercontent.com/jadyakub/ntt-data/main/ntt_logs.csv";
+    const AUTO_REFRESH_SECONDS=30;
+    const nowStr=()=>new Date().toLocaleString();
+    const cloudUrl=()=>REPO_RAW_URL+"?nocache="+Date.now();
+
+    async function sendTelegramResolved(record){
+      if(!record) return;
+      const payload = { nttNumber: record["NTT Number"], team: (getAssignment(record["NTT Number"])||{}).team || "UNKNOWN", node: record["TM Node"], networkId: record["Network ID"], aging: record["Aging Category"] || "-", viewUrl: "" };
+      let res = await fetch("/api/notify-telegram", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      if(!res.ok){ res = await fetch("/.netlify/functions/notify-telegram", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) }); }
+      if(!res.ok){ console.error("Telegram notify failed:", await res.text()); showToast("Failed to notify Telegram"); } else { showToast("Resolved & notified to Telegram"); }
+    }
+
+    function setupTabs() {
+      const buttons = Array.from(document.querySelectorAll('#dashTabs .tabbtn'));
+      const sections = { summaryGrid: document.getElementById('summaryGrid'), nttSummary: document.getElementById('nttSummary'), zoneCard: document.getElementById('zoneCard'), teamQuick: document.getElementById('teamQuickPanel'), summaryDashboard: document.getElementById('summaryDashboard') };
+      function showOnly(which) {
+        if (which === 'summary') { sections.summaryGrid.classList.remove('hidden'); sections.nttSummary.classList.remove('hidden'); sections.zoneCard.classList.remove('hidden'); sections.teamQuick.classList.remove('hidden'); sections.summaryDashboard.classList.add('hidden'); }
+        else if (which === 'zoneOnly') { sections.summaryGrid.classList.remove('hidden'); sections.nttSummary.classList.add('hidden'); sections.teamQuick.classList.add('hidden'); sections.zoneCard.classList.remove('hidden'); sections.summaryDashboard.classList.add('hidden'); }
+        else if (which === 'summaryDashboard') { sections.summaryGrid.classList.add('hidden'); sections.summaryDashboard.classList.remove('hidden'); }
+        buttons.forEach(b => b.classList.toggle('active', b.dataset.show===which));
+      }
+      showOnly('summary'); buttons.forEach(btn => btn.addEventListener('click', () => showOnly(btn.dataset.show)));
+    }
+
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden) { refreshFromGitHub(); refreshCTTFromGitHub(); } });
+
+    // Locator quick-search (ringkas)
+    async function handleLocatorInput(){
+      const q = (locator.input?.value || '').trim();
+      if(!q){ locator.box.classList.add('hidden'); locator.box.innerHTML=''; return; }
+      await loadLocationIndex();
+      const term = q.toUpperCase();
+      const items = locationIndex.filter(r =>
+        r.networkId.toUpperCase().includes(term) ||
+        r.street.toUpperCase().includes(term)  ||
+        r.section.toUpperCase().includes(term)
+      ).slice(0,20);
+      locator.box.innerHTML = items.map(r=>`
+        <div class="px-3 py-2 cursor-pointer locator-item" data-id="${r.networkId}">
+          <div class="font-semibold">${r.networkId}</div>
+          <div class="text-xs text-gray-600">${r.street || '-'} • ${r.section || '-'}</div>
+        </div>`).join('');
+      locator.box.classList.remove('hidden');
+      locator.box.querySelectorAll('.locator-item').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          locator.input.value = el.getAttribute('data-id');
+          locator.box.classList.add('hidden');
+        });
+      });
+    }
+
+    /* ---------- init ---------- */
+    window.addEventListener("DOMContentLoaded", async ()=>{
+      await refreshFromGitHub(true);
+      await refreshCTTFromGitHub();
+      await readAssignments();
+
+      // PRELOAD location index (kalau gagal pun tak apa)
+      loadLocationIndex().catch(err => console.warn('location index preload failed:', err));
+
+      setInterval(()=>{ refreshFromGitHub(); refreshCTTFromGitHub(); }, AUTO_REFRESH_SECONDS*1000);
+      [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",applyFilters));
+      document.getElementById('resetFilters').addEventListener('click', ()=>{ filterNode.value=""; filterDomain.value=""; filterAging.value=""; searchInput.value=""; applyFilters(); });
+      setupTabs();
+
+      // Detail modal close
+      const closeDetail = ()=> document.getElementById("nttDetailModal").classList.add("hidden");
+      document.getElementById("nttDetailClose").addEventListener("click", closeDetail);
+      document.getElementById("nttDetailModal").addEventListener("click", (e)=>{ if(e.target.id==="nttDetailModal") closeDetail(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDetail(); });
+
+      // Assign modal close/backdrop
+      document.getElementById('assignModalClose').addEventListener('click', closeAssignModal);
+      document.getElementById('assignModal').addEventListener('click', (e)=>{ if(e.target.id==='assignModal') closeAssignModal(); });
+
+      // Resolve button
+      document.getElementById("resolveBtn").addEventListener("click", async ()=>{
+        if(!currentDetailRecord) return;
+        const ntt = currentDetailRecord["NTT Number"];
+        const a = getAssignment(ntt);
+        await setDoneRemote(ntt, true);
+        if(a && a.team) incProductivity(a.team, ntt);
+        await sendTelegramResolved(currentDetailRecord);
+        closeDetail();
+        applyFilters();
+      });
+
+      // Evidence actions
+      document.getElementById('uploadEvidenceBtn').addEventListener('click', async ()=>{
+        const inp = document.getElementById('evidenceInput');
+        const file = inp.files && inp.files[0];
+        if(!file || !currentDetailRecord){ document.getElementById('evidenceStatus').textContent = 'No file selected.'; return; }
+        const fr = new FileReader();
+        fr.onload = () => {
+          saveEvidence(currentDetailRecord["NTT Number"], fr.result, file.name);
+          document.getElementById('evidenceStatus').textContent = 'Evidence saved locally.';
+          renderEvidencePreview(currentDetailRecord["NTT Number"]);
+        };
+        fr.readAsDataURL(file);
+      });
+      document.getElementById('removeEvidenceBtn').addEventListener('click', ()=>{
+        if(!currentDetailRecord) return;
+        removeEvidence(currentDetailRecord["NTT Number"]);
+        renderEvidencePreview(currentDetailRecord["NTT Number"]);
+        document.getElementById('evidenceStatus').textContent = 'Evidence removed.';
+      });
+
+      // Locator wiring
+      locator.input = document.getElementById('fdcFdpSearch');
+      locator.box   = document.getElementById('fdcFdpResults');
+      if(locator.input){
+        locator.input.addEventListener('input', debounce(handleLocatorInput, 200));
+        locator.input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ handleLocatorInput(); } });
+        document.addEventListener('click', (e)=>{ if(!locator.box.contains(e.target) && e.target!==locator.input){ locator.box.classList.add('hidden'); } });
+      }
+    });
+
+    function syncNow(){ showToast("Syncing from GitHub…"); refreshFromGitHub(true); refreshCTTFromGitHub(); }
+
+    async function refreshFromGitHub(firstLoad=false){
+      setLoading(true);
+      try{
+        const resp=await fetch(cloudUrl(),{cache:"no-store"});
+        if(!resp.ok) throw new Error("HTTP "+resp.status);
+        const csvText=await resp.text();
+        const parsed=Papa.parse(csvText,{header:true,skipEmptyLines:true});
+        const data=(parsed.data||[]).map(row=>({
+          "NTT Create Date":row["NTT Create Date"],"NTT Number":row["NTT Number"],
+          "TM Node":(row["TM Node"]||"").trim().toUpperCase(),"Symptom":row["Symptom"],
+          "Domain":(row["Domain"]||"").trim(),"Network ID":row["Network ID"],"CTTs Linked":row["CTTs Linked"],
+          "Aging Category":(row["Aging Category"]||"").trim(),"Zone":(row["Zone"]||"").trim().toUpperCase(),
+          "Description":row["Description"]
+        })).filter(r=>allowedNodes.includes(r["TM Node"]));
+        fullData=data; localStorage.setItem("nttData",JSON.stringify(fullData));
+        populateFilters(fullData); applyFilters();
+        lastUpdatedEl.textContent="Last updated: "+nowStr();
+        lastUpdatedEl.className="text-sm text-green-100";
+        if(!firstLoad) showToast("Data refreshed");
+      }catch(e){
+        const cached=localStorage.getItem("nttData");
+        if(cached){
+          fullData=JSON.parse(cached);
+          populateFilters(fullData); applyFilters();
+          lastUpdatedEl.textContent="Using cache: "+nowStr();
+          lastUpdatedEl.className="text-sm text-yellow-200";
+          showToast("Using cache");
+        } else {
+          fullData = [
+            {
+              "NTT Create Date":"2025-08-08 15:42:01",
+              "NTT Number":"NTT-20250808-38216",
+              "TM Node":"KGU",
+              "Symptom":"FDP Down",
+              "Domain":"PASSIVE ELEMENT NOVA",
+              "Network ID":"KGU_C018_DP0036",
+              "CTTs Linked":"",
+              "Aging Category":"12H - 24H",
+              "Zone":"PBP SELATAN",
+              "Description":"Check for optical cable cut/connection malfunction between FDC to FDP"
+            }
+          ];
+          populateFilters(fullData); applyFilters();
+          lastUpdatedEl.textContent="No network — showing sample data";
+          lastUpdatedEl.className="text-sm text-rose-100";
+          showToast("Loaded sample data");
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function getDayDifference(dateStr){ const t=new Date(), d=new Date(dateStr); if(isNaN(d.getTime())) return NaN; return Math.floor((t-d)/(1000*60*60*24)); }
+
+    async function openDetail(record){
+      currentDetailRecord = record;
+      await loadLocationIndex();
+
+      const loc = findLocationByNetworkId(record["Network ID"]);
+      document.getElementById("detailLocationFor").textContent = record["Network ID"] || "-";
+      document.getElementById("detailStreet").textContent = (loc && loc.street) || "-";
+      document.getElementById("detailSection").textContent = (loc && loc.section) || "-";
+
+      const link = document.getElementById("detailCoordsLink");
+      const mapWrap = document.getElementById("mapPreviewWrap");
+      const mapFrame = document.getElementById("detailMap");
+      if(loc && loc.lat && loc.lng){
+        link.textContent = `${loc.lat}, ${loc.lng}`;
+        link.href = `https://maps.google.com/?q=${loc.lat},${loc.lng}`;
+        const lat = parseFloat(loc.lat), lng = parseFloat(loc.lng);
+        const d = 0.005; const bbox = `${lng-d}%2C${lat-d}%2C${lng+d}%2C${lat+d}`;
+        mapFrame.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
+        mapWrap.classList.remove('hidden');
+      } else {
+        link.textContent = "-"; link.href = "#"; mapFrame.src = ""; mapWrap.classList.add('hidden');
+      }
+
+      document.getElementById("detailDescription").textContent = record["Description"] || "-";
+      document.getElementById("detailNttNo").textContent = record["NTT Number"] || "-";
+      const a = getAssignment(record["NTT Number"]);
+      document.getElementById("detailAssignedTo").textContent = (a && a.team) ? a.team : "Unassigned";
+
+      renderEvidencePreview(record["NTT Number"]);
+
+      const modal = document.getElementById("nttDetailModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function renderEvidencePreview(ntt){
+      const wrap = document.getElementById('evidencePreview');
+      const nameEl = document.getElementById('evidenceName');
+      const imgEl  = document.getElementById('evidenceThumb');
+      const viewA  = document.getElementById('viewEvidenceBtn');
+      const dlA    = document.getElementById('downloadEvidenceBtn');
+
+      const ev = readEvidence(ntt);
+      if(!ev){ wrap.classList.add('hidden'); nameEl.textContent=''; imgEl.classList.add('hidden'); viewA.removeAttribute('href'); dlA.removeAttribute('href'); dlA.removeAttribute('download'); return; }
+
+      wrap.classList.remove('hidden');
+      nameEl.textContent = ev.name || 'evidence';
+
+      let src = ev.base64;
+      viewA.href = src; dlA.href = src; dlA.download = ev.name || 'evidence';
+
+      if(src && (src.startsWith('data:image/') || /\.(png|jpe?g|webp|gif|bmp|svg)(\?|#|$)/i.test(src))){
+        imgEl.src = src; imgEl.classList.remove('hidden');
+      } else { imgEl.classList.add('hidden'); }
+    }
+
+    function populateTable(data){
+      const TEAM_LIST_LOCAL = ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"];
+      let out = [];
+      for(const row of data){
+        const ageCat = row["Aging Category"] || "";
+        const agingClass = ageCat.includes("48H")?"bg-red-500":(ageCat.includes("24H")?"bg-orange-400":"bg-green-500");
+        const daysCount = getDayDifference(row["NTT Create Date"]);
+        const asg = getAssignment(row["NTT Number"]);
+
+        const stat = asg && asg.status ? asg.status : "assigned";
+        const statusLabel = (stat==="done")?"RESOLVED":(stat==="in progress"?"IN PROGRESS":(stat==="unassigned"?"UNASSIGNED":"ASSIGNED"));
+        const badgeClass =
+          (stat==="done")?"bg-emerald-100 text-emerald-700":
+          (stat==="in progress")?"bg-amber-100 text-amber-700":
+          (stat==="unassigned")?"bg-gray-100 text-gray-600":"bg-indigo-100 text-indigo-700";
+        const statusBadge = `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${badgeClass}">${statusLabel}</span>`;
+
+        const assigneeBadge = `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${asg&&asg.team?'bg-purple-100 text-purple-700':'bg-gray-100 text-gray-600'}">${asg&&asg.team?asg.team:'UNASSIGNED'}</span>`;
+
+        const teamSelect = `<select class="assigneeSelect border rounded px-2 py-1 text-sm" data-ntt="${row["NTT Number"]||''}">
+          ${TEAM_LIST_LOCAL.map(t=>`<option value="${t}" ${(asg&&asg.team===t)?'selected':''}>${t}</option>`).join('')}
+        </select>`;
+
+        const statusSelect = `<select class="statusSelect border rounded px-2 py-1 text-sm ml-2" data-ntt="${row["NTT Number"]||''}">
+          <option value="UNASSIGNED" ${stat==='unassigned'?'selected':''}>UNASSIGNED</option>
+          <option value="ASSIGNED" ${stat==='assigned' || !asg?'selected':''}>ASSIGNED</option>
+          <option value="IN PROGRESS" ${stat==='in progress'?'selected':''}>IN PROGRESS</option>
+          <option value="RESOLVED" ${stat==='done'?'selected':''}>RESOLVED</option>
+        </select>`;
+
+        const inlineBadge = asg && asg.team ? `<span class="ml-2 text-[10px] px-2 py-0.5 rounded bg-indigo-600 text-white">${asg.team}${stat==="done"?" • done":""}</span>` : "";
+
+        out.push(`
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2">${row["NTT Create Date"]||""}</td>
+            <td class="px-4 py-2">
+              <button class="text-indigo-600 underline open-detail" data-ntt="${row["NTT Number"]||""}">
+                ${row["NTT Number"]||""}
+              </button>
+              ${inlineBadge}
+            </td>
+            <td class="px-4 py-2">${row["TM Node"]||""}</td>
+            <td class="px-4 py-2">${row["Symptom"]||""}</td>
+            <td class="px-4 py-2">${row["Domain"]||""}</td>
+            <td class="px-4 py-2">${row["Network ID"]||""}</td>
+            <td class="px-4 py-2">${row["CTTs Linked"]||""}</td>
+            <td class="px-4 py-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat}</span></td>
+            <td class="px-4 py-2">${isFinite(daysCount)?daysCount:"-"}</td>
+            <td class="px-4 py-2 hidden sm:table-cell">${assigneeBadge}</td>
+            <td class="px-4 py-2 hidden sm:table-cell">${statusBadge}</td>
+            <td class="px-4 py-2 hidden sm:table-cell">${teamSelect}${statusSelect}</td>
+          </tr>
+        `);
+      }
+      logTableBody.innerHTML = out.join("");
+
+      logTableBody.querySelectorAll('.open-detail').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const ntt = btn.getAttribute('data-ntt');
+          const rec = (fullData||[]).find(r => r["NTT Number"]===ntt);
+          if(rec) openDetail(rec);
+        });
+      });
+
+      logTableBody.querySelectorAll('.assigneeSelect').forEach(sel=>{
+        sel.addEventListener('change', async ()=>{
+          const ntt = sel.getAttribute('data-ntt');
+          const team = sel.value;
+          const current = getAssignment(ntt);
+          const nextStatus = (!current || current.status === "unassigned") ? "assigned" : (current.status || "assigned");
+          await upsertAssignmentRemote({ nttNumber: ntt, team, status: nextStatus, note: (current && current.note) || "" });
+          if(current && current.status === "done"){ await setDoneRemote(ntt, true); }
+          applyFilters(); showToast('Assignee updated');
+        });
+      });
+
+      logTableBody.querySelectorAll('.statusSelect').forEach(sel=>{
+        sel.addEventListener('change', async ()=>{
+          const ntt = sel.getAttribute('data-ntt');
+          const desired = sel.value;
+          let a = getAssignment(ntt);
+
+          if(!a && desired !== 'UNASSIGNED'){
+            await saveAssignment(ntt, ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"][0], "");
+            a = getAssignment(ntt);
+          }
+          if(desired === 'RESOLVED'){
+            await setDoneRemote(ntt, true);
+            if(a && a.team) incProductivity(a.team, ntt);
+            const rec = (fullData||[]).find(r=>r["NTT Number"]===ntt);
+            if(rec) await sendTelegramResolved(rec);
+          } else if(desired === 'UNASSIGNED'){
+            await upsertAssignmentRemote({ nttNumber: ntt, team: "", status: "unassigned", note: (a && a.note) || "" });
+          } else {
+            const teamVal = (a && a.team) ? a.team : ["TEAM FAISON","TEAM FAUZIE","TEAM RUDI","TEAM ROSDEE"][0];
+            const statusVal = (desired === 'IN PROGRESS') ? 'in progress' : 'assigned';
+            await upsertAssignmentRemote({ nttNumber: ntt, team: teamVal, status: statusVal, note: (a && a.note) || "" });
+          }
+          applyFilters(); showToast('Status updated');
+        });
+      });
+    }
+
+    function populateFilters(data){
+      const domainSet=new Set(data.map(d=>(d["Domain"]||"").trim()).filter(Boolean));
+      domainSet.add("LTE 4G");
+      const domains=[...domainSet].sort();
+      const agings=[...new Set(data.map(d=>(d["Aging Category"]||"").trim()).filter(Boolean))].sort();
+      filterDomain.innerHTML='<option value="">Filter by Domain</option>'+domains.map(d=>`<option value="${d}">${d}</option>`).join('');
+      filterAging.innerHTML='<option value="">Filter by Aging</option>'+agings.map(a=>`<option value="${a}">${a}</option>`).join('');
+    }
+
+    function renderActiveChips(){
+      const chips = [];
+      const add = (label, value, clear) => {
+        if(!value) return; chips.push(`
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 text-xs border">
+            <span class="mi text-[16px]">label</span>
+            <b>${label}:</b> ${value}
+            <button type="button" class="ml-1" aria-label="clear ${label}" onclick="${clear}"><span class="mi text-[16px]">close</span></button>
+          </span>`);
+      };
+      add('Node', filterNode.value, `filterNode.value='';applyFilters();`);
+      add('Domain', filterDomain.value, `filterDomain.value='';applyFilters();`);
+      add('Aging', filterAging.value, `filterAging.value='';applyFilters();`);
+      if((searchInput.value||'').trim()){
+        chips.push(`
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs border border-indigo-200">
+            <span class="mi text-[16px]">search</span>
+            <b>Search:</b> ${searchInput.value.trim()}
+            <button type="button" class="ml-1" aria-label="clear search" onclick="document.getElementById('searchInput').value='';applyFilters();"><span class="mi text-[16px]">close</span></button>
+          </span>`);
+      }
+      activeChips.innerHTML = chips.join('');
+    }
+
+    // NTT Summary guna ring-card (seragam dgn CTT)
+    function updateNTTSummary(data){
+      const cfg = [
+        { label:"< 8H",      ring:"ring-green-400",  text:"text-green-600"  },
+        { label:"8H - 12H",  ring:"ring-yellow-400", text:"text-yellow-600" },
+        { label:"12H - 24H", ring:"ring-orange-400", text:"text-orange-500" },
+        { label:"24H - 48H", ring:"ring-red-400",    text:"text-red-500"    },
+        { label:"> 48H",     ring:"ring-rose-400",   text:"text-rose-600"   }
+      ];
+      const c=document.getElementById("nttSummaryContainer");
+      if(!c) return;
+      c.innerHTML = cfg.map(cat=>{
+        const count=data.filter(d=>(d["Aging Category"]||"")===cat.label).length;
+        return `
+          <div class="flex flex-col items-center" role="button" tabindex="0" aria-label="NTT ${cat.label}" data-aging="${cat.label}">
+            <div class="ring-card ring-4 ${cat.ring}">${count}</div>
+            <span class="text-xs mt-2 ${cat.text}">${cat.label}</span>
+          </div>`;
+      }).join('');
+
+      const go = async (aging) => {
+        document.getElementById('filterAging').value = aging;
+        applyFilters();
+        document.querySelector('#dashTabs [data-show="summaryDashboard"]')?.click();
+        document.getElementById('summaryDashboard')?.scrollIntoView({ behavior:'smooth' });
+      };
+      c.querySelectorAll('[data-aging]').forEach(el=>{
+        el.addEventListener('click', () => go(el.dataset.aging));
+        el.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); go(el.dataset.aging); }});
+      });
+    }
+
+    function applyFilters(){
+      const node=filterNode.value, domain=filterDomain.value, aging=filterAging.value, keyword=(searchInput.value||"").toLowerCase();
+      const filtered=fullData.filter(row=>{
+        const okNode=!node||(row["TM Node"]||"")===node;
+        const okDomain=!domain||(row["Domain"]||"")===domain;
+        const okAging=!aging||(row["Aging Category"]||"")===aging;
+        const okSearch=!keyword||Object.values(row).some(v=>String(v||"").toLowerCase().includes(keyword));
+        return okNode&&okDomain&&okAging&&okSearch;
+      });
+      populateTable(filtered);
+      populateDashboard(filtered);
+      updateNTTSummary(filtered);
+      populateZoneDashboard(filtered);
+      renderTeamQuickPanel(filtered);
+      renderActiveChips();
+    }
+
+    function toggleTeam(teamId){
+      const section=document.getElementById(teamId);
+      if(section){
+        section.classList.toggle("hidden");
+        const btn = section.parentElement.querySelector('button .chev');
+        if (btn) btn.textContent = section.classList.contains('hidden') ? '▸' : '▾';
+      }
+    }
+
+    const TEAM_ALIASES={"TEAM FAISON":["TEAM FAISON"],"TEAM FAUZIE":["TEAM FAUZIE"],"TEAM RUDI":["TEAM RUDI"],"TEAM ROSDEE":["TEAM ROSDEE"]};
+    function teamsMatch(entryTeam, cardTeam){ const aliases=TEAM_ALIASES[cardTeam]||[cardTeam]; return aliases.includes(entryTeam); }
+
+    function populateDashboard(data){
+      const teams={"TEAM FAISON":["KGU","TBN"],"TEAM FAUZIE":["KGU","TBN"],"TEAM RUDI":["SOO","NBN"],"TEAM ROSDEE":["TNM"]};
+      summaryDashboard.innerHTML="";
+      const assignments=readAssignmentsCache();
+
+      Object.entries(teams).forEach(([team,nodes])=>{
+        const teamId=team.replace(/\s+/g,"_");
+
+        const assignedOpen = data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status!=="done" && a.status!=="unassigned"; }).length;
+        const done = data.filter(d=>{ const a=assignments[d["NTT Number"]]; return a && teamsMatch(a.team, team) && a.status==="done"; }).length;
+        const totalTeam = assignedOpen + done;
+        const prod=productivityCount(team);
+        const pct = totalTeam ? Math.round((done/totalTeam)*100) : 0;
+
+        const html = `
+          <div class="rounded-lg border border-gray-200 p-3 bg-white shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="font-semibold text-gray-800">${team}</div>
+              <div class="text-xs text-gray-500">Total: <b>${totalTeam}</b></div>
+            </div>
+
+            <div class="mt-2">
+              <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-emerald-500 rounded" style="width:${pct}%;"></div></div>
+              <div class="mt-1 flex flex-wrap gap-2 text-xs">
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">Assigned: ${assignedOpen}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Done: ${done}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-sky-100 text-sky-700">Productivity: ${prod}</span>
+              </div>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between">
+              <button class="text-xs px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 flex items-center gap-1" onclick="toggleTeam('${teamId}')"><span class="chev">▸</span> Details</button>
+              <button data-team="${team}" class="open-assign-modal bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Task Assign</button>
+            </div>
+
+            <div id="${teamId}" class="team-section hidden mt-3">
+              ${nodes.map(node=>{
+                const a8   = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="< 8H").length;
+                const a12  = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="8H - 12H").length;
+                const a24  = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="12H - 24H").length;
+                const a48  = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="24H - 48H").length;
+                const a48p = data.filter(d=>d["TM Node"]===node && d["Aging Category"]==="> 48H").length;
+                const tot  = a8+a12+a24+a48+a48p;
+                return `
+                  <div class="mb-2">
+                    <div class="text-xs font-semibold text-gray-700 mb-1">${node} • Total ${tot}</div>
+                    <div class="grid grid-cols-5 gap-2 text-[11px]">
+                      <div class="px-2 py-1 rounded bg-gray-100">🟢 &lt;8H: ${a8}</div>
+                      <div class="px-2 py-1 rounded bg-gray-100">🟡 8–12H: ${a12}</div>
+                      <div class="px-2 py-1 rounded bg-gray-100">🔶 12–24H: ${a24}</div>
+                      <div class="px-2 py-1 rounded bg-orange-400 text-white">24–48H: ${a48}</div>
+                      <div class="px-2 py-1 rounded bg-red-500 text-white">&gt;48H: ${a48p}</div>
+                    </div>
+                  </div>`; }).join('')}
+            </div>
+          </div>`;
+        summaryDashboard.insertAdjacentHTML('beforeend', html);
+      });
+
+      summaryDashboard.querySelectorAll('.open-assign-modal').forEach(btn=>{ btn.addEventListener('click',()=>openAssignModal(btn.getAttribute('data-team'))); });
+    }
+
+    function populateZoneDashboard(data){
+      const targetZone="PBP SELATAN", targetDomain="PASSIVE ELEMENT NOVA", nodes=["KGU","TBN","SOO","NBN","TNM"];
+      const filtered=data.filter(d=>String(d["Zone"]||"").toUpperCase()===targetZone && String(d["Domain"]||"").toUpperCase()===targetDomain && nodes.includes(String(d["TM Node"]||"").toUpperCase()));
+      const barWrap=document.getElementById("zoneDashboard"); const grand=document.getElementById("zoneGrand");
+
+      if(!filtered.length){ barWrap.innerHTML='<div class="text-sm text-gray-500 italic py-2 px-3 bg-yellow-100 border border-yellow-300 rounded">❗ No Passive Element NTT found.</div>'; grand.innerHTML=''; return; }
+
+      const counts=Object.fromEntries(nodes.map(n=>[n,0])); filtered.forEach(r=>{ const n=String(r["TM Node"]||"").toUpperCase(); if(n in counts) counts[n]++; });
+      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]); const max=Math.max(...sorted.map(([,c])=>c),1);
+      barWrap.innerHTML=sorted.map(([n,cnt])=>`<div class="flex items-center gap-3"><div class="w-14 text-sm font-medium">${n}</div><div class="flex-1 bg-gray-200 rounded h-4 relative overflow-hidden"><div class="bg-red-500 h-4" style="width:${cnt/max*100}%"></div><span class="absolute right-2 top-0 text-white text-xs font-bold leading-4">${cnt}</span></div></div>`).join("");
+      const total=sorted.reduce((s,[,c])=>s+c,0); grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
+    }
+
+    function renderTeamQuickPanel(data){
+      const teams = { "TEAM FAISON": ["KGU","TBN"], "TEAM FAUZIE": ["KGU","TBN"], "TEAM RUDI": ["SOO","NBN"], "TEAM ROSDEE": ["TNM"] };
+      const colorByNode = { KGU:'bg-amber-400', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600', TNM:'bg-rose-500' };
+      const el = document.getElementById('teamQuickPanel'); el.innerHTML = '';
+      Object.entries(teams).forEach(([team, nodes])=>{
+        const chips = nodes.map(n=>{ const cnt = data.filter(d=>d['TM Node']===n).length; const col = colorByNode[n] || 'bg-gray-400'; return `<span class="pill text-white ${col}">${n} ${cnt}</span>`; }).join(' ');
+        const card = document.createElement('div'); card.className = 'card-soft p-4';
+        card.innerHTML = `<div class="text-base font-semibold text-gray-800 mb-3">${team}</div><div class="flex items-center justify-between"><div class="flex flex-wrap gap-2">${chips}</div><button class="expandBtn text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded">Expand</button></div>`;
+        card.querySelector('.expandBtn').addEventListener('click', ()=>{ document.querySelector('#dashTabs [data-show="summaryDashboard"]').click(); setTimeout(()=>{ const teamId = team.replace(/\s+/g,'_'); const sec = document.getElementById(teamId); if(sec && sec.classList.contains('hidden')) sec.classList.remove('hidden'); document.getElementById('summaryDashboard')?.scrollIntoView({behavior:'smooth'}); }, 50); });
+        el.appendChild(card);
+      });
+    }
+
+    /* ---------- Assign Modal ---------- */
+    let currentAssignTeam = null;
+    function closeAssignModal(){ const m = document.getElementById('assignModal'); m.classList.add('hidden'); m.classList.remove('flex'); currentAssignTeam = null; }
+    function openAssignModal(teamName){
+      currentAssignTeam = teamName;
+      const modal = document.getElementById('assignModal'); modal.classList.remove('hidden'); modal.classList.add('flex');
+      document.getElementById('assignTeamTitle').textContent = teamName;
+      document.getElementById('assignSearch').value = ''; document.getElementById('showPool').checked = false; document.getElementById('showDone').checked = false;
+
+      const rerender = ()=>{
+        const q = document.getElementById('assignSearch').value.trim().toLowerCase();
+        const showPool = document.getElementById('showPool').checked;
+        const showDone = document.getElementById('showDone').checked;
+        const TEAM_NODES = { 'TEAM FAISON':['KGU','TBN'], 'TEAM FAUZIE':['KGU','TBN'], 'TEAM RUDI':['SOO','NBN'], 'TEAM ROSDEE':['TNM'] };
+        const teamNodes = TEAM_NODES[teamName] || [];
+        const listEl = document.getElementById('assignList'); const asn = readAssignmentsCache(); const rows = [];
+
+        for(const r of fullData){
+          if(q){ const blob = `${r['NTT Number']} ${r['Network ID']} ${r['Symptom']} ${r['TM Node']}`.toLowerCase(); if(!blob.includes(q)) continue; }
+          const a = asn[r['NTT Number']]; const inTeam = a && teamsMatch(a.team, teamName); const unassigned = !a || a.status==='unassigned' || !a.team;
+          if(inTeam){ if(!showDone && a.status==='done') continue; }
+          else if(showPool){ if(!(unassigned && teamNodes.includes(r['TM Node']))) continue; }
+          else { continue; }
+
+          const isDone = a && a.status==='done'; const ageCat = r['Aging Category'] || '';
+          const agingClass = ageCat.includes('48H') ? 'bg-red-500' : (ageCat.includes('24H') ? 'bg-orange-400' : 'bg-green-500');
+          rows.push(`
+            <div class="grid grid-cols-12 px-3 py-2 hover:bg-gray-50">
+              <div class="col-span-6">
+                <div class="font-semibold text-gray-800">${r['NTT Number']}</div>
+                <div class="text-[12px] text-gray-600">${r['TM Node']} • ${r['Symptom']||'-'}</div>
+                <div class="mt-1 flex gap-2">
+                  <button class="px-2 py-0.5 text-xs rounded bg-indigo-600 text-white" data-assign="${r['NTT Number']}">${inTeam ? 'Unassign' : 'Assign'}</button>
+                  <button class="px-2 py-0.5 text-xs rounded ${isDone?'bg-emerald-600 text-white':'bg-gray-200 text-gray-700'}" data-done="${r['NTT Number']}">${isDone?'Done':'Mark done'}</button>
+                </div>
+              </div>
+              <div class="col-span-4">${r['Network ID']||'-'}</div>
+              <div class="col-span-2"><span class="px-2 py-1 rounded text-white ${agingClass}">${ageCat}</span></div>
+            </div>`);
+        }
+
+        listEl.innerHTML = rows.join('') || '<div class="px-3 py-4 text-sm text-gray-500">No items.</div>';
+        document.getElementById('assignCount').textContent = rows.length;
+
+        listEl.querySelectorAll('[data-assign]').forEach(btn=>{
+          btn.addEventListener('click', async ()=>{
+            const ntt = btn.getAttribute('data-assign');
+            const a = getAssignment(ntt);
+            if(a && teamsMatch(a.team, teamName) && a.status!=='unassigned'){ await upsertAssignmentRemote({ nttNumber: ntt, team: '', status: 'unassigned' }); }
+            else { await upsertAssignmentRemote({ nttNumber: ntt, team: teamName, status: 'assigned' }); }
+            applyFilters(); rerender(); showToast('Updated');
+          });
+        });
+        listEl.querySelectorAll('[data-done]').forEach(btn=>{
+          btn.addEventListener('click', async ()=>{
+            const ntt = btn.getAttribute('data-done');
+            const a = getAssignment(ntt);
+            const rec = fullData.find(x=>x['NTT Number']===ntt);
+            const willBeDone = !(a && a.status==='done');
+            await setDoneRemote(ntt, willBeDone);
+            if(willBeDone && a && a.team) incProductivity(a.team, ntt);
+            if(willBeDone && rec) await sendTelegramResolved(rec);
+            applyFilters(); rerender();
+          });
+        });
+      };
+
+      const run = debounce(rerender, 150);
+      document.getElementById('assignSearch').oninput = run;
+      document.getElementById('showPool').onchange = rerender;
+      document.getElementById('showDone').onchange = rerender;
+      rerender();
+    }
+
+  </script>
+>>>>>>> f377e2e17351987db333ae8e377e9813726d59b0
 </body>
 </html>
