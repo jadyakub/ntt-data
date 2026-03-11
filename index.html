@@ -34,14 +34,12 @@
     .grid-sm{display:block}
   }
 
-  /* ===== Role gating ===== */
   body[data-role="cm"] .nff-only { display:none !important; }
   body[data-role="cm"] th.sel-col,
   body[data-role="cm"] th.action-col,
   body[data-role="cm"] td.sel-col,
   body[data-role="cm"] td.action-col { display:none !important; }
 
-  /* Header */
   .appbar{ background:var(--brand); color:white; }
   .app-title{ font-weight:700; letter-spacing:.2px; }
   .role-badge{ background:rgba(255,255,255,.12); }
@@ -50,7 +48,6 @@
 
   [data-node], [data-aging] { cursor:pointer; }
 
-  /* Attachments preview (CR/MT Detail) */
   .file-card{ border:1px solid #e5e7eb; border-radius:.5rem; overflow:hidden; background:#fff; }
   .file-thumb{ width:100%; height:9rem; object-fit:cover; background:#f3f4f6; display:block; }
   .file-icon{ height:9rem; display:flex; align-items:center; justify-content:center; background:#f3f4f6; font-size:42px; color:#6b7280;}
@@ -61,7 +58,6 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-<!-- Header -->
 <header class="appbar px-4 md:px-6 py-3 shadow flex flex-wrap items-center justify-between gap-3">
   <div class="flex items-center gap-2">
     <span class="mi text-2xl">dataset_linked</span>
@@ -69,25 +65,19 @@
   </div>
 
   <div class="flex items-center gap-2 text-sm">
-    <!-- Log CR/MT: NFF sahaja -->
     <button id="openCrmt" class="nff-only btn btn--brand hidden">
       <span class="mi mr-1">assignment</span> Log CR/MT
     </button>
 
     <div id="lastUpdated" class="text-indigo-100"></div>
 
-    <!-- role badge (akan disembunyi bila login CM) -->
     <div id="roleBadgeWrap" class="flex items-center gap-1 role-badge rounded px-2 py-1">
       <span class="mi">badge</span>
-      <select id="roleSelect" class="bg-transparent outline-none">
-        <option value="cm">CM Team</option>
-        <option value="nff">NFF Team</option>
-      </select>
+      <span id="roleLabel" class="font-medium">CM Team</span>
     </div>
 
     <button id="installBtn" class="hidden text-xs px-2 py-1 rounded bg-emerald-500 hover:bg-emerald-600">Install App</button>
 
-    <!-- 🆕 Logout -->
     <button id="logoutBtn" class="text-xs px-2 py-1 rounded border border-white/30 bg-white/10 hover:bg-white/20 flex items-center gap-1">
       <span class="mi">logout</span> Logout
     </button>
@@ -96,7 +86,6 @@
 
 <main class="w-full min-h-screen px-2 sm:px-6 lg:px-8 py-4">
 
-  <!-- Sticky Quick Bar -->
   <section class="card-soft p-3 sm:p-4 mb-4 sticky-top border-indigo-100">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
       <div class="flex items-center gap-2 text-sm text-gray-700">
@@ -113,7 +102,6 @@
       </div>
     </div>
 
-    <!-- Bar 1: Filters -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
       <div class="relative">
         <span class="mi absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">apartment</span>
@@ -140,7 +128,6 @@
       </div>
     </div>
 
-    <!-- Bar 2: FDC / FDP Location -->
     <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
       <div class="relative">
         <label for="fdcFdpSearch" class="block text-[11px] font-semibold text-gray-600 mb-1 flex items-center gap-1">
@@ -153,7 +140,6 @@
           <button id="fdcFdpBtn" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs rounded bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1">
             <span class="mi">search</span> Search
           </button>
-          <!-- hasil carian (klik item = buka Google Maps) -->
           <div id="fdcFdpResults" class="locator-list hidden"></div>
         </div>
       </div>
@@ -161,7 +147,6 @@
 
     <div id="activeChips" class="mt-2 flex flex-wrap gap-2"></div>
 
-    <!-- Bulk bar -->
     <div id="bulkBar" class="nff-only mt-3 hidden items-center justify-between flex-wrap gap-2 p-2 border rounded-lg bg-indigo-50">
       <div class="text-sm flex items-center gap-2">
         <span class="mi text-indigo-600">select_all</span>
@@ -179,7 +164,6 @@
     </div>
   </section>
 
-  <!-- Summaries -->
   <div id="summaryGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
     <div class="lg:col-span-8 space-y-4">
       <div class="card-soft p-4">
@@ -200,7 +184,6 @@
       </div>
     </div>
 
-    <!-- Team Dashboard -->
     <aside id="teamQuickPanel" class="lg:col-span-4 space-y-3"></aside>
   </div>
 
@@ -210,7 +193,6 @@
     <span class="mi align-middle mr-1 animate-pulse">hourglass_top</span> Loading data…
   </div>
 
-  <!-- Table -->
   <div class="overflow-x-auto text-sm border rounded-lg bg-white">
     <table class="min-w-full table-auto border-collapse text-center" id="logTable">
       <thead class="text-xs uppercase tracking-wider">
@@ -236,7 +218,6 @@
   </div>
 </main>
 
-<!-- Footer -->
 <footer class="px-4 sm:px-6 lg:px-8 mt-6">
   <div class="max-w-7xl mx-auto">
     <div class="border-t border-gray-200"></div>
@@ -246,7 +227,6 @@
   </div>
 </footer>
 
-<!-- NTT Detail Modal -->
 <div id="nttDetailModal" class="hidden fixed inset-0 z-[60] bg-black/50 items-start sm:items-center justify-center p-3">
   <div class="bg-white v-modal-panel shadow-2xl">
     <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -314,7 +294,6 @@
   </div>
 </div>
 
-<!-- CTT Early Analysis Modal -->
 <div id="cttModal" class="hidden fixed inset-0 z-[65] bg-black/50 items-start sm:items-center justify-center p-3">
   <div class="bg-white v-modal-panel shadow-2xl">
     <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -348,7 +327,6 @@
   </div>
 </div>
 
-<!-- Assign Modal -->
 <div id="assignModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
   <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden">
     <div class="bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -365,7 +343,6 @@
         </div>
       </div>
 
-      <!-- 🆕 wrapper overflow-x for mobile horizontal scroll -->
       <div class="overflow-x-auto">
         <div class="min-w-[720px] border rounded overflow-hidden">
           <div class="grid grid-cols-12 bg-gray-100 text-xs font-semibold text-gray-700 px-3 py-2">
@@ -376,14 +353,12 @@
           <div id="assignList" class="max-h-[65vh] overflow-y-auto divide-y"></div>
         </div>
       </div>
-      <!-- end wrapper -->
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
 
-<!-- CR/MT Pool Modal -->
 <div id="crmtPoolModal" class="hidden fixed inset-0 bg-black/50 z-[55] items-start sm:items-center justify-center p-3">
   <div class="bg-white v-modal-panel shadow-2xl">
     <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -404,7 +379,6 @@
   </div>
 </div>
 
-<!-- CR/MT Detail Modal -->
 <div id="crmtDetailModal" class="hidden fixed inset-0 bg-black/50 z-[70] items-start sm:items-center justify-center p-3">
   <div class="bg-white v-modal-panel shadow-2xl">
     <div class="v-modal-head bg-indigo-700 text-white px-4 py-3 flex items-center justify-between">
@@ -444,7 +418,6 @@
 </div>
 
 <script>
-/* ===== Paksa login & set data-role awal ===== */
 (() => {
   const role = localStorage.getItem('role');
   if (!role) {
@@ -454,7 +427,6 @@
   }
 })();
 
-/* ========================= CONSTANTS & UTILITIES ========================= */
 const toast = (msg)=>{ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1800); };
 const allowedNodes = ["KGU","TBN","SOO","NBN","TNM"];
 const VALID = { domains: ["PASSIVE ELEMENT NOVA","LTE 4G","CORE","ACCESS"], aging: ["< 8H","8H - 12H","12H - 24H","24H - 48H","> 48H"] };
@@ -470,7 +442,7 @@ const AUTO_REFRESH_SECONDS=30;
 const locator = { input:null, box:null };
 const LS = { NTT:"nttData", ASSIGN:"nttAssignments", ASSIGN_VER:"nttAssignmentsVersion", PROD:"nttProductivity", LOC:"nttLocationIndex", EV_PREFIX:"evidence:", TEAM_BOX:"nttTeamTasks" };
 
-let role = (localStorage.getItem('role')||'cm'); // 'cm' or 'nff'
+let role = (localStorage.getItem('role')||'cm');
 
 function debounce(fn,ms=250){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a),ms); }; }
 function normId(s){ return String(s||'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,''); }
@@ -478,18 +450,15 @@ function extractDpCode(s){ const m=String(s||'').toUpperCase().match(/DP0*\d{1,5
 function daysDiff(dateStr){ const t=new Date(), d=new Date(dateStr); if(isNaN(d)) return NaN; return Math.floor((t-d)/(1000*60*60*24)); }
 function copy(text){ navigator.clipboard?.writeText(text).then(()=>toast("Copied")).catch(()=>{}); }
 
-/* ===== CR/MT Inbox (Team task pool) ===== */
 function readTeamBox(){ try { return JSON.parse(localStorage.getItem(LS.TEAM_BOX) || '{}'); } catch { return {}; } }
 function writeTeamBox(obj){ localStorage.setItem(LS.TEAM_BOX, JSON.stringify(obj||{})); }
 
-/* ========================= STATE ========================= */
 let fullData=[], filteredData=[];
 let currentDetailRecord=null;
 let locationIndex=null;
 let cttData=[];
 let idxByNtt={}, idxByNetworkId={}, idxByNode={}, idxByDpCode={};
 
-/* ========================= PWA quick setup + Install button ========================= */
 (function setupPWA(){
   const manifest = {"name":"NTT Log Viewer — Pro","short_name":"NTT NOC","start_url":"./","display":"standalone","background_color":"#111827","theme_color":"#4338ca","icons":[{"src":"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><rect width='128' height='128' fill='%234338ca'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-size='56' fill='white'>N</text></svg>","sizes":"128x128","type":"image/svg+xml"}]};
   const blob = new Blob([JSON.stringify(manifest)],{type:'application/json'});
@@ -516,21 +485,21 @@ window.addEventListener('beforeinstallprompt', (e)=>{
   }
 });
 
-/* Quick nav to CR/MT page (NFF only) */
 document.getElementById('openCrmt').addEventListener('click', ()=>{
   const url = 'crmt.html?from=index';
   window.location.href = url;
 });
 
-/* ====== LOGOUT (baru) ====== */
 document.getElementById('logoutBtn').addEventListener('click', ()=>{
   try {
     localStorage.removeItem('role');
+    localStorage.removeItem('auth');
+    localStorage.removeItem('guest');
+    localStorage.removeItem('cm_perms');
   } catch {}
   location.href = 'login.html';
 });
 
-/* ========================= ASSIGNMENTS ========================= */
 function cacheAssignments(map){ localStorage.setItem(LS.ASSIGN, JSON.stringify(map)); localStorage.setItem(LS.ASSIGN_VER, String(Date.now())); }
 function readAssignmentsCache(){ try{ return JSON.parse(localStorage.getItem(LS.ASSIGN)||"{}"); }catch{ return {}; } }
 async function loadAssignmentsRemote(){
@@ -560,7 +529,6 @@ async function setDoneRemote(ntt, done=true){
   const current=getAssignment(ntt)||{}; await upsertAssignmentRemote({ nttNumber:ntt, team:current.team||"", status: done ? "done" : "assigned" });
 }
 
-/* ========================= PRODUCTIVITY & EVIDENCE ========================= */
 function readProd(){ try{ return JSON.parse(localStorage.getItem(LS.PROD)||'{"counts":{},"items":{}}'); }catch{return {counts:{},items:{}}; } }
 function writeProd(p){ localStorage.setItem(LS.PROD, JSON.stringify(p)); }
 function incProductivity(team, ntt){ const p=readProd(); if(p.items[ntt]) return; p.items[ntt]=true; p.counts[team]=(p.counts[team]||0)+1; writeProd(p); }
@@ -570,7 +538,6 @@ function readEvidence(ntt){ try{ return JSON.parse(localStorage.getItem(evKey(nt
 function saveEvidence(ntt, files){ const cur=readEvidence(ntt); cur.items.push(...files); localStorage.setItem(evKey(ntt), JSON.stringify(cur)); }
 function clearEvidence(ntt){ localStorage.removeItem(evKey(ntt)); }
 
-/* ========================= LOCATION INDEX ========================= */
 async function loadLocationIndex(force=false){
   if(locationIndex && !force) return locationIndex;
   try{ const cached=JSON.parse(localStorage.getItem(LS.LOC)||"null"); if(!force && cached && Array.isArray(cached.rows)){ locationIndex=cached.rows; return locationIndex; } }catch{}
@@ -588,7 +555,6 @@ async function loadLocationIndex(force=false){
 }
 function findLocByNetworkId(nid){ if(!locationIndex) return null; return locationIndex.find(r=>r.networkId===(nid||"").trim())||null; }
 
-/* === Carian FDC/FDP: papar senarai & buka Google Maps bila klik === */
 async function handleLocatorInput(){
   const q=(locator.input?.value||'').trim();
   if(!q){ locator.box.classList.add('hidden'); locator.box.innerHTML=''; return; }
@@ -621,7 +587,6 @@ async function handleLocatorInput(){
   });
 }
 
-/* ========================= CTT LOAD ========================= */
 function pick(row, keys){ for(const k of keys){ if(row[k]!==undefined && row[k]!==null) return row[k]; } return ""; }
 function isOfflineSession(val){ return String(val||'').toUpperCase().includes('OFFLINE'); }
 async function refreshCTTFromGitHub(){
@@ -646,7 +611,6 @@ async function refreshCTTFromGitHub(){
   }catch(e){ console.warn(e); cttData=[]; renderCTTSummary(); }
 }
 
-/* ========================= NTT LOAD & LINT ========================= */
 async function refreshFromGitHub(firstLoad=false){
   setLoading(true);
   try{
@@ -692,7 +656,6 @@ function lintData(data){
   else{ banner.classList.add('hidden'); }
 }
 
-/* ========================= INDEXES ========================= */
 function reindex(){
   idxByNtt={}; idxByNetworkId={}; idxByNode={}; idxByDpCode={};
   for(const r of fullData){
@@ -706,7 +669,6 @@ function reindex(){
   }
 }
 
-/* ========================= SUMMARY/TEAM/ZONE ========================= */
 function renderCTTSummary(){
   const wrap=document.getElementById('cttSummaryContainer');
   if(!wrap) return;
@@ -751,7 +713,6 @@ function populateZoneDashboard(data){
   const total=sorted.reduce((s,[,c])=>s+c,0); grand.innerHTML = `<div>Grand Total</div><div>${total}</div>`;
 }
 
-/* === Integrated Team Dashboard === */
 function renderTeamQuickPanel(data){
   const teams = { "TEAM FAISON": ["KGU","TBN"], "TEAM FAUZIE": ["KGU","TBN"], "TEAM RUDI": ["SOO","NBN"], "TEAM ROSDEE": ["TNM"] };
   const colorByNode = { KGU:'bg-amber-400', TBN:'bg-orange-500', SOO:'bg-emerald-600', NBN:'bg-green-600', TNM:'bg-rose-500' };
@@ -788,7 +749,6 @@ function renderTeamQuickPanel(data){
   });
 }
 
-/* ========================= FILTERS/TABLE ========================= */
 const filterNode = document.getElementById("filterNode");
 const filterDomain = document.getElementById("filterDomain");
 const filterAging = document.getElementById("filterAging");
@@ -940,7 +900,6 @@ document.getElementById('clearSelection').addEventListener('click', ()=>{
   updateBulkUI();
 });
 
-/* ===== Bulk actions ===== */
 document.getElementById('bulkAssign').addEventListener('click', async ()=>{
   const team=document.getElementById('bulkTeam').value;
   const sel=[...document.querySelectorAll('.selRow:checked')].map(el=>el.dataset.ntt);
@@ -964,7 +923,6 @@ document.getElementById('bulkPing').addEventListener('click', ()=>{
   toast('Reminder copied');
 });
 
-/* ========================= DETAIL MODAL (NTT) ========================= */
 async function openDetail(record){
   currentDetailRecord=record; await loadLocationIndex();
   const loc=findLocByNetworkId(record["Network ID"]);
@@ -1049,7 +1007,6 @@ document.getElementById('dropZone').addEventListener('drop',async e=>{
   const files=e.dataTransfer.files; const arr=await filesToBase64List(files); saveEvidence(currentDetailRecord["NTT Number"], arr); renderEvidenceGrid(currentDetailRecord["NTT Number"]);
 });
 
-/* ========================= CTT ANALYSIS ========================= */
 function fuzzyMatchScore(ctt, ntt){
   const nidU=(ntt["Network ID"]||"").toUpperCase();
   const dpStr=(ctt.dp||"").toUpperCase();
@@ -1155,13 +1112,11 @@ function openCTTAnalysis(node){
 }
 document.getElementById('cttModalClose').onclick=()=>document.getElementById('cttModal').classList.add('hidden');
 
-/* ========================= TELEGRAM ========================= */
 async function sendTelegramResolved(record){
   const payload={ nttNumber:record["NTT Number"], node:record["TM Node"], networkId:record["Network ID"], aging:record["Aging Category"]||"-" };
   fetch(TELEGRAM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});
 }
 
-/* ========================= ASSIGN MODAL ========================= */
 let currentAssignTeam=null;
 function closeAssignModal(){ const m=document.getElementById('assignModal'); m.classList.add('hidden'); m.classList.remove('flex'); currentAssignTeam=null; }
 function openAssignModal(teamName){
@@ -1237,7 +1192,6 @@ function openAssignModal(teamName){
 document.getElementById('assignModalClose').addEventListener('click', closeAssignModal);
 document.getElementById('assignModal').addEventListener('click', (e)=>{ if(e.target.id==='assignModal') closeAssignModal(); });
 
-/* ========================= CR/MT POOL (Team View) ========================= */
 function openCrmtPool(teamName){
   const modal=document.getElementById('crmtPoolModal');
   const title=document.getElementById('crmtPoolTitle');
@@ -1325,7 +1279,6 @@ function openCrmtPool(teamName){
   modal.classList.remove('hidden'); modal.classList.add('flex');
 }
 
-/* ===== CR/MT Detail modal helpers ===== */
 function arrayifyJobs(jobs){
   if(!jobs) return [];
   if(Array.isArray(jobs)) return jobs.filter(Boolean).map(String);
@@ -1403,10 +1356,8 @@ function openCrmtDetail(item){
 }
 document.getElementById('crmtDetailClose').onclick=()=>{ document.getElementById('crmtDetailModal').classList.add('hidden'); document.getElementById('crmtDetailModal').classList.remove('flex'); };
 
-/* ========================= INIT & ROLE ========================= */
 function updateRoleUI(){
   document.body.dataset.role = role;
-
   const crmtBtn = document.getElementById('openCrmt');
   if (crmtBtn) crmtBtn.classList.toggle('hidden', role !== 'nff');
 
@@ -1417,13 +1368,8 @@ function updateRoleUI(){
 }
 
 async function init(){
-  const sel = document.getElementById('roleSelect');
-  sel.value = role;
-  sel.onchange = (e)=>{ role = e.target.value; localStorage.setItem('role', role); updateRoleUI(); applyFilters(); };
-
   updateRoleUI();
 
-  // Shortcut "/" focuses search
   window.addEventListener('keydown', (e)=>{
     if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       const tag = (document.activeElement.tagName || '').toLowerCase();
@@ -1439,7 +1385,6 @@ async function init(){
   await refreshCTTFromGitHub();
   loadLocationIndex().catch(()=>{});
 
-  // Auto open detail from ?ntt=
   const nttParam = new URLSearchParams(location.search).get('ntt');
   if (nttParam && idxByNtt[nttParam]) { openDetail(idxByNtt[nttParam]); }
 
@@ -1448,7 +1393,6 @@ async function init(){
   [filterNode,filterDomain,filterAging,searchInput].forEach(el=>el.addEventListener("input",debounce(applyFilters,120)));
   document.getElementById('resetFilters').addEventListener('click', ()=>{ filterNode.value=""; filterDomain.value=""; filterAging.value=""; searchInput.value=""; applyFilters(); });
 
-  // Locator wiring
   locator.input = document.getElementById('fdcFdpSearch');
   locator.box   = document.getElementById('fdcFdpResults');
   document.getElementById('fdcFdpBtn').addEventListener('click', handleLocatorInput);
@@ -1461,9 +1405,7 @@ async function init(){
 }
 init();
 
-/* helpers */
 function syncNow(){ toast("Syncing…"); refreshFromGitHub(true); refreshCTTFromGitHub(); }
 </script>
 </body>
 </html>
-
