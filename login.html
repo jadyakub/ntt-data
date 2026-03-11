@@ -150,11 +150,6 @@
           <span class="mi">login</span> Login
         </button>
 
-        <!-- Guest button -->
-        <button id="guestBtn" type="button"
-          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/85 hover:bg-white border border-gray-200 font-semibold">
-          <span class="mi">visibility</span> Continue as Guest (read-only)
-        </button>
       </form>
 
       <div class="mt-6 text-[11px] leading-relaxed text-gray-600">
@@ -219,14 +214,6 @@
     qs('#quickLast').classList.remove('hidden');
     qs('#resumeBtn').onclick = ()=> location.href = redirectTo;
   }
-
-  // Guest view-only
-  qs('#guestBtn').onclick=()=>{
-    localStorage.setItem('role','cm');
-    localStorage.setItem('auth','guest');
-    localStorage.setItem('guest','1');
-    location.href = redirectTo;
-  };
 
   // Submit via button or Enter
   qs('#loginForm').addEventListener('submit', e=>{ e.preventDefault(); doLogin(); });
