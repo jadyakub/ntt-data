@@ -1406,8 +1406,14 @@ document.getElementById('crmtDetailClose').onclick=()=>{ document.getElementById
 /* ========================= INIT & ROLE ========================= */
 function updateRoleUI(){
   document.body.dataset.role = role;
+
   const crmtBtn = document.getElementById('openCrmt');
   if (crmtBtn) crmtBtn.classList.toggle('hidden', role !== 'nff');
+
+  const roleLabel = document.getElementById('roleLabel');
+  if (roleLabel) {
+    roleLabel.textContent = role === 'nff' ? 'NFF Team' : 'CM Team';
+  }
 }
 
 async function init(){
